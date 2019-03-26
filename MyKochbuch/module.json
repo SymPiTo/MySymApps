@@ -3,7 +3,7 @@
 	"name": "MyKochbuch",
 	"type": 3,
 	"vendor": "PiTo",
-	"aliases": ["MyRezepte"],
+	"aliases": ["MyKochbuch"],
 	"parentRequirements": [],
 	"childRequirements": [],
 	"implemented": [],
