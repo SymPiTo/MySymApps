@@ -345,7 +345,7 @@ class MyKochbuch extends IPSModule
 
     private function readJsonFile($ModulPath, $JsonFileName) {
         // Read JSON file
-        $dataPath = IPS_GetKernelDir() . '/modules/MySymCodes/'.$ModulPath.'/';
+        $dataPath = IPS_GetKernelDir() . '/modules/MySymApps/'.$ModulPath.'/';
         $json = file_get_contents($dataPath.$JsonFileName);
         //Decode JSON
         // true = json als array ausgeben
