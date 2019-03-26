@@ -17,7 +17,7 @@ class MyKochbuch extends IPSModule
 {
     
     //externe Klasse einbinden - ueberlagern mit TRAIT.
-    use MyDebugHelper;
+    //use MyDebugHelper;
     
     
     /* 
