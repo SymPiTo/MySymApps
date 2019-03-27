@@ -278,9 +278,11 @@ class MyKochbuch extends IPSModule
     ------------------------------------------------------------------------------  */
     public function prevRezept(){ 
         $nn = getvalue($this->GetIDForIdent('ID_No'));
-        $nn = $nn - 1;
-        $result = $this->readKochbuch($nn);
-        if(!$result){
+        if ($nn > 0){
+            $nn = $nn - 1;
+            $result = $this->readKochbuch($nn);
+        }
+        else{
             $nn = 0;
         }
         setvalue($this->GetIDForIdent('ID_No'), $nn);
