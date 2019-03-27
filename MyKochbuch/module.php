@@ -186,18 +186,17 @@ class MyKochbuch extends IPSModule
         $ModulPath = "MyKochbuch";
         $JsonFileName = "Rezepte.json";
         $CookBook = $this->readJsonFile($ModulPath, $JsonFileName);
-            
-        foreach ($CookBook['Rezepte'] as $key=>$rezept) {
-            
-            $Kochbuch[$key]['name'] = $rezept['items'][0]['mainEntity'][1]['name'];
-            $Kochbuch[$key]['recipeIngredient'] = $rezept['items'][0]['mainEntity'][1]['recipeIngredient'];
-            $Kochbuch[$key]['image'] = $rezept['items'][0]['mainEntity'][1]['image'];
-            $Kochbuch[$key]['recipeInstructions'] = $rezept['items'][0]['mainEntity'][1]['recipeInstructions'];
-            $KochbuchIndex[$key] = $rezept['items'][0]['mainEntity'][1]['name'];
-        }
-        
-        
-            
+        $Anzahl = count($CookBook['Rezepte']);   
+        if ($No < $Anzahl or $no > -1){
+            foreach ($CookBook['Rezepte'] as $key=>$rezept) {
+
+                $Kochbuch[$key]['name'] = $rezept['items'][0]['mainEntity'][1]['name'];
+                $Kochbuch[$key]['recipeIngredient'] = $rezept['items'][0]['mainEntity'][1]['recipeIngredient'];
+                $Kochbuch[$key]['image'] = $rezept['items'][0]['mainEntity'][1]['image'];
+                $Kochbuch[$key]['recipeInstructions'] = $rezept['items'][0]['mainEntity'][1]['recipeInstructions'];
+                $KochbuchIndex[$key] = $rezept['items'][0]['mainEntity'][1]['name'];
+            }
+
             $ZutatenHTML = '
                 <table width="100%">';
             foreach ($Kochbuch[$No]['recipeIngredient'] as $key => $value) {
@@ -219,24 +218,76 @@ class MyKochbuch extends IPSModule
                     <img src="'.@$Kochbuch[$No]['image'].'" style="width: auto; height: 200px">
                 ';             
             }       
-        $suchMuster = ". ";
-        $str     =  $Kochbuch[$No]['recipeInstructions'];
-        $replace = '.<br>';
-        $NewRezept = str_replace($suchMuster, $replace, $str);
-        if($this->ReadPropertyBoolean('ID_WF')){
-            setvalue($this->GetIDForIdent('ID_WFRezept'), $NewRezept);
-            setvalue($this->GetIDForIdent('ID_WFBild'), $imageHTML);
-            setvalue($this->GetIDForIdent('ID_WFZutaten'), $ZutatenHTML);            
+            $suchMuster = ". ";
+            $str     =  $Kochbuch[$No]['recipeInstructions'];
+            $replace = '.<br>';
+            $NewRezept = str_replace($suchMuster, $replace, $str);
+            if($this->ReadPropertyBoolean('ID_WF')){
+                setvalue($this->GetIDForIdent('ID_WFRezept'), $NewRezept);
+                setvalue($this->GetIDForIdent('ID_WFBild'), $imageHTML);
+                setvalue($this->GetIDForIdent('ID_WFZutaten'), $ZutatenHTML);            
+            }
+
+
+            setvalue($this->GetIDForIdent('ID_Kochbuch'),json_encode($KochbuchIndex));
+            setvalue($this->GetIDForIdent('ID_Rezept'), $Kochbuch[$No]['recipeInstructions']);
+            setvalue($this->GetIDForIdent('ID_Bild'), $Kochbuch[$No]['image']);
+            setvalue($this->GetIDForIdent('ID_Zutaten'), json_encode($Kochbuch[$No]['recipeIngredient'])) ;
+            setvalue($this->GetIDForIdent('ID_Titel'), $Kochbuch[$No]['name']);    
+            $status = true;
         }
-        setvalue($this->GetIDForIdent('ID_Kochbuch'),json_encode($KochbuchIndex));
-        setvalue($this->GetIDForIdent('ID_Rezept'), $Kochbuch[$No]['recipeInstructions']);
-        setvalue($this->GetIDForIdent('ID_Bild'), $Kochbuch[$No]['image']);
-        setvalue($this->GetIDForIdent('ID_Zutaten'), json_encode($Kochbuch[$No]['recipeIngredient'])) ;
-        setvalue($this->GetIDForIdent('ID_Titel'), $Kochbuch[$No]['name']);    
-        return $Kochbuch;
+        else {
+            $status = false;
+        }
+        return $status;
     }  
 
-
+    
+            
+    //-----------------------------------------------------------------------------
+    /* Function: nextRezept
+    ...............................................................................
+    Beschreibung
+    ...............................................................................
+    Parameters: 
+        none
+    ...............................................................................
+    Returns:    
+        none
+    ------------------------------------------------------------------------------  */
+    public function nextRezept(){ 
+        $nn = getvalue($this->GetIDForIdent('ID_No'));
+        $nn = $nn + 1;
+        $result = $this->readKochbuch($nn);
+        if(!$result){
+            $nn = $$nn - 1;
+        }
+        setvalue(ID_No, $nn);
+    }   
+    
+    //-----------------------------------------------------------------------------
+    /* Function: prevRezept
+    ...............................................................................
+    Beschreibung
+    ...............................................................................
+    Parameters: 
+        none
+    ...............................................................................
+    Returns:    
+        none
+    ------------------------------------------------------------------------------  */
+    public function prevRezept(){ 
+        $nn = getvalue($this->GetIDForIdent('ID_No'));
+        $nn = $nn - 1;
+        $result = $this->readKochbuch($nn);
+        if(!$result){
+            $nn = $$nn + 1;
+        }
+        setvalue(ID_No, $nn);
+        
+    }
+    
+    
    /* _______________________________________________________________________
     * Section: Private Funtions
     * Die folgenden Funktionen sind nur zur internen Verwendung verfügbar
