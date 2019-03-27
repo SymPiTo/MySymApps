@@ -262,7 +262,7 @@ class MyKochbuch extends IPSModule
         if(!$result){
             $nn = $$nn - 1;
         }
-        setvalue(ID_No, $nn);
+        setvalue($ID_No, $nn);
     }   
     
     //-----------------------------------------------------------------------------
