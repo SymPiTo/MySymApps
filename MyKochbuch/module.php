@@ -281,7 +281,7 @@ class MyKochbuch extends IPSModule
         $nn = $nn - 1;
         $result = $this->readKochbuch($nn);
         if(!$result){
-            $nn = $$nn + 1;
+            $nn = 0;
         }
         setvalue($this->GetIDForIdent('ID_No'), $nn);
     }
