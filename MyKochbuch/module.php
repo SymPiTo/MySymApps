@@ -287,7 +287,7 @@ class MyKochbuch extends IPSModule
         }
         setvalue($this->GetIDForIdent('ID_No'), $nn);
     }
-    
+
     
    /* _______________________________________________________________________
     * Section: Private Funtions
