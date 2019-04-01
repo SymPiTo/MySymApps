@@ -185,7 +185,7 @@ if (!defined("vtBoolean")) { //Nur wenn Konstanten noch nicht bekannt sind.
  * DebugHelper ergänzt SendDebug um die Möglichkeit Array und Objekte auszugeben.
  *
  */
-trait MyDebugHelper
+trait MyDebugHelper1
 {
 
     /**
@@ -233,7 +233,7 @@ trait MyDebugHelper
 /**
  * Trait mit Hilfsfunktionen für den Datenaustausch.
  */
-trait InstanceStatus
+trait InstanceStatus1
 {
 
     /**
@@ -311,7 +311,7 @@ trait InstanceStatus
 /**
  * Trait welcher Objekt-Eigenschaften in den Instance-Buffer schreiben und lesen kann.
  */
-trait MyBufferHelper
+trait MyBufferHelper1
 {
 
     /**
@@ -364,7 +364,7 @@ trait MyBufferHelper
     }
 }
 
-trait UTF8Coder
+trait UTF8Coder1
 {
 
     /**
