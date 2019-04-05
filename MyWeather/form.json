@@ -35,11 +35,6 @@
             {
                     "type" : "Label",
                     "label" : "--------------------------------------------"
-            },
-            {
-                    "name" : "x ",
-                    "type" : "ValidationTextBox",
-                    "caption" : "x"
             }
 	],
 	"actions":
