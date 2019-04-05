@@ -44,8 +44,8 @@ class MyWeather extends IPSModule
         //$this->RegisterPropertyFloat("IDENTNAME", 0.5);
         //$this->RegisterPropertyBoolean("IDENTNAME", false);
         $this->RegisterPropertyString("key", "111111111111111111");
-        $this->RegisterPropertyFloat("Latitude", 49.3987524);  
-        $this->RegisterPropertyFloat("longitude", 8.6724335);  
+        $this->RegisterPropertyString("Latitude", 49.3987524);  
+        $this->RegisterPropertyString("longitude", 8.6724335);  
         
         //Integer Variable anlegen
         //integer RegisterVariableInteger ( string $Ident, string $Name, string $Profil, integer $Position )
@@ -149,8 +149,8 @@ class MyWeather extends IPSModule
     ------------------------------------------------------------------------------  */
     public function getAPIData(){
         $api = $this->ReadPropertyString("key"); 
-        $latitude = $this->ReadPropertyFloat("Latitude");  
-        $longitude = $this->ReadPropertyFloat("longitude");  
+        $latitude = $this->ReadPropertyString("Latitude");  
+        $longitude = $this->ReadPropertyString("longitude");  
 
         $heute = date('d'); 
         $WochenTage = Array('Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'); 
