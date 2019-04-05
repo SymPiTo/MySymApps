@@ -3,7 +3,7 @@
 	"name": "MyWeather",
 	"type": 3,
 	"vendor": "PiTo",
-	"aliases": [""],
+	"aliases": ["MyWeather"],
 	"parentRequirements": [],
 	"childRequirements": [],
 	"implemented": [],
