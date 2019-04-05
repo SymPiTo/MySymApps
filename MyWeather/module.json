@@ -1,0 +1,11 @@
+{
+	"id": "{52BE7EC9-08DB-F40D-F822-0401CEC6A49C}",
+	"name": "MyWeather",
+	"type": 3,
+	"vendor": "PiTo",
+	"aliases": [""],
+	"parentRequirements": [],
+	"childRequirements": [],
+	"implemented": [],
+	"prefix": "W"
+}

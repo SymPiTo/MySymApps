@@ -1,0 +1,66 @@
+{
+	"elements":
+	[
+            {       "name": "ID_Active",          
+                    "type": "CheckBox",             
+                    "caption": "active" 
+            },
+            {
+                    "type" : "Label",
+                    "label" : "API Key"
+            },
+            {
+                    "name" : "key",
+                    "type" : "ValidationTextBox",
+                    "caption" : "API Key"
+            },
+            {
+                    "type" : "Label",
+                    "label" : "Latitude"
+            },
+            {
+                    "name" : "Latitude",
+                    "type" : "ValidationTextBox",
+                    "caption" : "Latitude"
+            } ,
+            {
+                    "type" : "Label",
+                    "label" : "longitude "
+            },
+            {
+                    "name" : "longitude ",
+                    "type" : "ValidationTextBox",
+                    "caption" : "longitude"
+            } 
+	],
+	"actions":
+	[
+
+        ],
+        
+	"status" : 
+        [
+            {
+                    "code" : 101,
+                    "icon" : "inactive",
+                    "caption" : "Creating instance."
+            },
+            {
+                    "code" : 102,
+                    "icon" : "active",
+                    "caption" : "Device created."
+            },
+            {
+                    "code" : 104,
+                    "icon" : "inactive",
+                    "caption" : "interface closed."
+            },
+            {
+                    "code" : 201,
+                    "icon" : "error",
+                    "caption" : "special errorcode"
+            }
+	]
+        
+        
+}
