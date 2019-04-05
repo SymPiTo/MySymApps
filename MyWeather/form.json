@@ -25,10 +25,10 @@
             } ,
             {
                     "type" : "Label",
-                    "label" : "longitude "
+                    "label" : "longitude"
             },
             {
-                    "name" : "longitude ",
+                    "name" : "longitude",
                     "type" : "ValidationTextBox",
                     "caption" : "longitude"
             } ,
