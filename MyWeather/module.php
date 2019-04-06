@@ -4,7 +4,7 @@
   *
  * author PiTo
  * 
- * GITHUB = <https://github.com/SymPiTo/>
+ * GITHUB = <https://github.com/SymPiTo/MySymApps>
  * 
  * Version:1.0.2019.4.5
  */

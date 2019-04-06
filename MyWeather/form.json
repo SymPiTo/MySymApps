@@ -31,11 +31,7 @@
                     "name" : "longitude",
                     "type" : "ValidationTextBox",
                     "caption" : "longitude"
-            } ,
-            {
-                    "type" : "Label",
-                    "label" : "--------------------------------------------"
-            }
+            } 
 	],
 	"actions":
 	[
