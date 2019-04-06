@@ -228,7 +228,7 @@ class MyWeather extends IPSModule
         none
     ------------------------------------------------------------------------------  */
     public  function Weather_Now_And_Next_Days($dailyJson){  
-        $weather_daily = json_decode($dailyJson, true);  
+        $weather_daily = (array) $dailyJson  ;  
         
         $html = '<head> 
         <meta charset="utf-8"> 
