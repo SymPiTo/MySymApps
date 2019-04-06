@@ -199,12 +199,12 @@ class MyWeather extends IPSModule
                        <figure class="cap-bot"><img src="https://darksky.net/images/weather-icons/'.$weather_now['icon'].'.png" alt="Wettericon" width="70" height="70"><figcaption>'.$weather_now['summary'].'</figcaption></figure> 
                        <section class="weatherpicright"> 
                            <div class="temperature">'.round($weather_now['temperature'], 1).' °C</div> 
-                                 <div class="humidity">'.$weather_now['humidity'].'%</div> 
+                                 <div class="humidity">Luftfeuchtigkeit '.$weather_now['humidity'].'%</div> 
                           </section> 
                           <section class="weatherpicbottom"> 
                               <div class="wind">Ø Wind: '.$weather_now['windSpeed'].' km/h</div> 
-                              <div class="temperaturefeel">'.round($weather_now['apparentTemperature'], 1).' °C gefühlt</div> 
-                              <div class="pressure">'.$weather_now['pressure'].' hPa</div> 
+                              <div class="temperaturefeel">Temperatur '.round($weather_now['apparentTemperature'], 1).' °C gefühlt</div> 
+                              <div class="pressure">Luftdruck '.$weather_now['pressure'].' hPa</div> 
                               <div class="visibility">Sichtweite '.$weather_now['visibility'].' km</div> 
                            </section> 
                      </section> 
