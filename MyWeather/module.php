@@ -209,11 +209,12 @@ class MyWeather extends IPSModule
 
 
             $message[$tag] = array(date('d.m',intval($day)),$WochenTage[date('w',intval($day))],$summary,$temphigh,$templow,$niederschlag,$niedr_prop,$wind,$boen,$wolken,$humidity); 
-            $box[] = "$Wochentag $summary / $niederschlag $niedr_prop % / $temphigh °C $templow °C"; 
+            
+            //$box[] = "$Wochentag $summary / $niederschlag $niedr_prop % / $temphigh °C $templow °C"; 
          } 
          
             $array = json_decode(json_encode($days), true);
-        return $array;
+        return $message;
     }
     
             
