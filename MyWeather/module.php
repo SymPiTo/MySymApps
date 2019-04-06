@@ -211,8 +211,8 @@ class MyWeather extends IPSModule
             $box[] = "$Wochentag $summary / $niederschlag $niedr_prop % / $temphigh °C $templow °C"; 
          } 
          
-            
-        return $days;
+            $array = json_decode(json_encode($days), true);
+        return $array;
     }
     
             
