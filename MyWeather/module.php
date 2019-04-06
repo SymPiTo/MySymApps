@@ -197,16 +197,40 @@ class MyWeather extends IPSModule
              $boen = utf8_decode($days[$i]->windGust); 
              $wolken = utf8_decode($days[$i]->cloudCover); 
              $humidity = utf8_decode($days[$i]->humidity); 
+             
+            $Icon =  utf8_decode($days[$i]->icon);     
+            $IconUrl = 'https://darksky.net/images/weather-icons/'.$Icon.'.png'; 
+            $html = '<td align="center" valign="top"  style="width:110px;padding-left:20px;"> 
+                        '.$Wochentag.'<br> 
+                        <img width="70" height="70" src="'.$IconUrl.'" style="float:left;">';    
+                            
              $tag = date('d',intval($day));     
              $Wochentag = $WochenTage[date('w',intval($day))];      
              $message[$tag] = array(date('d.m',intval($day)),$WochenTage[date('w',intval($day))],$summary,$temphigh,$templow,$niederschlag,$niedr_prop,$wind,$boen,$wolken,$humidity); 
              $box[] = "$Wochentag $summary / $niederschlag $niedr_prop % / $temphigh °C $templow °C"; 
          } 
-        return $box;
+        return $IconUrl;
     }
     
-    
-    
+            
+    /*-----------------------------------------------------------------------------
+    Function: getIconURL
+    ...............................................................................
+    Beschreibung
+    ...............................................................................
+    Parameters: 
+        none
+    ...............................................................................
+    Returns:    
+        none
+    ------------------------------------------------------------------------------  */
+    public function getIconURL(){
+            
+     
+        
+            
+    } 
+
     
     
    /* _______________________________________________________________________
