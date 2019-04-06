@@ -338,7 +338,7 @@ class MyWeather extends IPSModule
     Returns:    
         $precipitation_type - Deutscher Begriff
     ------------------------------------------------------------------------------  */     
-    private function Get_PrecipitationType($precipitation_type) 
+    protected function Get_PrecipitationType($precipitation_type) 
     { 
         $precipitation_type = ""; 
         if ($precipitation_type == "rain") 
@@ -370,7 +370,7 @@ class MyWeather extends IPSModule
     Returns:    
         Abfangszeit - EndZeit
     ------------------------------------------------------------------------------  */   
-    private function isToday($time){ 
+    protected function isToday($time){ 
        $begin = mktime(0, 0, 0); 
        $end = mktime(23, 59, 59); 
        // check if given time is between begin and end 
@@ -390,7 +390,7 @@ class MyWeather extends IPSModule
     Returns:    
         $percentage - Prozentwert
     ------------------------------------------------------------------------------  */   
-    private function ConvertPercent($value) 
+   protected function ConvertPercent($value) 
     { 
         $percentage = $value * 100; 
         return $percentage; 
@@ -411,7 +411,7 @@ class MyWeather extends IPSModule
     Returns:    
         CSS Text
     ------------------------------------------------------------------------------  */  
-    private function Get_CSS() 
+    protected function Get_CSS() 
     { 
         $style = '<style> 
         body { background-color:transparent; } 
