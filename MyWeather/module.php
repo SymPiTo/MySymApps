@@ -170,13 +170,13 @@ class MyWeather extends IPSModule
     /*-----------------------------------------------------------------------------
     Function: $weather_now
     ...............................................................................
-    Beschreibung
+    Beschreibung: Holt sich die aktuellen Wetter Daten (1000 Zugriffe pro Tag sind kostenlos)
     ...............................................................................
     Parameters: 
-        none
+        $array_json - API Daten als Array umgewandelt
     ...............................................................................
     Returns:    
-        none
+        $wetterNowData - aktuelle Wetter Daten als Array
     ------------------------------------------------------------------------------  */
     function Weather_Now($array_json) 
     { 
@@ -225,7 +225,7 @@ class MyWeather extends IPSModule
 
         setvalue($this->GetIDForIdent("ID_Now"),$html);
         setvalue($this->GetIDForIdent("ID_NowData"), json_encode($wetterNowData));      
-        return $html; 
+        return $wetterNowData; 
     } 
 
     
@@ -233,13 +233,14 @@ class MyWeather extends IPSModule
     /*-----------------------------------------------------------------------------
     Function: Weather_Now_And_Next_Days
     ...............................................................................
-    Beschreibung
+    Beschreibung:
+     * Holt sich alle Wetter Daten der ganzen Woche
     ...............................................................................
     Parameters: 
-        none
+        $array_json - API Daten als Array umgewandelt
     ...............................................................................
     Returns:    
-        none
+        $wetterData - Wetter Daten der Woche
     ------------------------------------------------------------------------------  */
     public  function Weather_Now_And_Next_Days($array_json){  
         
@@ -326,15 +327,16 @@ class MyWeather extends IPSModule
         
             
     /*-----------------------------------------------------------------------------
-    Function: Weather_Now_And_Next_Days
+    Function: Get_PrecipitationType
     ...............................................................................
-    Beschreibung
+    Beschreibung:
+     *  Umwandulung Engliche Begriffe in Deutsche
     ...............................................................................
     Parameters: 
-        none
+        $precipitation_type - englischer Begriff
     ...............................................................................
     Returns:    
-        none
+        $precipitation_type - Deutscher Begriff
     ------------------------------------------------------------------------------  */     
     public function Get_PrecipitationType($precipitation_type) 
     { 
@@ -359,13 +361,14 @@ class MyWeather extends IPSModule
     /*-----------------------------------------------------------------------------
     Function: isToday
     ...............................................................................
-    Beschreibung
+    Beschreibung:
+     * Wandelt die UNIX timeStamp um und prüft ob dies Heute ist
     ...............................................................................
     Parameters: 
         none
     ...............................................................................
     Returns:    
-        none
+        Abfangszeit - EndZeit
     ------------------------------------------------------------------------------  */   
     public function isToday($time){ 
        $begin = mktime(0, 0, 0); 
@@ -378,13 +381,14 @@ class MyWeather extends IPSModule
     /*-----------------------------------------------------------------------------
     Function: ConvertPercent
     ...............................................................................
-    Beschreibung
+    Beschreibung:
+     * wandelt übergebenen Wert in Prozent um
     ...............................................................................
     Parameters: 
-        none
+        $value - übergbener Wert
     ...............................................................................
     Returns:    
-        none
+        $percentage - Prozentwert
     ------------------------------------------------------------------------------  */   
     public function ConvertPercent($value) 
     { 
@@ -398,13 +402,14 @@ class MyWeather extends IPSModule
     /*-----------------------------------------------------------------------------
     Function: Get_CSS
     ...............................................................................
-    Beschreibung
+    Beschreibung:
+     * CSS Text
     ...............................................................................
     Parameters: 
         none
     ...............................................................................
     Returns:    
-        none
+        CSS Text
     ------------------------------------------------------------------------------  */  
     public function Get_CSS() 
     { 
