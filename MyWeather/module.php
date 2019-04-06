@@ -187,7 +187,7 @@ class MyWeather extends IPSModule
         <!--The following script tag downloads a font from the Adobe Edge Web Fonts server for use within the web page. We recommend that you do not modify it.--> 
         <script>var __adobewebfontsappname__="dreamweaver"</script> 
         <script src="http://use.edgefonts.net/source-sans-pro:n6:default;acme:n4:default;bilbo:n4:default.js" type="text/javascript"></script>'. 
-        Get_CSS().' 
+        $this->Get_CSS().' 
         </head> 
 
         <body>'; 
@@ -338,7 +338,7 @@ class MyWeather extends IPSModule
     Returns:    
         $precipitation_type - Deutscher Begriff
     ------------------------------------------------------------------------------  */     
-    protected function Get_PrecipitationType($precipitation_type) 
+    private function Get_PrecipitationType($precipitation_type) 
     { 
         $precipitation_type = ""; 
         if ($precipitation_type == "rain") 
@@ -370,7 +370,7 @@ class MyWeather extends IPSModule
     Returns:    
         Abfangszeit - EndZeit
     ------------------------------------------------------------------------------  */   
-    protected function isToday($time){ 
+    private function isToday($time){ 
        $begin = mktime(0, 0, 0); 
        $end = mktime(23, 59, 59); 
        // check if given time is between begin and end 
@@ -390,7 +390,7 @@ class MyWeather extends IPSModule
     Returns:    
         $percentage - Prozentwert
     ------------------------------------------------------------------------------  */   
-   protected function ConvertPercent($value) 
+   private function ConvertPercent($value) 
     { 
         $percentage = $value * 100; 
         return $percentage; 
@@ -411,7 +411,7 @@ class MyWeather extends IPSModule
     Returns:    
         CSS Text
     ------------------------------------------------------------------------------  */  
-    protected function Get_CSS() 
+    private function Get_CSS() 
     { 
         $style = '<style> 
         body { background-color:transparent; } 
