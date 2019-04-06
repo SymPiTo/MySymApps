@@ -227,7 +227,7 @@ class MyWeather extends IPSModule
     Returns:    
         none
     ------------------------------------------------------------------------------  */
-    public  function Weather_Now_And_Next_Days($dailyJson){  
+    public  function Weather_Now_And_Next_Days($weather_daily){  
         
         
         $html = '<head> 
