@@ -62,7 +62,8 @@ class MyWeather extends IPSModule
         //Aufruf dieser Variable mit $this->GetIDForIdent("IDENTNAME")
         //$this->RegisterVariableString("SZ_MoFr", "SchaltZeiten Mo-Fr");
         $this->RegisterVariableString ("ID_Week", "WeekFrame", "~HTMLBox", 0);
- 
+        $this->RegisterVariableString ("ID_WeekData", "WeekData", "", 1);
+        
         // Aktiviert die Standardaktion der Statusvariable zur Bedienbarkeit im Webfront
         //$this->EnableAction("IDENTNAME");
         
@@ -161,61 +162,7 @@ class MyWeather extends IPSModule
         
         return $parsed_json;
     }  
-
-    /*-----------------------------------------------------------------------------
-    Function: calcDay
-    ...............................................................................
-    Beschreibung
-    ...............................................................................
-    Parameters: 
-        none
-    ...............................................................................
-    Returns:    
-        none
-    ------------------------------------------------------------------------------  */
-    public function calcDay($parsed_json){
-        $heute = date('d'); 
-        $WochenTage = Array('Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'); 
-        
-        $daily = $parsed_json->{'daily'}; 
-        $text0 = utf8_decode($daily->summary) . "\n"; 
-        $days = $parsed_json->{'daily'}->{'data'}; 
-        
-        $message = array(); 
-
-        for($i=0;$i<7;$i++) 
-         { 
-            $day = utf8_decode($days[$i]->time); 
-            $summary = utf8_decode($days[$i]->summary); 
-            $temphigh = utf8_decode($days[$i]->temperatureHigh); 
-            $templow = utf8_decode($days[$i]->temperatureLow); 
-            @$precipType = utf8_decode($days[$i]->precipType); 
-            $niederschlag = ""; 
-            if ($precipType == "rain") $niederschlag = "Regen"; 
-            if ($precipType == "snow") $niederschlag = "Schnee"; 
-            if ($precipType == "sleet") $niederschlag = "Schneeregen"; 
-            $niedr_prop = utf8_decode($days[$i]->precipProbability); 
-            $wind = utf8_decode($days[$i]->windSpeed); 
-            $boen = utf8_decode($days[$i]->windGust); 
-            $wolken = utf8_decode($days[$i]->cloudCover); 
-            $humidity = utf8_decode($days[$i]->humidity); 
-            $tag = date('d',intval($day));     
-            $Wochentag = $WochenTage[date('w',intval($day))]; 
-            $Icon =  utf8_decode($days[$i]->icon);     
-            $IconUrl = 'https://darksky.net/images/weather-icons/'.$Icon.'.png'; 
-            $html = '<td align="center" valign="top"  style="width:110px;padding-left:20px;"> 
-                        '.$Wochentag.'<br> 
-                        <img width="70" height="70" src="'.$IconUrl.'" style="float:left;">';    
-
-
-            $message[$tag] = array(date('d.m',intval($day)),$WochenTage[date('w',intval($day))],$summary,$temphigh,$templow,$niederschlag,$niedr_prop,$wind,$boen,$wolken,$humidity); 
             
-            //$box[] = "$Wochentag $summary / $niederschlag $niedr_prop % / $temphigh °C $templow °C"; 
-         } 
-         
-            $array = json_decode(json_encode($days), true);
-        return $message;
-    }
     
             
     /*-----------------------------------------------------------------------------
@@ -245,14 +192,16 @@ class MyWeather extends IPSModule
             $html .= '<table>'; 
 
             $html.= '<tr>'; 
-
+            $i=0;
             foreach ($weather_daily['daily']['data'] as $day => $data){ 
-          
+                $i = $i +1;
                 if ($this->isToday($data['time'])){ 
                    $weekday = "Heute"; 
+                   $wetterData[$i]['weekday'] = $weekday;
                 } else { 
                    $day_names = array("Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"); 
                    $weekday = $day_names[date("w",intval($data['time']))]; 
+                   $wetterData[$i]['weekday'] = $weekday;
                 } 
 
                 $html.= '<td class="weathertablecell"> 
@@ -268,29 +217,45 @@ class MyWeather extends IPSModule
                                     <div class="wind">Ø Wind Böen: '.$data['windGust'].' km/h</div> 
                                     <div class="cloud">Wolken: '.$this->ConvertPercent($data['cloudCover']).' %</div> 
                                     <div class="humidity">Ø Feuchtigkeit: '.$this->ConvertPercent($data['humidity']).' %</div>'; 
+                
                 if(isset($data['precipType'])) 
                 { 
                     $precipitation_type = $this->Get_PrecipitationType($data['precipType']); 
                     if($precipitation_type != "") 
                     { 
                     $html.= '<div class="precipitationtype">Niederschlagstyp: '.$this->$precipitation_type.'</div>'; 
+                    $wetterData[$i]['precipitationtype'] = $this->$precipitation_type;
                     } 
+                    else{
+                        $wetterData[$i]['precipitationtype'] = "";
+                    }
                 } 
+                else{
+                        $wetterData[$i]['precipitationtype'] = "";
+                    }
 
                 $html.= '<div class="precipitationprobability">Regen: '.$this->ConvertPercent($data['precipProbability']).' %</div>                           
-                                </section> 
+                               </section> 
                                </section> 
                                </td>'; 
-                } 
+                $wetterData[$i]['temperatureHigh'] = round($data['temperatureHigh'], 1).' °C';
+                $wetterData[$i]['temperatureLow'] = round($data['temperatureLow'], 1).' °C';
+                $wetterData[$i]['windSpeed'] = $data['windSpeed'].' km/h';
+                $wetterData[$i]['windGust'] = $data['windGust'].' km/h';
+                $wetterData[$i]['cloudCover'] = $this->ConvertPercent($data['cloudCover']).' %';
+                $wetterData[$i]['humidity'] = $this->ConvertPercent($data['humidity']).' %';
+ 
+            } 
            
            
                 $html .= "</tr> 
                          </table>"; 
                 $html .= '</body> 
-             </html>'; 
+            </html>'; 
+                
             setvalue($this->GetIDForIdent("ID_Week"),$html);
-  
-            return $html; 
+            setvalue($this->GetIDForIdent("ID_WeekData"), json_encode($wetterData));
+            return $wetterData; 
         }  
         
             
