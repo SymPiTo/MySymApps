@@ -179,6 +179,7 @@ class MyWeather extends IPSModule
         $daily = $parsed_json->{'daily'}; 
         $text0 = utf8_decode($daily->summary) . "\n"; 
         $days = $parsed_json->{'daily'}->{'data'}; 
+        
         $message = array(); 
 
         for($i=0;$i<7;$i++) 
@@ -226,8 +227,9 @@ class MyWeather extends IPSModule
     Returns:    
         none
     ------------------------------------------------------------------------------  */
-    public  function Weather_Now_And_Next_Days($weather_daily){  
-            
+    public  function Weather_Now_And_Next_Days($dailyJson){  
+        $weather_daily = json_decode($dailyJson, true);  
+        
         $html = '<head> 
         <meta charset="utf-8"> 
         <title>Wetter</title> 
@@ -243,6 +245,7 @@ class MyWeather extends IPSModule
            $html.= '<tr>'; 
 
            foreach ($weather_daily as $day => $data){ 
+            
               if ($this->isToday($data['time'])){ 
                  $weekday = "Heute"; 
               } else { 
