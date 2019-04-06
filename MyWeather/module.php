@@ -63,6 +63,8 @@ class MyWeather extends IPSModule
         //$this->RegisterVariableString("SZ_MoFr", "SchaltZeiten Mo-Fr");
         $this->RegisterVariableString ("ID_Week", "WeekFrame", "~HTMLBox", 0);
         $this->RegisterVariableString ("ID_WeekData", "WeekData", "", 1);
+        $this->RegisterVariableString ("ID_Now", "NowFrame", "~HTMLBox", 2);
+        $this->RegisterVariableString ("ID_NowData", "NowData", "", 3);
         
         // Aktiviert die Standardaktion der Statusvariable zur Bedienbarkeit im Webfront
         //$this->EnableAction("IDENTNAME");
@@ -158,11 +160,74 @@ class MyWeather extends IPSModule
 
         //$json_string = file_get_contents("https://api.darksky.net/forecast/$api/$latitude,$longitude?exclude=minutely&lang=de&units=si");  
         $json_string = '{"latitude":49.3987524,"longitude":8.6724335,"timezone":"Europe/Berlin","currently":{"time":1554490902,"summary":"Nebel","icon":"fog","precipIntensity":0.0152,"precipProbability":0.03,"precipType":"rain","temperature":6.8,"apparentTemperature":6.02,"dewPoint":6.76,"humidity":1,"pressure":1004.54,"windSpeed":5.33,"windGust":8.32,"windBearing":356,"cloudCover":0.92,"uvIndex":0,"visibility":1.14,"ozone":323},"daily":{"summary":"Leichter Regen am Dienstag und Mittwoch mit steigender Temperatur von 16°C am Montag.","icon":"rain","data":[{"time":1554415200,"summary":"Nebel am Vormittag.","icon":"fog","sunriseTime":1554440136,"sunsetTime":1554487362,"moonPhase":0.01,"precipIntensity":0.0178,"precipIntensityMax":0.0533,"precipIntensityMaxTime":1554418800,"precipProbability":0.4,"precipType":"rain","temperatureHigh":9.02,"temperatureHighTime":1554480000,"temperatureLow":4.37,"temperatureLowTime":1554526800,"apparentTemperatureHigh":8.33,"apparentTemperatureHighTime":1554480000,"apparentTemperatureLow":4.37,"apparentTemperatureLowTime":1554526800,"dewPoint":4.49,"humidity":0.89,"pressure":1005.54,"windSpeed":1.87,"windGust":16.35,"windGustTime":1554415200,"windBearing":22,"cloudCover":0.95,"uvIndex":3,"uvIndexTime":1554458400,"visibility":7.29,"ozone":355.91,"temperatureMin":3.51,"temperatureMinTime":1554447600,"temperatureMax":9.02,"temperatureMaxTime":1554480000,"apparentTemperatureMin":1.81,"apparentTemperatureMinTime":1554447600,"apparentTemperatureMax":8.33,"apparentTemperatureMaxTime":1554480000},{"time":1554501600,"summary":"Den ganzen Tag lang überwiegend bewölkt.","icon":"partly-cloudy-day","sunriseTime":1554526409,"sunsetTime":1554573853,"moonPhase":0.03,"precipIntensity":0.0025,"precipIntensityMax":0.0102,"precipIntensityMaxTime":1554562800,"precipProbability":0.05,"precipType":"rain","temperatureHigh":15.74,"temperatureHighTime":1554566400,"temperatureLow":8.23,"temperatureLowTime":1554616800,"apparentTemperatureHigh":15.74,"apparentTemperatureHighTime":1554566400,"apparentTemperatureLow":7.96,"apparentTemperatureLowTime":1554613200,"dewPoint":5.04,"humidity":0.69,"pressure":1003.73,"windSpeed":7.37,"windGust":22.18,"windGustTime":1554562800,"windBearing":73,"cloudCover":0.76,"uvIndex":3,"uvIndexTime":1554544800,"visibility":16.09,"ozone":335.27,"temperatureMin":4.37,"temperatureMinTime":1554526800,"temperatureMax":15.74,"temperatureMaxTime":1554566400,"apparentTemperatureMin":4.37,"apparentTemperatureMinTime":1554526800,"apparentTemperatureMax":15.74,"apparentTemperatureMaxTime":1554566400},{"time":1554588000,"summary":"Den ganzen Tag lang überwiegend bewölkt.","icon":"partly-cloudy-day","sunriseTime":1554612683,"sunsetTime":1554660344,"moonPhase":0.07,"precipIntensity":0.0076,"precipIntensityMax":0.0533,"precipIntensityMaxTime":1554670800,"precipProbability":0.14,"precipType":"rain","temperatureHigh":16.01,"temperatureHighTime":1554642000,"temperatureLow":8.79,"temperatureLowTime":1554703200,"apparentTemperatureHigh":16.01,"apparentTemperatureHighTime":1554642000,"apparentTemperatureLow":7.93,"apparentTemperatureLowTime":1554703200,"dewPoint":6.16,"humidity":0.65,"pressure":1004.65,"windSpeed":0.64,"windGust":18.04,"windGustTime":1554660000,"windBearing":145,"cloudCover":0.91,"uvIndex":3,"uvIndexTime":1554631200,"visibility":16.09,"ozone":354.7,"temperatureMin":8.23,"temperatureMinTime":1554616800,"temperatureMax":16.01,"temperatureMaxTime":1554642000,"apparentTemperatureMin":7.96,"apparentTemperatureMinTime":1554613200,"apparentTemperatureMax":16.01,"apparentTemperatureMaxTime":1554642000},{"time":1554674400,"summary":"Den ganzen Tag lang überwiegend bewölkt.","icon":"partly-cloudy-day","sunriseTime":1554698958,"sunsetTime":1554746836,"moonPhase":0.1,"precipIntensity":0.0533,"precipIntensityMax":0.1956,"precipIntensityMaxTime":1554739200,"precipProbability":0.47,"precipType":"rain","temperatureHigh":16.08,"temperatureHighTime":1554732000,"temperatureLow":9.78,"temperatureLowTime":1554789600,"apparentTemperatureHigh":16.08,"apparentTemperatureHighTime":1554732000,"apparentTemperatureLow":8.89,"apparentTemperatureLowTime":1554789600,"dewPoint":7.51,"humidity":0.72,"pressure":1008.25,"windSpeed":7.55,"windGust":15.53,"windGustTime":1554735600,"windBearing":234,"cloudCover":0.89,"uvIndex":3,"uvIndexTime":1554717600,"visibility":15.85,"ozone":362.99,"temperatureMin":8.79,"temperatureMinTime":1554703200,"temperatureMax":16.08,"temperatureMaxTime":1554732000,"apparentTemperatureMin":7.93,"apparentTemperatureMinTime":1554703200,"apparentTemperatureMax":16.08,"apparentTemperatureMaxTime":1554732000},{"time":1554760800,"summary":"Den ganzen Tag lang überwiegend bewölkt.","icon":"partly-cloudy-day","sunriseTime":1554785233,"sunsetTime":1554833327,"moonPhase":0.13,"precipIntensity":0.3277,"precipIntensityMax":0.7595,"precipIntensityMaxTime":1554840000,"precipProbability":0.86,"precipType":"rain","temperatureHigh":15.17,"temperatureHighTime":1554825600,"temperatureLow":8.46,"temperatureLowTime":1554876000,"apparentTemperatureHigh":15.17,"apparentTemperatureHighTime":1554825600,"apparentTemperatureLow":6.63,"apparentTemperatureLowTime":1554876000,"dewPoint":8.22,"humidity":0.79,"pressure":1008.54,"windSpeed":2.12,"windGust":18.59,"windGustTime":1554789600,"windBearing":181,"cloudCover":0.89,"uvIndex":3,"uvIndexTime":1554807600,"visibility":15.9,"ozone":372.33,"temperatureMin":9.6,"temperatureMinTime":1554796800,"temperatureMax":15.17,"temperatureMaxTime":1554825600,"apparentTemperatureMin":8.85,"apparentTemperatureMinTime":1554793200,"apparentTemperatureMax":15.17,"apparentTemperatureMaxTime":1554825600},{"time":1554847200,"summary":"Den ganzen Tag lang überwiegend bewölkt.","icon":"partly-cloudy-day","sunriseTime":1554871509,"sunsetTime":1554919819,"moonPhase":0.17,"precipIntensity":0.3988,"precipIntensityMax":0.6706,"precipIntensityMaxTime":1554847200,"precipProbability":0.9,"precipType":"rain","temperatureHigh":12.68,"temperatureHighTime":1554901200,"temperatureLow":6.14,"temperatureLowTime":1554962400,"apparentTemperatureHigh":12.68,"apparentTemperatureHighTime":1554901200,"apparentTemperatureLow":3.66,"apparentTemperatureLowTime":1554962400,"dewPoint":7.06,"humidity":0.79,"pressure":1008.07,"windSpeed":11.78,"windGust":30.3,"windGustTime":1554926400,"windBearing":38,"cloudCover":0.57,"uvIndex":3,"uvIndexTime":1554890400,"visibility":16.09,"ozone":373.92,"temperatureMin":8.38,"temperatureMinTime":1554879600,"temperatureMax":12.68,"temperatureMaxTime":1554901200,"apparentTemperatureMin":6.56,"apparentTemperatureMinTime":1554879600,"apparentTemperatureMax":12.68,"apparentTemperatureMaxTime":1554901200},{"time":1554933600,"summary":"Den ganzen Tag lang überwiegend bewölkt.","icon":"partly-cloudy-day","sunriseTime":1554957785,"sunsetTime":1555006310,"moonPhase":0.2,"precipIntensity":0.0965,"precipIntensityMax":0.3429,"precipIntensityMaxTime":1554933600,"precipProbability":0.65,"precipType":"rain","temperatureHigh":9.54,"temperatureHighTime":1554987600,"temperatureLow":2.58,"temperatureLowTime":1555048800,"apparentTemperatureHigh":7.73,"apparentTemperatureHighTime":1554987600,"apparentTemperatureLow":0.42,"apparentTemperatureLowTime":1555048800,"dewPoint":3.71,"humidity":0.75,"pressure":1011.85,"windSpeed":11.36,"windGust":26.33,"windGustTime":1554933600,"windBearing":36,"cloudCover":0.83,"uvIndex":3,"uvIndexTime":1554976800,"visibility":16.09,"ozone":385.7,"temperatureMin":6.14,"temperatureMinTime":1554962400,"temperatureMax":9.54,"temperatureMaxTime":1554987600,"apparentTemperatureMin":3.58,"apparentTemperatureMinTime":1554966000,"apparentTemperatureMax":7.73,"apparentTemperatureMaxTime":1554987600},{"time":1555020000,"summary":"Den ganzen Tag lang Klar.","icon":"clear-day","sunriseTime":1555044062,"sunsetTime":1555092802,"moonPhase":0.24,"precipIntensity":0.0025,"precipIntensityMax":0.0051,"precipIntensityMaxTime":1555020000,"precipProbability":0.04,"precipType":"rain","temperatureHigh":11.91,"temperatureHighTime":1555081200,"temperatureLow":4.43,"temperatureLowTime":1555131600,"apparentTemperatureHigh":11.91,"apparentTemperatureHighTime":1555081200,"apparentTemperatureLow":3.05,"apparentTemperatureLowTime":1555135200,"dewPoint":0.23,"humidity":0.63,"pressure":1014.77,"windSpeed":7.77,"windGust":14.98,"windGustTime":1555020000,"windBearing":49,"cloudCover":0.18,"uvIndex":4,"uvIndexTime":1555063200,"visibility":16.09,"ozone":395.41,"temperatureMin":2.58,"temperatureMinTime":1555048800,"temperatureMax":11.91,"temperatureMaxTime":1555081200,"apparentTemperatureMin":0.42,"apparentTemperatureMinTime":1555048800,"apparentTemperatureMax":11.91,"apparentTemperatureMaxTime":1555081200}]},"flags":{"sources":["meteoalarm","cmc","gfs","icon","isd","madis"],"meteoalarm-license":"Based on data from EUMETNET - MeteoAlarm [https://www.meteoalarm.eu/]. Time delays between this website and the MeteoAlarm website are possible; for the most up to date information about alert levels as published by the participating National Meteorological Services please use the MeteoAlarm website.","nearest-station":1.629,"units":"ca"},"offset":2}';
-        $parsed_json = json_decode($json_string, true); 
+        $array_json = json_decode($json_string, true); 
         
-        return $parsed_json;
+        return $array_json;
     }  
             
+    
+    
+    /*-----------------------------------------------------------------------------
+    Function: $weather_now
+    ...............................................................................
+    Beschreibung
+    ...............................................................................
+    Parameters: 
+        none
+    ...............................................................................
+    Returns:    
+        none
+    ------------------------------------------------------------------------------  */
+    function Weather_Now($array_json) 
+    { 
+        $weather_now = $array_json['currently'];
+        $html = '<head> 
+        <meta charset="utf-8"> 
+        <title>Wetter</title> 
+        <!--The following script tag downloads a font from the Adobe Edge Web Fonts server for use within the web page. We recommend that you do not modify it.--> 
+        <script>var __adobewebfontsappname__="dreamweaver"</script> 
+        <script src="http://use.edgefonts.net/source-sans-pro:n6:default;acme:n4:default;bilbo:n4:default.js" type="text/javascript"></script>'. 
+        Get_CSS().' 
+        </head> 
+
+        <body>'; 
+           $html .= '<table>'; 
+           $html.= '<tr> 
+                   <td class="weathertablecell"> 
+                   <section class="weatherframe"> 
+                         <div class="weathertitledate">Aktuell</div> 
+                       <figure class="cap-bot"><img src="https://darksky.net/images/weather-icons/'.$weather_now['icon'].'.png" alt="Wettericon" width="70" height="70"><figcaption>'.$weather_now['summary'].'</figcaption></figure> 
+                       <section class="weatherpicright"> 
+                           <div class="temperature">'.round($weather_now['temperature'], 1).' °C</div> 
+                                 <div class="humidity">'.$weather_now['humidity'].'%</div> 
+                          </section> 
+                          <section class="weatherpicbottom"> 
+                              <div class="wind">Ø Wind: '.$weather_now['windSpeed'].' km/h</div> 
+                              <div class="temperaturefeel">'.round($weather_now['apparentTemperature'], 1).' °C gefühlt</div> 
+                              <div class="pressure">'.$weather_now['pressure'].' hPa</div> 
+                              <div class="visibility">Sichtweite '.$weather_now['visibility'].' km</div> 
+                           </section> 
+                     </section> 
+                    </td>'; 
+
+           $html .= "</tr> 
+                    </table>"; 
+              $html .= '</body> 
+        </html>'; 
+              
+        $wetterNowData['visibility'] = $weather_now['visibility'].' km';
+        $wetterNowData['pressure'] = $weather_now['pressure'].' hPa';
+        $wetterNowData['windSpeed'] = $weather_now['windSpeed'].' km/h';
+        $wetterNowData['apparentTemperature'] = round($weather_now['apparentTemperature'], 1).' °C gefühlt';
+        $wetterNowData['temperature'] = round($weather_now['temperature'], 1).' °C';
+        $wetterNowData['humidity'] = $weather_now['humidity'].'%';
+        $wetterNowData['icon'] = 'https://darksky.net/images/weather-icons/'.$weather_now['icon'].'.png'; 
+
+        setvalue($this->GetIDForIdent("ID_Now"),$html);
+        setvalue($this->GetIDForIdent("ID_NowData"), json_encode($wetterNowData));      
+        return $html; 
+    } 
+
     
             
     /*-----------------------------------------------------------------------------
@@ -176,9 +241,9 @@ class MyWeather extends IPSModule
     Returns:    
         none
     ------------------------------------------------------------------------------  */
-    public  function Weather_Now_And_Next_Days($weather_daily){  
+    public  function Weather_Now_And_Next_Days($array_json){  
         
-        
+        $weather_daily = $array_json['daily']['data'];
         $html = '<head> 
         <meta charset="utf-8"> 
         <title>Wetter</title> 
@@ -193,7 +258,7 @@ class MyWeather extends IPSModule
 
             $html.= '<tr>'; 
             $i=0;
-            foreach ($weather_daily['daily']['data'] as $day => $data){ 
+            foreach ($weather_daily as $day => $data){ 
                 $i = $i +1;
                 if ($this->isToday($data['time'])){ 
                    $weekday = "Heute"; 
@@ -244,6 +309,7 @@ class MyWeather extends IPSModule
                 $wetterData[$i]['windGust'] = $data['windGust'].' km/h';
                 $wetterData[$i]['cloudCover'] = $this->ConvertPercent($data['cloudCover']).' %';
                 $wetterData[$i]['humidity'] = $this->ConvertPercent($data['humidity']).' %';
+                $wetterData[$i]['icon'] = 'https://darksky.net/images/weather-icons/'.$data['icon'].'.png';
  
             } 
            
