@@ -183,38 +183,40 @@ class MyWeather extends IPSModule
 
         for($i=0;$i<7;$i++) 
          { 
-             $day = utf8_decode($days[$i]->time); 
-             $summary = utf8_decode($days[$i]->summary); 
-             $temphigh = utf8_decode($days[$i]->temperatureHigh); 
-             $templow = utf8_decode($days[$i]->temperatureLow); 
-             @$precipType = utf8_decode($days[$i]->precipType); 
-             $niederschlag = ""; 
-             if ($precipType == "rain") $niederschlag = "Regen"; 
-             if ($precipType == "snow") $niederschlag = "Schnee"; 
-             if ($precipType == "sleet") $niederschlag = "Schneeregen"; 
-             $niedr_prop = utf8_decode($days[$i]->precipProbability); 
-             $wind = utf8_decode($days[$i]->windSpeed); 
-             $boen = utf8_decode($days[$i]->windGust); 
-             $wolken = utf8_decode($days[$i]->cloudCover); 
-             $humidity = utf8_decode($days[$i]->humidity); 
-             
+            $day = utf8_decode($days[$i]->time); 
+            $summary = utf8_decode($days[$i]->summary); 
+            $temphigh = utf8_decode($days[$i]->temperatureHigh); 
+            $templow = utf8_decode($days[$i]->temperatureLow); 
+            @$precipType = utf8_decode($days[$i]->precipType); 
+            $niederschlag = ""; 
+            if ($precipType == "rain") $niederschlag = "Regen"; 
+            if ($precipType == "snow") $niederschlag = "Schnee"; 
+            if ($precipType == "sleet") $niederschlag = "Schneeregen"; 
+            $niedr_prop = utf8_decode($days[$i]->precipProbability); 
+            $wind = utf8_decode($days[$i]->windSpeed); 
+            $boen = utf8_decode($days[$i]->windGust); 
+            $wolken = utf8_decode($days[$i]->cloudCover); 
+            $humidity = utf8_decode($days[$i]->humidity); 
+            $tag = date('d',intval($day));     
+            $Wochentag = $WochenTage[date('w',intval($day))]; 
             $Icon =  utf8_decode($days[$i]->icon);     
             $IconUrl = 'https://darksky.net/images/weather-icons/'.$Icon.'.png'; 
             $html = '<td align="center" valign="top"  style="width:110px;padding-left:20px;"> 
                         '.$Wochentag.'<br> 
                         <img width="70" height="70" src="'.$IconUrl.'" style="float:left;">';    
-                            
-             $tag = date('d',intval($day));     
-             $Wochentag = $WochenTage[date('w',intval($day))];      
-             $message[$tag] = array(date('d.m',intval($day)),$WochenTage[date('w',intval($day))],$summary,$temphigh,$templow,$niederschlag,$niedr_prop,$wind,$boen,$wolken,$humidity); 
-             $box[] = "$Wochentag $summary / $niederschlag $niedr_prop % / $temphigh °C $templow °C"; 
+
+
+            $message[$tag] = array(date('d.m',intval($day)),$WochenTage[date('w',intval($day))],$summary,$temphigh,$templow,$niederschlag,$niedr_prop,$wind,$boen,$wolken,$humidity); 
+            $box[] = "$Wochentag $summary / $niederschlag $niedr_prop % / $temphigh °C $templow °C"; 
          } 
-        return $IconUrl;
+         
+            
+        return $days;
     }
     
             
     /*-----------------------------------------------------------------------------
-    Function: getIconURL
+    Function: Weather_Now_And_Next_Days
     ...............................................................................
     Beschreibung
     ...............................................................................
@@ -224,13 +226,370 @@ class MyWeather extends IPSModule
     Returns:    
         none
     ------------------------------------------------------------------------------  */
-    public function getIconURL(){
+    public  function Weather_Now_And_Next_Days($weather_daily){  
             
-     
+        $html = '<head> 
+        <meta charset="utf-8"> 
+        <title>Wetter</title> 
+        <!--The following script tag downloads a font from the Adobe Edge Web Fonts server for use within the web page. We recommend that you do not modify it.--> 
+        <script>var __adobewebfontsappname__="dreamweaver"</script> 
+        <script src="http://use.edgefonts.net/source-sans-pro:n6:default;acme:n4:default;bilbo:n4:default.js" type="text/javascript"></script>'. 
+        $this->Get_CSS().' 
+        </head> 
+
+        <body>'; 
+           $html .= '<table>'; 
+
+           $html.= '<tr>'; 
+
+           foreach ($weather_daily as $day => $data){ 
+              if (isToday($data['time'])){ 
+                 $weekday = "Heute"; 
+              } else { 
+                 $day_names = array("Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"); 
+                 $weekday = $day_names[date("w",intval($data['time']))]; 
+              } 
+
+              $html.= '<td class="weathertablecell"> 
+                          <section class="weatherframe"> 
+                               <div class="weathertitledate">'.$weekday.'</div> 
+                           <figure class="cap-bot"><img src="https://darksky.net/images/weather-icons/'.$data['icon'].'.png" alt="Wettericon" width="70" height="70"><figcaption>'.$data['summary'].'</figcaption></figure> 
+                           <section class="weatherpicright"> 
+                               <div class="temperaturemax">'.round($data['temperatureHigh'], 1).' °C</div> 
+                               <div class="temperaturemin">'.round($data['temperatureLow'], 1).' °C</div> 
+                           </section> 
+                           <section class="weatherpicbottom"> 
+                                  <div class="wind">Ø Wind: '.$data['windSpeed'].' km/h</div> 
+                                  <div class="wind">Ø Wind Böen: '.$data['windGust'].' km/h</div> 
+                                  <div class="cloud">Wolken: '.$this->ConvertPercent($data['cloudCover']).' %</div> 
+                                  <div class="humidity">Ø Feuchtigkeit: '.$this->ConvertPercent($data['humidity']).' %</div>'; 
+            if(isset($data['precipType'])) 
+            { 
+                $precipitation_type = $this->Get_PrecipitationType($data['precipType']); 
+                if($precipitation_type != "") 
+                { 
+                $html.= '<div class="precipitationtype">Niederschlagstyp: '.$this->$precipitation_type.'</div>'; 
+                } 
+            } 
+
+            $html.= '<div class="precipitationprobability">Regen: '.$this->ConvertPercent($data['precipProbability']).' %</div>                           
+                            </section> 
+                           </section> 
+                           </td>'; 
+           } 
+           $html .= "</tr> 
+                    </table>"; 
+           $html .= '</body> 
+        </html>'; 
+           return $html; 
+        }  
         
             
-    } 
+    /*-----------------------------------------------------------------------------
+    Function: Weather_Now_And_Next_Days
+    ...............................................................................
+    Beschreibung
+    ...............................................................................
+    Parameters: 
+        none
+    ...............................................................................
+    Returns:    
+        none
+    ------------------------------------------------------------------------------  */     
+    public function Get_PrecipitationType($precipitation_type) 
+    { 
+        $precipitation_type = ""; 
+        if ($precipitation_type == "rain") 
+        { 
+            $precipitation_type = "Regen"; 
+        }  
+        if ($precipitation_type == "snow") 
+        { 
+            $precipitation_type = "Schnee"; 
+        } 
+        if ($precipitation_type == "sleet") 
+        { 
+            $precipitation_type = "Schneeregen"; 
+        } 
 
+        return $precipitation_type; 
+    }
+        
+
+    /*-----------------------------------------------------------------------------
+    Function: isToday
+    ...............................................................................
+    Beschreibung
+    ...............................................................................
+    Parameters: 
+        none
+    ...............................................................................
+    Returns:    
+        none
+    ------------------------------------------------------------------------------  */   
+    public function isToday($time){ 
+       $begin = mktime(0, 0, 0); 
+       $end = mktime(23, 59, 59); 
+       // check if given time is between begin and end 
+       return (($time >= $begin) && ($time <= $end)); 
+    } 
+    
+    
+    /*-----------------------------------------------------------------------------
+    Function: ConvertPercent
+    ...............................................................................
+    Beschreibung
+    ...............................................................................
+    Parameters: 
+        none
+    ...............................................................................
+    Returns:    
+        none
+    ------------------------------------------------------------------------------  */   
+    public function ConvertPercent($value) 
+    { 
+        $percentage = $value * 100; 
+        return $percentage; 
+    }
+    
+    
+    
+        
+    /*-----------------------------------------------------------------------------
+    Function: Get_CSS
+    ...............................................................................
+    Beschreibung
+    ...............................................................................
+    Parameters: 
+        none
+    ...............................................................................
+    Returns:    
+        none
+    ------------------------------------------------------------------------------  */  
+    public function Get_CSS() 
+    { 
+        $style = '<style> 
+        body { background-color:transparent; } 
+        .weathertablecell { 
+            width: 170px; 
+            text-shadow: 1px 1px 0px rgba(66,66,66,1.00); 
+            vertical-align: top; 
+            padding-bottom: 0px; 
+            padding-top: 0px; 
+            margin-top: 0px; 
+            margin-right: 0px; 
+            margin-bottom: 0px; 
+            margin-left: 0px; 
+        } 
+        .weatherframe { 
+            background-color: rgba(136,123,123,0.55); 
+            border-radius: 25px; 
+            padding-left: 0px; 
+            margin-left: 4px; 
+            margin-right: 4px; 
+            padding-top: 0px; 
+            margin-top: 3px; 
+            -webkit-box-shadow: 2px 2px 13px 0px rgba(50,49,49,1.00); 
+            box-shadow: 2px 2px 13px 0px rgba(50,49,49,1.00); 
+            padding-bottom: 0px; 
+            margin-bottom: 0px; 
+            position: relative; 
+            height: 275px; 
+        } 
+
+        .weathertitlehour { 
+            color: rgba(241,241,241,1.00); 
+            font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "DejaVu Sans", Verdana, sans-serif; 
+            text-align: center; 
+            padding-top: 6px; 
+        } 
+        figure { 
+            display: block; 
+            position: relative; 
+            overflow: hidden; 
+            margin-left: 1px; 
+            margin-right: 1px; 
+            margin-top: 0px; 
+        } 
+        figcaption { 
+            position: absolute; 
+            background: rgba(0,0,0,0.55); 
+            color: white; 
+            padding: 10px 20px; 
+            opacity: 0; 
+            bottom: 0; 
+            left: -30%; 
+            -webkit-transition: all 0.6s ease; 
+            -moz-transition: all 0.6s ease; 
+            -o-transition: all 0.6s ease; 
+            font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "DejaVu Sans", Verdana, sans-serif; 
+            font-size: xx-small; 
+        } 
+        figure:hover figcaption { 
+          opacity: 1; 
+          left: 0; 
+        } 
+        .cap-left figcaption { bottom: 0; left: -30%; } 
+        .cap-left:hover figcaption { left: 0; } 
+
+        .cap-right figcaption { bottom: 0; right: -30%; } 
+        .cap-right:hover figcaption { right: 0; } 
+
+        .cap-top figcaption { left: 0; top: -30%; } 
+        .cap-top:hover figcaption { top: 0; } 
+
+        .cap-bot figcaption { left: 0; bottom: -30%;} 
+        .cap-bot:hover figcaption { bottom: 0; } 
+        figure:before {  
+          content: "?";  
+          position: absolute;  
+          background: rgba(255,255,255,0.75);  
+          color: black; 
+          width: 24px; 
+          height: 24px; 
+          -webkit-border-radius: 12px; 
+          -moz-border-radius:    12px; 
+          border-radius:         12px; 
+          text-align: center; 
+          font-size: 14px; 
+          line-height: 24px; 
+          /* Only Fx 4 supporting transitions on psuedo elements so far... */ 
+          -webkit-transition: all 0.6s ease; 
+          -moz-transition: all 0.6s ease; 
+          -o-transition: all 0.6s ease; 
+          opacity: 0.75;     
+        } 
+        figure:hover:before { 
+          opacity: 0; 
+        } 
+        .temperature { 
+            position: relative; 
+            text-align: right; 
+            color: rgba(235,235,235,1.00); 
+            padding-right: 5px; 
+            font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "DejaVu Sans", Verdana, sans-serif; 
+            text-shadow: 2px 2px 4px rgba(51,51,51,1.00); 
+        } 
+        .humidity { 
+            position: relative; 
+            text-align: right; 
+            color: rgba(235,235,235,1.00); 
+            padding-right: 5px; 
+            font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "DejaVu Sans", Verdana, sans-serif; 
+            text-shadow: 2px 2px 4px rgba(51,51,51,1.00); 
+        } 
+        .wind { 
+            font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "DejaVu Sans", Verdana, sans-serif; 
+            color: rgba(225,225,225,1.00); 
+            font-size: x-small; 
+            text-align: center; 
+            text-shadow: 1px 1px 1px rgba(37,36,36,1.00); 
+        } 
+        .weathertitledate { 
+            padding-top: 6px; 
+            text-align: center; 
+            color: rgba(241,241,241,1.00); 
+            font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "DejaVu Sans", Verdana, sans-serif; 
+        } 
+        .temperaturefeel { 
+            font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "DejaVu Sans", Verdana, sans-serif; 
+            color: rgba(225,225,225,1.00); 
+            font-size: x-small; 
+            text-align: center; 
+            text-shadow: 1px 1px 1px rgba(37,36,36,1.00); 
+        } 
+        .pressure { 
+            font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "DejaVu Sans", Verdana, sans-serif; 
+            color: rgba(225,225,225,1.00); 
+            font-size: x-small; 
+            text-align: center; 
+            text-shadow: 1px 1px 1px rgba(37,36,36,1.00); 
+        } 
+        .rain { 
+            font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "DejaVu Sans", Verdana, sans-serif; 
+            color: rgba(225,225,225,1.00); 
+            font-size: x-small; 
+            text-align: center; 
+            text-shadow: 1px 1px 1px rgba(37,36,36,1.00); 
+        } 
+        .precipitationtype { 
+            font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "DejaVu Sans", Verdana, sans-serif; 
+            color: rgba(225,225,225,1.00); 
+            font-size: x-small; 
+            text-align: center; 
+            text-shadow: 1px 1px 1px rgba(37,36,36,1.00); 
+        } 
+        .precipitationprobability { 
+            font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "DejaVu Sans", Verdana, sans-serif; 
+            color: rgba(225,225,225,1.00); 
+            font-size: x-small; 
+            text-align: center; 
+            text-shadow: 1px 1px 1px rgba(37,36,36,1.00); 
+        } 
+        .cloud { 
+            font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "DejaVu Sans", Verdana, sans-serif; 
+            color: rgba(225,225,225,1.00); 
+            font-size: x-small; 
+            text-align: center; 
+            text-shadow: 1px 1px 1px rgba(37,36,36,1.00); 
+        } 
+        .humidity { 
+            font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "DejaVu Sans", Verdana, sans-serif; 
+            color: rgba(225,225,225,1.00); 
+            font-size: x-small; 
+            text-align: center; 
+            text-shadow: 1px 1px 1px rgba(37,36,36,1.00); 
+        } 
+        .weatherframe .weatherpicright { 
+            position: relative; 
+            top: -18px; 
+        } 
+        .weatherframe .weatherpicbottom { 
+            position: relative; 
+            left: auto; 
+            right: auto; 
+            top: -20px; 
+        } 
+
+
+        .visibility { 
+            font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "DejaVu Sans", Verdana, sans-serif; 
+            color: rgba(225,225,225,1.00); 
+            font-size: x-small; 
+            text-align: center; 
+            text-shadow: 1px 1px 1px rgba(37,36,36,1.00); 
+        } 
+        .temperaturemax { 
+            position: relative; 
+            text-align: right; 
+            color: rgba(235,235,235,1.00); 
+            padding-right: 5px; 
+            font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "DejaVu Sans", Verdana, sans-serif; 
+            text-shadow: 2px 2px 4px rgba(51,51,51,1.00); 
+        } 
+        .temperaturemin { 
+            position: relative; 
+            text-align: right; 
+            color: rgba(235,235,235,1.00); 
+            padding-right: 5px; 
+            font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "DejaVu Sans", Verdana, sans-serif; 
+            text-shadow: 2px 2px 4px rgba(51,51,51,1.00); 
+        } 
+        </style>'; 
+        return $style; 
+    }  
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     
     
    /* _______________________________________________________________________
