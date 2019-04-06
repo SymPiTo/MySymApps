@@ -244,7 +244,7 @@ class MyWeather extends IPSModule
 
            $html.= '<tr>'; 
 
-           foreach ($weather_daily as $day => $data){ 
+           foreach ($weather_daily['daily'] as $day => $data){ 
             print_r($day);
             /*   
               if ($this->isToday($data['time'])){ 
