@@ -222,7 +222,18 @@ class MyWeather extends IPSModule
         $wetterNowData['temperature'] = round($weather_now['temperature'], 1).' °C';
         $wetterNowData['humidity'] = $weather_now['humidity'].'%';
         $wetterNowData['icon'] = 'https://darksky.net/images/weather-icons/'.$weather_now['icon'].'.png'; 
-
+        $wetterNowData['ozone'] = $weather_now['ozone'].'  µg/m3';
+        $wetterNowData['uvIndex'] = $weather_now['uvIndex'].'';
+        $wetterNowData['cloudCover'] = $weather_now['cloudCover'];
+        $wetterNowData['windBearing'] = $weather_now['windBearing'];
+        $wetterNowData['windGust'] = $weather_now['windGust'];
+        $wetterNowData['dewPoint'] = $weather_now['dewPoint'];
+        $wetterNowData['precipType'] = $weather_now['precipType'];
+        $wetterNowData['precipProbability'] = $weather_now['precipProbability'];
+        $wetterNowData['precipIntensity'] = $weather_now['precipIntensity'];
+        $wetterNowData['summary'] = $weather_now['summary'];
+        $wetterNowData['time'] = $weather_now['time'];
+        
         setvalue($this->GetIDForIdent("ID_Now"),$html);
         setvalue($this->GetIDForIdent("ID_NowData"), json_encode($wetterNowData));      
         return $wetterNowData; 
