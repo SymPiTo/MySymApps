@@ -245,7 +245,8 @@ class MyWeather extends IPSModule
            $html.= '<tr>'; 
 
            foreach ($weather_daily as $day => $data){ 
-            
+            print_r($day);
+            /*   
               if ($this->isToday($data['time'])){ 
                  $weekday = "Heute"; 
               } else { 
@@ -280,10 +281,15 @@ class MyWeather extends IPSModule
                            </section> 
                            </td>'; 
            } 
+           
+           
            $html .= "</tr> 
                     </table>"; 
            $html .= '</body> 
         </html>'; 
+           
+        */
+           }
            return $html; 
         }  
         
