@@ -243,7 +243,7 @@ class MyWeather extends IPSModule
            $html.= '<tr>'; 
 
            foreach ($weather_daily as $day => $data){ 
-              if (isToday($data['time'])){ 
+              if ($this->isToday($data['time'])){ 
                  $weekday = "Heute"; 
               } else { 
                  $day_names = array("Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"); 
