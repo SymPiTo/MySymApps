@@ -61,6 +61,7 @@ class MyWeather extends IPSModule
         //RegisterVariableString ($Ident,  $Name, $Profil, $Position )
         //Aufruf dieser Variable mit $this->GetIDForIdent("IDENTNAME")
         //$this->RegisterVariableString("SZ_MoFr", "SchaltZeiten Mo-Fr");
+        $this->RegisterVariableString ("ID_Week", "WeekFrame", ~"HTMLBox", 0);
  
         // Aktiviert die Standardaktion der Statusvariable zur Bedienbarkeit im Webfront
         //$this->EnableAction("IDENTNAME");
@@ -240,55 +241,55 @@ class MyWeather extends IPSModule
         </head> 
 
         <body>'; 
-           $html .= '<table>'; 
+            $html .= '<table>'; 
 
-           $html.= '<tr>'; 
+            $html.= '<tr>'; 
 
-           foreach ($weather_daily['daily']['data'] as $day => $data){ 
+            foreach ($weather_daily['daily']['data'] as $day => $data){ 
           
-              if ($this->isToday($data['time'])){ 
-                 $weekday = "Heute"; 
-              } else { 
-                 $day_names = array("Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"); 
-                 $weekday = $day_names[date("w",intval($data['time']))]; 
-              } 
-
-              $html.= '<td class="weathertablecell"> 
-                          <section class="weatherframe"> 
-                               <div class="weathertitledate">'.$weekday.'</div> 
-                           <figure class="cap-bot"><img src="https://darksky.net/images/weather-icons/'.$data['icon'].'.png" alt="Wettericon" width="70" height="70"><figcaption>'.$data['summary'].'</figcaption></figure> 
-                           <section class="weatherpicright"> 
-                               <div class="temperaturemax">'.round($data['temperatureHigh'], 1).' °C</div> 
-                               <div class="temperaturemin">'.round($data['temperatureLow'], 1).' °C</div> 
-                           </section> 
-                           <section class="weatherpicbottom"> 
-                                  <div class="wind">Ø Wind: '.$data['windSpeed'].' km/h</div> 
-                                  <div class="wind">Ø Wind Böen: '.$data['windGust'].' km/h</div> 
-                                  <div class="cloud">Wolken: '.$this->ConvertPercent($data['cloudCover']).' %</div> 
-                                  <div class="humidity">Ø Feuchtigkeit: '.$this->ConvertPercent($data['humidity']).' %</div>'; 
-            if(isset($data['precipType'])) 
-            { 
-                $precipitation_type = $this->Get_PrecipitationType($data['precipType']); 
-                if($precipitation_type != "") 
-                { 
-                $html.= '<div class="precipitationtype">Niederschlagstyp: '.$this->$precipitation_type.'</div>'; 
+                if ($this->isToday($data['time'])){ 
+                   $weekday = "Heute"; 
+                } else { 
+                   $day_names = array("Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"); 
+                   $weekday = $day_names[date("w",intval($data['time']))]; 
                 } 
-            } 
 
-            $html.= '<div class="precipitationprobability">Regen: '.$this->ConvertPercent($data['precipProbability']).' %</div>                           
-                            </section> 
-                           </section> 
-                           </td>'; 
-           } 
+                $html.= '<td class="weathertablecell"> 
+                            <section class="weatherframe"> 
+                                 <div class="weathertitledate">'.$weekday.'</div> 
+                             <figure class="cap-bot"><img src="https://darksky.net/images/weather-icons/'.$data['icon'].'.png" alt="Wettericon" width="70" height="70"><figcaption>'.$data['summary'].'</figcaption></figure> 
+                             <section class="weatherpicright"> 
+                                 <div class="temperaturemax">'.round($data['temperatureHigh'], 1).' °C</div> 
+                                 <div class="temperaturemin">'.round($data['temperatureLow'], 1).' °C</div> 
+                             </section> 
+                             <section class="weatherpicbottom"> 
+                                    <div class="wind">Ø Wind: '.$data['windSpeed'].' km/h</div> 
+                                    <div class="wind">Ø Wind Böen: '.$data['windGust'].' km/h</div> 
+                                    <div class="cloud">Wolken: '.$this->ConvertPercent($data['cloudCover']).' %</div> 
+                                    <div class="humidity">Ø Feuchtigkeit: '.$this->ConvertPercent($data['humidity']).' %</div>'; 
+                if(isset($data['precipType'])) 
+                { 
+                    $precipitation_type = $this->Get_PrecipitationType($data['precipType']); 
+                    if($precipitation_type != "") 
+                    { 
+                    $html.= '<div class="precipitationtype">Niederschlagstyp: '.$this->$precipitation_type.'</div>'; 
+                    } 
+                } 
+
+                $html.= '<div class="precipitationprobability">Regen: '.$this->ConvertPercent($data['precipProbability']).' %</div>                           
+                                </section> 
+                               </section> 
+                               </td>'; 
+                } 
            
            
-           $html .= "</tr> 
-                    </table>"; 
-           $html .= '</body> 
-        </html>'; 
-           
+                $html .= "</tr> 
+                         </table>"; 
+                $html .= '</body> 
+             </html>'; 
+            setvalue($this->GetIDForIdent("ID_Week"),$html);
   
-           return $html; 
+            return $html; 
         }  
         
             
