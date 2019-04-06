@@ -202,7 +202,7 @@ class MyWeather extends IPSModule
              $message[$tag] = array(date('d.m',intval($day)),$WochenTage[date('w',intval($day))],$summary,$temphigh,$templow,$niederschlag,$niedr_prop,$wind,$boen,$wolken,$humidity); 
              $box[] = "$Wochentag $summary / $niederschlag $niedr_prop % / $temphigh °C $templow °C"; 
          } 
-        return $box[];
+        return $box;
     }
     
     
