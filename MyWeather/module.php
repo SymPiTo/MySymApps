@@ -228,7 +228,6 @@ class MyWeather extends IPSModule
         $wetterNowData['windBearing'] = $weather_now['windBearing'];
         $wetterNowData['windGust'] = $weather_now['windGust'];
         $wetterNowData['dewPoint'] = $weather_now['dewPoint'];
-        $wetterNowData['precipType'] = $weather_now['precipType'];
         $wetterNowData['precipProbability'] = $weather_now['precipProbability'];
         $wetterNowData['precipIntensity'] = $weather_now['precipIntensity'];
         $wetterNowData['summary'] = $weather_now['summary'];
