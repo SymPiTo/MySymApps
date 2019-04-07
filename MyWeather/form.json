@@ -1,7 +1,7 @@
 {
 	"elements":
 	[
-            {       "name": "ID_Active",          
+            {       "name": "ID_active",          
                     "type": "CheckBox",             
                     "caption": "active" 
             },
