@@ -42,10 +42,11 @@ class MyWeather extends IPSModule
         // Aufruf dieser Form Variable mit  $this->ReadPropertyFloat("IDENTNAME")
         //
         //$this->RegisterPropertyFloat("IDENTNAME", 0.5);
-        //$this->RegisterPropertyBoolean("IDENTNAME", false);
+        $this->RegisterPropertyBoolean("ID_active", false);
         $this->RegisterPropertyString("key", "111111111111111111");
         $this->RegisterPropertyString("Latitude", 49.3987524);  
         $this->RegisterPropertyString("longitude", 8.6724335);  
+        
         
         //Integer Variable anlegen
         //integer RegisterVariableInteger ( string $Ident, string $Name, string $Profil, integer $Position )
@@ -72,8 +73,8 @@ class MyWeather extends IPSModule
         //IPS_SetVariableCustomProfile(§this->GetIDForIdent("Mode"), "Rollo.Mode");
         
         //anlegen eines Timers
-        //$this->RegisterTimer("TimerName", 0, "FSSC_reset($_IPS[!TARGET!>]);");
-            
+        //$this->RegisterTimer("TimerGetWeather", 0, "FSSC_reset($_IPS[!TARGET!>]);");
+        $this->RegisterTimer("TimerGetWeather", 0, "W_update()");    
 
 
     }
@@ -90,7 +91,12 @@ class MyWeather extends IPSModule
         SunRiseEvent".$this->InstanceID       -   cyclice Time Event jeden Tag at SunRise
     ------------------------------------------------------------- */
     public function ApplyChanges()
-    {
+    {   if($this->ReadPropertyBoolean("ID_active")){
+            $this->SetTimerInterval("TimerGetWeather", 60000);
+        }
+        else{
+           $this->SetTimerInterval("TimerGetWeather", 0); 
+        }
 	//Never delete this line!
         parent::ApplyChanges();
        
@@ -335,7 +341,27 @@ class MyWeather extends IPSModule
             return $wetterData; 
         }  
         
-            
+
+        
+    /*-----------------------------------------------------------------------------
+    Function: update
+    ...............................................................................
+    Beschreibung: 
+    ...............................................................................
+    Parameters: 
+         
+    ...............................................................................
+    Returns:    
+         
+    ------------------------------------------------------------------------------  */
+    public  function update(){  
+        $newData = $this->getAPIData();
+        Weather_Now($newData);
+        Weather_Now_And_Next_Days($newData);
+    }    
+        
+        
+        
     /*-----------------------------------------------------------------------------
     Function: Get_PrecipitationType
     ...............................................................................
