@@ -91,15 +91,16 @@ class MyWeather extends IPSModule
         SunRiseEvent".$this->InstanceID       -   cyclice Time Event jeden Tag at SunRise
     ------------------------------------------------------------- */
     public function ApplyChanges()
-    {   if($this->ReadPropertyBoolean("ID_active")){
+    {   
+	//Never delete this line!
+        parent::ApplyChanges();
+        
+        if($this->ReadPropertyBoolean("ID_active")){
             $this->SetTimerInterval("TimerGetWeather", 60000);
         }
         else{
            $this->SetTimerInterval("TimerGetWeather", 0); 
         }
-	//Never delete this line!
-        parent::ApplyChanges();
-       
     }
     
    /* ------------------------------------------------------------ 
