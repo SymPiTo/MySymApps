@@ -220,11 +220,11 @@ class MyWeather extends IPSModule
         $wetterNowData['windSpeed'] = $weather_now['windSpeed'].' km/h';
         $wetterNowData['apparentTemperature'] = round($weather_now['apparentTemperature'], 1).' °C';
         $wetterNowData['temperature'] = round($weather_now['temperature'], 1).' °C';
-        $wetterNowData['humidity'] = $weather_now['humidity'].'%';
+        $wetterNowData['humidity'] = $this->ConvertPercent($weather_now['humidity']).'%';
         $wetterNowData['icon'] = 'https://darksky.net/images/weather-icons/'.$weather_now['icon'].'.png'; 
         $wetterNowData['ozone'] = $weather_now['ozone'].'  µg/m3';
         $wetterNowData['uvIndex'] = $weather_now['uvIndex'].'';
-        $wetterNowData['cloudCover'] = $weather_now['cloudCover'];
+        $wetterNowData['cloudCover'] = $this->ConvertPercent($weather_now['cloudCover']);
         $wetterNowData['windBearing'] = $weather_now['windBearing'];
         $wetterNowData['windGust'] = $weather_now['windGust'];
         $wetterNowData['dewPoint'] = $weather_now['dewPoint'];
