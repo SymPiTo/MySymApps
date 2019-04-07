@@ -218,8 +218,8 @@ class MyWeather extends IPSModule
         $wetterNowData['visibility'] = $weather_now['visibility'].' km';
         $wetterNowData['pressure'] = $weather_now['pressure'].' hPa';
         $wetterNowData['windSpeed'] = $weather_now['windSpeed'].' km/h';
-        $wetterNowData['apparentTemperature'] = "gefühle Temp.: ".round($weather_now['apparentTemperature'], 1).' °C';
-        $wetterNowData['temperature'] = "Temperatur ".round($weather_now['temperature'], 1).' °C';
+        $wetterNowData['apparentTemperature'] = round($weather_now['apparentTemperature'], 1).' °C';
+        $wetterNowData['temperature'] = round($weather_now['temperature'], 1).' °C';
         $wetterNowData['humidity'] = $weather_now['humidity'].'%';
         $wetterNowData['icon'] = 'https://darksky.net/images/weather-icons/'.$weather_now['icon'].'.png'; 
         $wetterNowData['ozone'] = $weather_now['ozone'].'  µg/m3';
