@@ -94,7 +94,7 @@ class MyWeather extends IPSModule
         parent::ApplyChanges();
         
         if($this->ReadPropertyBoolean("ID_active")){
-            $this->SetTimerInterval("TimerGetWeather", 600000);
+            $this->SetTimerInterval("TimerGetWeather", 3600000);
         }
         else{
            $this->SetTimerInterval("TimerGetWeather", 0); 
