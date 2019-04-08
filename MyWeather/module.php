@@ -355,8 +355,8 @@ class MyWeather extends IPSModule
     ------------------------------------------------------------------------------  */
     public  function update(){  
         $newData = $this->getAPIData();
-        Weather_Now($newData);
-        Weather_Now_And_Next_Days($newData);
+        $this->Weather_Now($newData);
+        $this->Weather_Now_And_Next_Days($newData);
     }    
         
         
