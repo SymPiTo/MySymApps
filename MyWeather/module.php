@@ -73,9 +73,7 @@ class MyWeather extends IPSModule
         //IPS_SetVariableCustomProfile(§this->GetIDForIdent("Mode"), "Rollo.Mode");
         
         //anlegen eines Timers
-        //$this->RegisterTimer("TimerGetWeather", 0, "FSSC_reset($_IPS[!TARGET!>]);");
-        $this->RegisterTimer("TimerGetWeather", 0, "W_update()");    
-
+        $this->RegisterTimer("TimerGetWeather", 0, 'W_update($_IPS[\'TARGET\']);');
 
     }
    /* ------------------------------------------------------------ 
