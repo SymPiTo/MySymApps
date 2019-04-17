@@ -48,43 +48,7 @@ class MyFS20_SC extends IPSModule
 	//Never delete this line!
         parent::Create();
 		
-	//These lines are parsed on Symcon Startup or Instance creation
-        //You cannot use variables here. Just static values.}
-        
-        // Variable aus dem Instanz Formular registrieren (zugänglich zu machen)
-        // Aufruf dieser Form Variable mit $Tup = $this->ReadPropertyFloat('IDENTNAME'); 
-        $this->RegisterPropertyInteger("FS20RSU_ID", 0);
-        $this->RegisterPropertyInteger ("SunSet_ID", 57942);
-        $this->RegisterPropertyInteger ("SunRise_ID", 11938);
-        $this->RegisterPropertyFloat("Time_OU", 0.5);
-        $this->RegisterPropertyFloat("Time_UO", 0.5);
-        $this->RegisterPropertyFloat("Time_OM", 0.5);
-        $this->RegisterPropertyFloat("Time_UM", 0.5);
-        $this->RegisterPropertyBoolean("SunRiseActive", false);
-        
-            
-        
-        //Integer Variable anlegen
-        //integer RegisterVariableInteger ( string $Ident, string $Name, string $Profil, integer $Position )
-        // Aufruf dieser Variable mit "$this->GetIDForIdent("IDENTNAME")"
-        $this->RegisterVariableInteger("FSSC_Position", "Position", "Rollo.Position");
-        $this->RegisterVariableInteger("FSSC_Timer", "Timer", "");   
-        IPS_SetHidden($this->GetIDForIdent("FSSC_Timer"), true); //Objekt verstecken
-      
-        //Boolean Variable anlegen
-        //integer RegisterVariableBoolean ( string $Ident, string $Name, string $Profil, integer $Position )
-        // Aufruf dieser Variable mit "$this->GetIDForIdent("IDENTNAME")"
-        $this->RegisterVariableBoolean("UpDown", "Rollo Up/Down");
-        $this->RegisterVariableBoolean("Mode", "Mode");
-        $this->RegisterVariableBoolean("SS", "SunSet-Rise");
-        
 
-        
-        //String Variable anlegen
-        //RegisterVariableString (  $Ident,  $Name, $Profil, $Position )
-        // Aufruf dieser Variable mit "$this->GetIDForIdent("IDENTNAME")"
-        $this->RegisterVariableString("SZ_MoFr", "SchaltZeiten Mo-Fr");
-        $this->RegisterVariableString("SZ_SaSo", "SchaltZeiten Sa-So");
         
 
         
