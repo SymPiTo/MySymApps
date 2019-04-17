@@ -563,21 +563,7 @@ class MyFS20_SC extends IPSModule
         none
     ------------------------------------------------------------------------------ */
     private function updateSunRise(){
-        $SunRiseEventID = $this->GetIDForIdent("SunRiseEvent".$this->InstanceID);
-        // täglich, um x Uhr
-        $sunrise = getvalue(56145);
-        $sunrise_H = date("H", $sunrise); 
-        $sunrise_M = date("i", $sunrise); 
-        IPS_SetEventCyclicTimeFrom($SunRiseEventID, $sunrise_H, $sunrise_M, 0);
-                
-        $SunSetEventID = $this->GetIDForIdent("SunSetEvent".$this->InstanceID);
-        // täglich, um x Uhr
-        $sunset = getvalue(25305);
-        $sunset_H = date("H", $sunset); 
-        $sunset_M = date("i", $sunset); 
-        IPS_SetEventCyclicTimeFrom($SunSetEventID, $sunset_H, $sunset_M, 0);
-        setvalue($this->GetIDForIdent("SZ_MoFr"), $sunrise_H.":".$sunrise_M." - ".$sunset_H.":".$sunset_M);
-        setvalue($this->GetIDForIdent("SZ_SaSo"), $sunrise_H.":".$sunrise_M." - ".$sunset_H.":".$sunset_M);
+
     }    
         
 
@@ -595,7 +581,25 @@ class MyFS20_SC extends IPSModule
     ------------------------------------------------------------------------------ */
     public function GetWochenplanAction() 
     { 
+        $EventID = $this->GetIDForIdent("SwitchTimeEvent".$this->InstanceID);
+        
+        $a = IPS_GetEvent($EventID); 
 
+            $SP = $a['ScheduleGroups'][0]['Points']; 
+            $SP1A_H = $SP[0]['Start']['Hour'];
+            $SP1A_M = $SP[0]['Start']['Minute'];
+            $SP1B_H = $SP[1]['Start']['Hour'];
+            $SP1B_M = $SP[1]['Start']['Minute'];
+            $SP1 = str_pad($SP1A_H, 2, 0, STR_PAD_LEFT).":".str_pad($SP1A_M, 2, 0, STR_PAD_LEFT)." - ".str_pad($SP1B_H, 2, 0, STR_PAD_LEFT).":".str_pad($SP1B_M, 2, 0, STR_PAD_LEFT);
+            
+            $SP2A_H = $SP[0]['Start']['Hour'];
+            $SP2A_M = $SP[0]['Start']['Minute'];
+            $SP2B_H = $SP[1]['Start']['Hour'];
+            $SP2B_M = $SP[1]['Start']['Minute'];
+            $SP2 = str_pad($SP2A_H, 2, 0, STR_PAD_LEFT).":".str_pad($SP2A_M, 2, 0, STR_PAD_LEFT)." - ".str_pad($SP2B_H, 2, 0, STR_PAD_LEFT).":".str_pad($SP2B_M, 2, 0, STR_PAD_LEFT);
+            
+            setvalue($this->GetIDForIdent("SZ_MoFr"), $SP1);
+            setvalue($this->GetIDForIdent("SZ_SaSo"), $SP2);
         
     }  
     
