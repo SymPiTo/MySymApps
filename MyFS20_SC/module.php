@@ -103,6 +103,8 @@ class MyFS20_SC extends IPSModule
         $this->RegisterTimer("LaufzeitTimer", 0, "FSSC_reset(\$_IPS['TARGET']);");
         
         
+        
+        
     }
    /* ------------------------------------------------------------ 
      Function: ApplyChanges    
