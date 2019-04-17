@@ -122,64 +122,7 @@ class MyFS20_SC extends IPSModule
 	//Never delete this line!
         parent::ApplyChanges();
 
-    	// Anlegen des Wochenplans mit ($Name, $Ident, $Typ, $Parent, $Position)
-	$this->RegisterEvent("Wochenplan", "SwitchTimeEvent".$this->InstanceID, 2, $this->InstanceID, 20);    
-     
-	// Anlegen der Daten für den Wochenplan
-        IPS_SetEventScheduleGroup($this->GetIDForIdent("SwitchTimeEvent".$this->InstanceID), 0, 31); //Mo - Fr (1 + 2 + 4 + 8 + 16)
-        IPS_SetEventScheduleGroup($this->GetIDForIdent("SwitchTimeEvent".$this->InstanceID), 1, 96); //Sa + So (32 + 64)     
-        
-        //Aktionen erstellen mit  ($EventID, $ActionID, $Name, $Color, $Script)
-	$this->RegisterScheduleAction($this->GetIDForIdent("SwitchTimeEvent".$this->InstanceID), 0, "Up", 0x40FF00, "FSSC_SetRolloUp(\$_IPS['TARGET']);");
-	$this->RegisterScheduleAction($this->GetIDForIdent("SwitchTimeEvent".$this->InstanceID), 1, "Down", 0xFF0040, "FSSC_SetRolloDown(\$_IPS['TARGET']);");
-         
-        //Ändern von Schaltpunkten für Gruppe mit ID = 0 (Mo-Fr) ID = 1 (Sa-So)
-        $eid = $this->GetIDForIdent("SwitchTimeEvent".$this->InstanceID);
-        IPS_SetEventScheduleGroupPoint($eid, 0, 0, 7, 0, 0, 0); //Um 7:00 Aktion mit ID 0 (Up) aufrufen
-        IPS_SetEventScheduleGroupPoint($eid, 0, 1, 22, 30, 0, 1); //Um 22:30 Aktion mit ID 1 (Down) aufrufen
-        IPS_SetEventScheduleGroupPoint($eid, 1, 0, 8, 0, 0, 0); //Um 8:00 Aktion mit ID 0 (Up) aufrufen
-        IPS_SetEventScheduleGroupPoint($eid, 1, 1, 22, 00, 0, 1); //Um 22:30 Aktion mit ID 1 (Down) aufrufen
-        IPS_SetEventActive($eid, true);             //Ereignis  aktivieren
-
-
-
-
-
-            
-        if($this->ReadPropertyBoolean("SunRiseActive")){
-            IPS_SetEventActive($SunRiseEventID, true);             //Ereignis  aktivieren
-            IPS_SetEventActive($SunSetEventID, true);             //Ereignis  aktivieren
-            IPS_SetEventActive($eid, false);             //Ereignis  deaktivieren
-            IPS_SetHidden($eid, true); //Objekt verstecken
-            IPS_SetDisabled($eid, true);// Das Objekt wird inaktiv gesetzt.
-            IPS_SetHidden($SunRiseEventID, false); //Objekt verstecken
-            IPS_SetDisabled($SunRiseEventID, true);// Das Objekt wird inaktiv gesetzt.
-            IPS_SetHidden($SunSetEventID, false); //Objekt verstecken
-            IPS_SetDisabled($SunSetEventID, true);// Das Objekt wird inaktiv gesetzt.
-            $sunriseA = date(' H:i', $sunrise);
-            $sunsetA = date(' H:i', $sunset);
-            setvalue($this->GetIDForIdent("SZ_MoFr"), $sunriseA." - ".$sunsetA);
-            setvalue($this->GetIDForIdent("SZ_SaSo"), $sunriseA." - ".$sunsetA);
-        }
-        else {
-            IPS_SetEventActive($SunRiseEventID, false);             //Ereignis  deaktivieren
-            IPS_SetEventActive($SunSetEventID, false);             //Ereignis  deaktivieren
-            IPS_SetEventActive($eid, true);             //Ereignis  aktivieren
-            IPS_SetHidden($eid, false); //Objekt nicht verstecken
-            IPS_SetDisabled($eid, false);// Das Objekt wird aktiv gesetzt.
-            IPS_SetHidden($SunRiseEventID, true); //Objekt verstecken
-            IPS_SetDisabled($SunRiseEventID, true);// Das Objekt wird inaktiv gesetzt.
-            IPS_SetHidden($SunSetEventID, true); //Objekt verstecken
-            IPS_SetDisabled($SunSetEventID, true);// Das Objekt wird inaktiv gesetzt.
-            
-            $this->GetWochenplanAction(); 
-        } 
-
-        $SSstate = $this->ReadPropertyBoolean('SunRiseActive');
-        if ($SSstate){setvalue($this->GetIDForIdent("SS"), true);}
-        else {
-            setvalue($this->GetIDForIdent("SS"), false);
-        }
+  
     }
    /* ------------------------------------------------------------ 
       Function: RequestAction  
