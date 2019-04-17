@@ -87,8 +87,7 @@ class MyFS20_SC extends IPSModule
         $this->RegisterVariableString("SZ_SaSo", "SchaltZeiten Sa-So");
         
         // Aktiviert die Standardaktion der Statusvariable zur Bedienbarkeit im Webfront
-        $this->EnableAction("FSSC_Position");
-        IPS_SetVariableCustomProfile($this->GetIDForIdent("FSSC_Position"), "Rollo.Position");
+            
      
             
         
@@ -215,20 +214,7 @@ class MyFS20_SC extends IPSModule
       Mode             -   Switch für Automatik/Manual
      ------------------------------------------------------------- */
     public function RequestAction($Ident, $Value) {
-         switch($Ident) {
-            case "FSSC_Position":
-                //Hier würde normalerweise eine Aktion z.B. das Schalten ausgeführt werden
-                //Ausgaben über 'echo' werden an die Visualisierung zurückgeleitet
-                $this->setRollo($Value);
-
-                //Neuen Wert in die Statusvariable schreiben
-                //SetValue($this->GetIDForIdent($Ident), $Value);
-                break;
-            
-
-            default:
-                throw new Exception("Invalid Ident");
-        }
+ 
  
     }
     /*  ----------------------------------------------------------------------------------------------------------------- 
