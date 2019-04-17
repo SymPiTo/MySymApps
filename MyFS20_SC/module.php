@@ -7,7 +7,7 @@ require_once(__DIR__ . "/../libs/NetworkTraits1.php");
   *
  * author PiTo
  * 
- * GITHUB = <https://github.com/SymPiTo/MySymCodes/tree/master/MyFS20_SC>
+ * GITHUB = <https://github.com/SymPiTo/MySymCodes/tree/master/MyFS20SC>
  * 
  * Version:1.0.2018.08.21
  */
