@@ -94,33 +94,7 @@ class MyFS20_SC extends IPSModule
       Mode             -   Switch für Automatik/Manual
      ------------------------------------------------------------- */
     public function RequestAction($Ident, $Value) {
-         switch($Ident) {
-            case "FSSC_Position":
-                //Hier würde normalerweise eine Aktion z.B. das Schalten ausgeführt werden
-                //Ausgaben über 'echo' werden an die Visualisierung zurückgeleitet
-                $this->setRollo($Value);
 
-                //Neuen Wert in die Statusvariable schreiben
-                //SetValue($this->GetIDForIdent($Ident), $Value);
-                break;
-            case "UpDown":
-                SetValue($this->GetIDForIdent($Ident), $Value);
-                if(getvalue($this->GetIDForIdent($Ident))){
-                    $this->SetRolloDown();  
-                }
-                else{
-                    $this->SetRolloUp();
-                }
-                break;
-             case "Mode":
-                $this->SetMode($Value);  
-                break;
-             case "SS":
-                $this->SetSunSet($Value);  
-                break;
-            default:
-                throw new Exception("Invalid Ident");
-        }
  
     }
     /*  ----------------------------------------------------------------------------------------------------------------- 
