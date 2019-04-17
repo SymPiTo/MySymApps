@@ -90,8 +90,7 @@ class MyFS20_SC extends IPSModule
         $this->EnableAction("FSSC_Position");
         IPS_SetVariableCustomProfile($this->GetIDForIdent("FSSC_Position"), "Rollo.Position");
      
-        $this->EnableAction("UpDown");
-        IPS_SetVariableCustomProfile($this->GetIDForIdent("UpDown"), "Rollo.UpDown");
+            
         
       
         
@@ -225,15 +224,7 @@ class MyFS20_SC extends IPSModule
                 //Neuen Wert in die Statusvariable schreiben
                 //SetValue($this->GetIDForIdent($Ident), $Value);
                 break;
-            case "UpDown":
-                SetValue($this->GetIDForIdent($Ident), $Value);
-                if(getvalue($this->GetIDForIdent($Ident))){
-                    $this->SetRolloDown();  
-                }
-                else{
-                    $this->SetRolloUp();
-                }
-                break;
+            
 
             default:
                 throw new Exception("Invalid Ident");
