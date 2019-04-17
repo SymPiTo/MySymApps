@@ -153,7 +153,7 @@ class MyFS20_SC extends IPSModule
         $SunRiseEventID = $this->GetIDForIdent("SunRiseEvent".$this->InstanceID);
         // täglich, um x Uhr
         $sunrise = getvalue($this->ReadPropertyInteger("SunRise_ID"));
-        $sunrise_H = date("H", $sunrise); 
+        $sunrise_H = date("h", $sunrise); 
         $sunrise_M = date("i", $sunrise); 
         IPS_SetEventCyclicTimeFrom($SunRiseEventID, $sunrise_H, $sunrise_M, 0);
         IPS_SetEventScript($SunRiseEventID, "FSSC_SetRolloUp(\$_IPS['TARGET']);");
