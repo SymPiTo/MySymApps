@@ -93,11 +93,7 @@ class MyFS20_SC extends IPSModule
         $this->EnableAction("UpDown");
         IPS_SetVariableCustomProfile($this->GetIDForIdent("UpDown"), "Rollo.UpDown");
         
-        $this->EnableAction("Mode");
-        IPS_SetVariableCustomProfile($this->GetIDForIdent("Mode"), "Rollo.Mode");
-
-        $this->EnableAction("SS");
-        IPS_SetVariableCustomProfile($this->GetIDForIdent("SS"), "Rollo.SunSet");        
+      
         
         //anlegen eines Timers
         $this->RegisterTimer("LaufzeitTimer", 0, "FSSC_reset(\$_IPS['TARGET']);");
@@ -238,12 +234,7 @@ class MyFS20_SC extends IPSModule
                     $this->SetRolloUp();
                 }
                 break;
-             case "Mode":
-                $this->SetMode($Value);  
-                break;
-             case "SS":
-                $this->SetSunSet($Value);  
-                break;
+
             default:
                 throw new Exception("Invalid Ident");
         }
