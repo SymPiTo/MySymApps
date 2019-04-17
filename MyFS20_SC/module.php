@@ -87,11 +87,17 @@ class MyFS20_SC extends IPSModule
         $this->RegisterVariableString("SZ_SaSo", "SchaltZeiten Sa-So");
         
         // Aktiviert die Standardaktion der Statusvariable zur Bedienbarkeit im Webfront
-            
+        $this->EnableAction("FSSC_Position");
+        IPS_SetVariableCustomProfile($this->GetIDForIdent("FSSC_Position"), "Rollo.Position");
      
-            
+        $this->EnableAction("UpDown");
+        IPS_SetVariableCustomProfile($this->GetIDForIdent("UpDown"), "Rollo.UpDown");
         
-      
+        $this->EnableAction("Mode");
+        IPS_SetVariableCustomProfile($this->GetIDForIdent("Mode"), "Rollo.Mode");
+
+        $this->EnableAction("SS");
+        IPS_SetVariableCustomProfile($this->GetIDForIdent("SS"), "Rollo.SunSet");        
         
         //anlegen eines Timers
         $this->RegisterTimer("LaufzeitTimer", 0, "FSSC_reset(\$_IPS['TARGET']);");
@@ -162,40 +168,7 @@ class MyFS20_SC extends IPSModule
         IPS_SetEventScript($SunSetEventID, "FSSC_SetRolloDown(\$_IPS['TARGET']);");
 
             
-        if($this->ReadPropertyBoolean("SunRiseActive")){
-            IPS_SetEventActive($SunRiseEventID, true);             //Ereignis  aktivieren
-            IPS_SetEventActive($SunSetEventID, true);             //Ereignis  aktivieren
-            IPS_SetEventActive($eid, false);             //Ereignis  deaktivieren
-            IPS_SetHidden($eid, true); //Objekt verstecken
-            IPS_SetDisabled($eid, true);// Das Objekt wird inaktiv gesetzt.
-            IPS_SetHidden($SunRiseEventID, false); //Objekt verstecken
-            IPS_SetDisabled($SunRiseEventID, true);// Das Objekt wird inaktiv gesetzt.
-            IPS_SetHidden($SunSetEventID, false); //Objekt verstecken
-            IPS_SetDisabled($SunSetEventID, true);// Das Objekt wird inaktiv gesetzt.
-            $sunriseA = date(' H:i', $sunrise);
-            $sunsetA = date(' H:i', $sunset);
-            setvalue($this->GetIDForIdent("SZ_MoFr"), $sunriseA." - ".$sunsetA);
-            setvalue($this->GetIDForIdent("SZ_SaSo"), $sunriseA." - ".$sunsetA);
-        }
-        else {
-            IPS_SetEventActive($SunRiseEventID, false);             //Ereignis  deaktivieren
-            IPS_SetEventActive($SunSetEventID, false);             //Ereignis  deaktivieren
-            IPS_SetEventActive($eid, true);             //Ereignis  aktivieren
-            IPS_SetHidden($eid, false); //Objekt nicht verstecken
-            IPS_SetDisabled($eid, false);// Das Objekt wird aktiv gesetzt.
-            IPS_SetHidden($SunRiseEventID, true); //Objekt verstecken
-            IPS_SetDisabled($SunRiseEventID, true);// Das Objekt wird inaktiv gesetzt.
-            IPS_SetHidden($SunSetEventID, true); //Objekt verstecken
-            IPS_SetDisabled($SunSetEventID, true);// Das Objekt wird inaktiv gesetzt.
-            
-            $this->GetWochenplanAction(); 
-        } 
 
-        $SSstate = $this->ReadPropertyBoolean('SunRiseActive');
-        if ($SSstate){setvalue($this->GetIDForIdent("SS"), true);}
-        else {
-            setvalue($this->GetIDForIdent("SS"), false);
-        }
     }
    /* ------------------------------------------------------------ 
       Function: RequestAction  
@@ -214,7 +187,33 @@ class MyFS20_SC extends IPSModule
       Mode             -   Switch für Automatik/Manual
      ------------------------------------------------------------- */
     public function RequestAction($Ident, $Value) {
- 
+         switch($Ident) {
+            case "FSSC_Position":
+                //Hier würde normalerweise eine Aktion z.B. das Schalten ausgeführt werden
+                //Ausgaben über 'echo' werden an die Visualisierung zurückgeleitet
+                $this->setRollo($Value);
+
+                //Neuen Wert in die Statusvariable schreiben
+                //SetValue($this->GetIDForIdent($Ident), $Value);
+                break;
+            case "UpDown":
+                SetValue($this->GetIDForIdent($Ident), $Value);
+                if(getvalue($this->GetIDForIdent($Ident))){
+                    $this->SetRolloDown();  
+                }
+                else{
+                    $this->SetRolloUp();
+                }
+                break;
+             case "Mode":
+                $this->SetMode($Value);  
+                break;
+             case "SS":
+                $this->SetSunSet($Value);  
+                break;
+            default:
+                throw new Exception("Invalid Ident");
+        }
  
     }
     /*  ----------------------------------------------------------------------------------------------------------------- 
