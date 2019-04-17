@@ -86,21 +86,7 @@ class MyFS20_SC extends IPSModule
         $this->RegisterVariableString("SZ_MoFr", "SchaltZeiten Mo-Fr");
         $this->RegisterVariableString("SZ_SaSo", "SchaltZeiten Sa-So");
         
-        // Aktiviert die Standardaktion der Statusvariable zur Bedienbarkeit im Webfront
-        $this->EnableAction("FSSC_Position");
-        IPS_SetVariableCustomProfile($this->GetIDForIdent("FSSC_Position"), "Rollo.Position");
-     
-        $this->EnableAction("UpDown");
-        IPS_SetVariableCustomProfile($this->GetIDForIdent("UpDown"), "Rollo.UpDown");
-        
-        $this->EnableAction("Mode");
-        IPS_SetVariableCustomProfile($this->GetIDForIdent("Mode"), "Rollo.Mode");
 
-        $this->EnableAction("SS");
-        IPS_SetVariableCustomProfile($this->GetIDForIdent("SS"), "Rollo.SunSet");        
-        
-        //anlegen eines Timers
-        $this->RegisterTimer("LaufzeitTimer", 0, "FSSC_reset(\$_IPS['TARGET']);");
         
         
     }
@@ -122,24 +108,6 @@ class MyFS20_SC extends IPSModule
 	//Never delete this line!
         parent::ApplyChanges();
 
-    	// Anlegen des Wochenplans mit ($Name, $Ident, $Typ, $Parent, $Position)
-	$this->RegisterEvent("Wochenplan", "SwitchTimeEvent".$this->InstanceID, 2, $this->InstanceID, 20);    
-     
-	// Anlegen der Daten für den Wochenplan
-        IPS_SetEventScheduleGroup($this->GetIDForIdent("SwitchTimeEvent".$this->InstanceID), 0, 31); //Mo - Fr (1 + 2 + 4 + 8 + 16)
-        IPS_SetEventScheduleGroup($this->GetIDForIdent("SwitchTimeEvent".$this->InstanceID), 1, 96); //Sa + So (32 + 64)     
-        
-        //Aktionen erstellen mit  ($EventID, $ActionID, $Name, $Color, $Script)
-	$this->RegisterScheduleAction($this->GetIDForIdent("SwitchTimeEvent".$this->InstanceID), 0, "Up", 0x40FF00, "FSSC_SetRolloUp(\$_IPS['TARGET']);");
-	$this->RegisterScheduleAction($this->GetIDForIdent("SwitchTimeEvent".$this->InstanceID), 1, "Down", 0xFF0040, "FSSC_SetRolloDown(\$_IPS['TARGET']);");
-         
-        //Ändern von Schaltpunkten für Gruppe mit ID = 0 (Mo-Fr) ID = 1 (Sa-So)
-        $eid = $this->GetIDForIdent("SwitchTimeEvent".$this->InstanceID);
-        IPS_SetEventScheduleGroupPoint($eid, 0, 0, 7, 0, 0, 0); //Um 7:00 Aktion mit ID 0 (Up) aufrufen
-        IPS_SetEventScheduleGroupPoint($eid, 0, 1, 22, 30, 0, 1); //Um 22:30 Aktion mit ID 1 (Down) aufrufen
-        IPS_SetEventScheduleGroupPoint($eid, 1, 0, 8, 0, 0, 0); //Um 8:00 Aktion mit ID 0 (Up) aufrufen
-        IPS_SetEventScheduleGroupPoint($eid, 1, 1, 22, 00, 0, 1); //Um 22:30 Aktion mit ID 1 (Down) aufrufen
-        IPS_SetEventActive($eid, true);             //Ereignis  aktivieren
 
 
 
