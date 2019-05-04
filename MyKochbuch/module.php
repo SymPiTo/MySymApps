@@ -70,13 +70,18 @@ class MyKochbuch extends IPSModule
         //String Variable anlegen
         //RegisterVariableString ( $Ident,  $Name, $Profil, $Position )
         // Aufruf dieser Variable mit $this->GetIDForIdent('IDENTNAME')
-        $this->RegisterVariableString("ID_Rezept", "Rezept","",0);
-        $this->RegisterVariableString("ID_Bild", "Image","",1);
-        $this->RegisterVariableString("ID_Zutaten", "Zutaten","",2);
-        $this->RegisterVariableString("ID_Kochbuch", "Kochbuch","",3);
-        $this->RegisterVariableString("ID_Titel", "Titel","",4);
-            
+        $variablenID = $this->RegisterVariableString("ID_Rezept", "Rezept","",0);
+        IPS_SetInfo ($variablenID, "WSS"); 
+        $variablenID = $this->RegisterVariableString("ID_Bild", "Image","",1);
+        IPS_SetInfo ($variablenID, "WSS"); 
+        $variablenID = $this->RegisterVariableString("ID_Zutaten", "Zutaten","",2);
+        IPS_SetInfo ($variablenID, "WSS"); 
+        $variablenID = $this->RegisterVariableString("ID_Kochbuch", "Kochbuch","",3);
+        IPS_SetInfo ($variablenID, "WSS"); 
+        $variablenID = $this->RegisterVariableString("ID_Titel", "Titel","",4);
+        IPS_SetInfo ($variablenID, "WSS");     
         $this->RegisterVariableString("ID_WFRezept", "WF_Rezept","",5);
+            
         $this->RegisterVariableString("ID_WFBild", "WF_Image","~HTMLBox",6);
         $this->RegisterVariableString("ID_WFZutaten", "WF_Zutaten","",7);
             
