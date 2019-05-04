@@ -62,11 +62,14 @@ class MyWeather extends IPSModule
         //RegisterVariableString ($Ident,  $Name, $Profil, $Position )
         //Aufruf dieser Variable mit $this->GetIDForIdent("IDENTNAME")
         //$this->RegisterVariableString("SZ_MoFr", "SchaltZeiten Mo-Fr");
-        $this->RegisterVariableString ("ID_Week", "WeekFrame", "~HTMLBox", 0);
-        $this->RegisterVariableString ("ID_WeekData", "WeekData", "", 1);
-        $this->RegisterVariableString ("ID_Now", "NowFrame", "~HTMLBox", 2);
-        $this->RegisterVariableString ("ID_NowData", "NowData", "", 3);
-        
+        $variablenID = $this->RegisterVariableString ("ID_Week", "WeekFrame", "~HTMLBox", 0);
+        IPS_SetInfo ($variablenID, "WSS"); 
+        $variablenID = $this->RegisterVariableString ("ID_WeekData", "WeekData", "", 1);
+        IPS_SetInfo ($variablenID, "WSS"); 
+        $variablenID = $this->RegisterVariableString ("ID_Now", "NowFrame", "~HTMLBox", 2);
+        IPS_SetInfo ($variablenID, "WSS"); 
+        $variablenID = $this->RegisterVariableString ("ID_NowData", "NowData", "", 3);
+        IPS_SetInfo ($variablenID, "WSS"); 
         // Aktiviert die Standardaktion der Statusvariable zur Bedienbarkeit im Webfront
         //$this->EnableAction("IDENTNAME");
         
