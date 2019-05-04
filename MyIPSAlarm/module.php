@@ -115,8 +115,7 @@ class MyAlarm extends IPSModule
         IPS_SetInfo ($variablenID, "WSS");    
         
             //HTML Box anlegen
-                   
-            $this->RegisterVariableString("A_SecKeyboard", "Security Keyboard"); 
+             $this->RegisterVariableString("A_SecKeyboard", "Security Keyboard"); 
                    
             //HTML Box Profil zuordnen und befüllen
             IPS_SetVariableCustomProfile($this->GetIDForIdent("A_SecKeyboard"), "~HTMLBox");
