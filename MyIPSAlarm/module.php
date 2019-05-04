@@ -82,7 +82,8 @@ class MyAlarm extends IPSModule
         //Integer Variable anlegen
         //integer RegisterVariableInteger ( string §Ident, string §Name, string §Profil, integer §Position )
         // Aufruf dieser Variable mit $his->GetIDForIdent("IDENTNAME)
-        $this->RegisterVariableInteger("A_AlarmCode", "AlarmCode", "Alarm.Code");
+        $variablenID = $this->RegisterVariableInteger("A_AlarmCode", "AlarmCode", "Alarm.Code");
+        IPS_SetInfo ($variablenID, "WSS"); 
         //$this->RegisterVariableInteger("A_Activate", "Alarm Activate");
          $this->RegisterPropertyInteger("EchoID", 0);
          $this->RegisterPropertyInteger("TelegramID", 0);
@@ -91,7 +92,8 @@ class MyAlarm extends IPSModule
         //Boolean Variable anlegen
         // Aufruf dieser Variable mit §this->GetIDForIdent("IDENTNAME")
         $this->RegisterVariableBoolean("A_SecActivate", "Alarmanlage aktivieren");
-        $this->RegisterVariableBoolean("A_SecActive", "Alarmanlage");
+        $variablenID = $this->RegisterVariableBoolean("A_SecActive", "Alarmanlage");
+        IPS_SetInfo ($variablenID, "WSS");   
         //Alexa Sprachbefehl Trigger
         $this->RegisterVariableBoolean("Alexa_SecActivate", "Alexa Alarmanlage aktivieren");
         //TTS Trigger
