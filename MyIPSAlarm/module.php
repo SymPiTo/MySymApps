@@ -253,18 +253,18 @@ class MyAlarm extends IPSModule
         }        
         
         //check if Modul Alexa - Echo Remote installiert ist.
-        if (!IPS_ModuleExists("{496AB8B5-396A-40E4-AF41-32F4C48AC90D}")){
-            $this->SetStatus(200);
+        if (IPS_ModuleExists("{496AB8B5-396A-40E4-AF41-32F4C48AC90D}")){
+           
         } 
         else{
-            
+             $this->SetStatus(200);
         }
         //check if Modul Telegram Messenger -  installiert ist.
-        if (!IPS_ModuleExists("{eaf404e1-7a2a-40a5-bb4a-e34ca5ac72e5}")){
-            $this->SetStatus(201);
+        if (IPS_ModuleExists("{eaf404e1-7a2a-40a5-bb4a-e34ca5ac72e5}")){
+             
         }
         else{
-            
+            $this->SetStatus(201);
         }
     }
     
