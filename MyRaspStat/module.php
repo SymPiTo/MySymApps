@@ -65,7 +65,7 @@ class MyRaspberryPi extends IPSModule
         //IPS_SetVariableCustomProfile(§this->GetIDForIdent("Mode"), "Rollo.Mode");
         
         //anlegen eines Timers
-        //$this->RegisterTimer("TimerName", 0, "FSSC_reset($_IPS[!TARGET!>]);");
+        //$this->RegisterTimer("TimerName", 0, "FSSC_reset($_IPS["TARGET">]);");
             
 
 
@@ -223,7 +223,7 @@ class MyRaspberryPi extends IPSModule
             $eid = @$this->GetIDForIdent($Ident);
             if($eid === false) {
                     $eid = 0;
-            } elseif(IPS_GetEvent($eid)[!EventType!] <> $Typ) {
+            } elseif(IPS_GetEvent($eid)["EventType"] <> $Typ) {
                     IPS_DeleteEvent($eid);
                     $eid = 0;
             }
@@ -244,7 +244,7 @@ class MyRaspberryPi extends IPSModule
     ...............................................................................
      *  Legt eine Aktion für den Event fest
      * Beispiel:
-     * ("SwitchTimeEvent".$this->InstanceID), 1, "Down", 0xFF0040, "FSSC_SetRolloDown(\$_IPS[!TARGET!]);");
+     * ("SwitchTimeEvent".$this->InstanceID), 1, "Down", 0xFF0040, "FSSC_SetRolloDown(\$_IPS["TARGET"]);");
     ...............................................................................
     Parameters: 
       $EventID
