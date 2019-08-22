@@ -106,12 +106,7 @@ class MyRaspberryPi extends IPSModule
         $variablenID =  $this->RegisterVariableString("ID_ip", "IP Adress Device");
         IPS_SetInfo ($variablenID, "WSS"); 
 
-        if($this->ReadPropertyBoolean("IPS_Server")){
-          $variablenID =  $this->RegisterVariableFloat("ID_IPS_Version", "IPS Version","", 0);
-          IPS_SetInfo ($variablenID, "WSS"); 
-          $variablenID =  $this->RegisterVariableString("ID_KernelStat", "IPS Kernel Status");
-          IPS_SetInfo ($variablenID, "WSS"); 
-        }
+
 
 
         // Aktiviert die Standardaktion der Statusvariable zur Bedienbarkeit im Webfront
@@ -141,6 +136,14 @@ class MyRaspberryPi extends IPSModule
     {
 	    //Never delete this line!
       parent::ApplyChanges();
+
+      if($this->ReadPropertyBoolean("IPS_Server")){
+        $variablenID =  $this->RegisterVariableFloat("ID_IPS_Version", "IPS Version","", 0);
+        IPS_SetInfo ($variablenID, "WSS"); 
+        $variablenID =  $this->RegisterVariableString("ID_KernelStat", "IPS Kernel Status");
+        IPS_SetInfo ($variablenID, "WSS"); 
+      }
+      
       if($this->ReadPropertyBoolean("Modul_Active")){
           $this->SetTimerInterval("update_Timer", $this->ReadPropertyInteger("UpdateInterval"));
           $this->update();
