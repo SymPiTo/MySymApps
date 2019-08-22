@@ -1,0 +1,11 @@
+{
+	"id": "{79CBA60B-AB7E-159E-D281-AD87228E6499}",
+	"name": "MyRaspberryPi",
+	"type": 3,
+	"vendor": "PiTo",
+	"aliases": ["MyRaspStat"],
+	"parentRequirements": [],
+	"childRequirements": [],
+	"implemented": [],
+	"prefix": "MyRPI"
+}
