@@ -186,21 +186,21 @@ class MyRaspberryPi extends IPSModule
       SetValue($this->ReadPropertyFloat("ID_SD_boot_used"), $data['sdcard_boot_used']);
       SetValue($this->ReadPropertyFloat("ID_SD_root_used"), $data['sdcard_root_used']);
       SetValue($this->ReadPropertyFloat("ID_Swap_used"), $data['swap_used']);
-      SetValue($this->ReadPropertyFloat("ID_CPU_Volt"), $data['cpu_voltage']);
-      SetValue($this->ReadPropertyFloat("ID_http"), $data['http']);
-      SetValue($this->ReadPropertyFloat("ID_https"), $data['https']);
-      SetValue($this->ReadPropertyFloat("ID_RPI_monitor"), $data['rpimonitor']);
-      SetValue($this->ReadPropertyFloat("ID_ssh"), $data['ssh']);
-      SetValue($this->ReadPropertyFloat("ID_symcon"), $data['symcon']);
-      SetValue($this->ReadPropertyFloat("ID_wss"), $data['websocketserver']);
-      SetValue($this->ReadPropertyFloat("ID_scal_Gov"), $data['scaling_governor']);
-      SetValue($this->ReadPropertyFloat("ID_CPU_Temp"), $data['soc_temp']);
-      SetValue($this->ReadPropertyFloat("ID_upgrade"), $data['upgrade']);
-      SetValue($this->ReadPropertyFloat("ID_UpTime"), $data['uptime']);
-      SetValue($this->ReadPropertyFloat("ID_CPU_load1"), $data['load1']);
-      SetValue($this->ReadPropertyFloat("ID_CPU_load5"), $data['load5']);
-      SetValue($this->ReadPropertyFloat("ID_CPU_load15"), $data['load15']);
-      SetValue($this->ReadPropertyFloat("ID_packages"), $data['packages']);
+      SetValue($this->ReadPropertyString("ID_CPU_Volt"), $data['cpu_voltage']);
+      SetValue($this->ReadPropertyString("ID_http"), $data['http']);
+      SetValue($this->ReadPropertyString("ID_https"), $data['https']);
+      SetValue($this->ReadPropertyString("ID_RPI_monitor"), $data['rpimonitor']);
+      SetValue($this->ReadPropertyString("ID_ssh"), $data['ssh']);
+      SetValue($this->ReadPropertyString("ID_symcon"), $data['symcon']);
+      SetValue($this->ReadPropertyString("ID_wss"), $data['websocketserver']);
+      SetValue($this->ReadPropertyString("ID_scal_Gov"), $data['scaling_governor']);
+      SetValue($this->ReadPropertyString("ID_CPU_Temp"), $data['soc_temp']);
+      SetValue($this->ReadPropertyString("ID_upgrade"), $data['upgrade']);
+      SetValue($this->ReadPropertyString("ID_UpTime"), $data['uptime']);
+      SetValue($this->ReadPropertyString("ID_CPU_load1"), $data['load1']);
+      SetValue($this->ReadPropertyString("ID_CPU_load5"), $data['load5']);
+      SetValue($this->ReadPropertyString("ID_CPU_load15"), $data['load15']);
+      SetValue($this->ReadPropertyString("ID_packages"), $data['packages']);
     }  
 
  
