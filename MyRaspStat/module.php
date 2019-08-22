@@ -177,7 +177,7 @@ class MyRaspberryPi extends IPSModule
         none
     ------------------------------------------------------------------------------  */
     public function update(){
-      $ip = $this->ReadPropertyFloat("IPAddress");
+      $ip = $this->ReadPropertyString("IPAddress");
       $data = file_get_contents("http://".$ip.":8888/dynamic.json"); 
       $data = json_decode($data); 
       SetValue($this->ReadPropertyFloat("ID_cpuFreq"), $data['cpu_frequency']); 
