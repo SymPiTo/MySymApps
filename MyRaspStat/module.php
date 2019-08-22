@@ -89,8 +89,8 @@ class MyRaspberryPi extends IPSModule
         
         //IPS_SetVariableCustomProfile(§this->GetIDForIdent("Mode"), "Rollo.Mode");
         
-        //anlegen eines Timers
-        //$this->RegisterTimer("TimerName", 0, "FSSC_reset($_IPS["TARGET">]);");
+        //anlegen eines Timers zur Variablen Aktualisierung
+        $this->RegisterTimer("update_Timer", $this->ReadPropertyInteger("UpdateInterval"), "MyRPI_update($_IPS["TARGET">]);");
             
 
 
@@ -110,8 +110,13 @@ class MyRaspberryPi extends IPSModule
     public function ApplyChanges()
     {
 	    //Never delete this line!
-        parent::ApplyChanges();
-       
+      parent::ApplyChanges();
+      if($this->ReadPropertyBoolean("Modul_Active")){
+          $this->SetTimerInterval("update_Timer", $this->ReadPropertyInteger("UpdateInterval"));
+      }
+      else {
+            $this->SetTimerInterval("update_Timer", 0);
+      }
     }
     
    /* ------------------------------------------------------------ 
