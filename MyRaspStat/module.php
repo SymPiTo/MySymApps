@@ -35,16 +35,25 @@ class MyRaspberryPi extends IPSModule
     ------------------------------------------------------------- */
     public function Create()
     {
-	//Never delete this line!
+	    //Never delete this line!
         parent::Create();
  
         // Variable aus dem Instanz Formular registrieren (zugänglich zu machen)
         // Aufruf dieser Form Variable mit  $this->ReadPropertyFloat("IDENTNAME")
-        //$this->RegisterPropertyInteger("IDENTNAME", 0);
-        //$this->RegisterPropertyFloat("IDENTNAME", 0.5);
-        //$this->RegisterPropertyBoolean("IDENTNAME", false);
+        $this->RegisterPropertyInteger("UpdateInterval", 30000);
+        $this->RegisterPropertyBoolean("Modul_Active", false);
+        $this-RegisterPropertyString("IPAddress");
         
-        //Integer Variable anlegen
+        
+        //Float Variable anlegen
+        $this->RegisterVariableFloat("ID_cpuFreq", "CPU frequnecy","", 0);
+        $this->RegisterVariableFloat("ID_MemTotal", "Memory total","", 0);
+        $this->RegisterVariableFloat("ID_MemFree", "Memory free","", 0);
+        $this->RegisterVariableFloat("ID_SD_boot_used", "SD Card Boot used","", 0);
+        $this->RegisterVariableFloat("ID_SD_root_used", "SD Card Root used","", 0);
+        $this->RegisterVariableFloat("ID_Swap_used", "Swap used","", 0);
+        
+         //Integer Variable anlegen
         //integer RegisterVariableInteger ( string $Ident, string $Name, string $Profil, integer $Position )
         //Aufruf dieser Variable mit $this->GetIDForIdent("IDENTNAME")
         //$this->RegisterVariableInteger("FSSC_Position", "Position", "Rollo.Position");
@@ -57,8 +66,24 @@ class MyRaspberryPi extends IPSModule
         //String Variable anlegen
         //RegisterVariableString ($Ident,  $Name, $Profil, $Position )
         //Aufruf dieser Variable mit $this->GetIDForIdent("IDENTNAME")
-        //$this->RegisterVariableString("SZ_MoFr", "SchaltZeiten Mo-Fr");
- 
+        $this->RegisterVariableString("ID_CPU_Volt", "CPU Voötage");
+        $this->RegisterVariableString("ID_http", "Port http");
+        $this->RegisterVariableString("ID_https", "Port https");
+        $this->RegisterVariableString("ID_RPI_monitor", "Port RPI Monitor");
+        $this->RegisterVariableString("ID_ssh", "Port Telnet/ssh");
+        $this->RegisterVariableString("ID_symcon", "Port symcon");
+        $this->RegisterVariableString("ID_wss", "Port WebSocketServer");
+        $this->RegisterVariableString("ID_scal_Gov", "scaling govenor");
+        $this->RegisterVariableString("ID_CPU_Temp", "CPU Temperature");
+        $this->RegisterVariableString("ID_upgrade", "Files upgradable");
+        $this->RegisterVariableString("ID_UpTime", "Start Time");
+        $this->RegisterVariableString("ID_CPU_load1", "CPU load 1 min");
+        $this->RegisterVariableString("ID_CPU_load5", "CPU load 5 min");
+        $this->RegisterVariableString("ID_CPU_load15", "CPU load 15 min");
+        $this->RegisterVariableString("ID_packages", "update for packages");
+
+
+
         // Aktiviert die Standardaktion der Statusvariable zur Bedienbarkeit im Webfront
         //$this->EnableAction("IDENTNAME");
         
@@ -84,7 +109,7 @@ class MyRaspberryPi extends IPSModule
     ------------------------------------------------------------- */
     public function ApplyChanges()
     {
-	//Never delete this line!
+	    //Never delete this line!
         parent::ApplyChanges();
        
     }
@@ -134,9 +159,10 @@ class MyRaspberryPi extends IPSModule
      FSSC_XYFunktion($Instance_id, ... );
      ________________________________________________________________________________________________________________________ */
     //-----------------------------------------------------------------------------
-    /* Function: xxxx
+    /* Function: update
     ...............................................................................
-    Beschreibung
+    Beschreibung:
+      liest Statuswerte als Json des Raspberry aus und schreibt Werte in die Variable
     ...............................................................................
     Parameters: 
         none
@@ -144,11 +170,35 @@ class MyRaspberryPi extends IPSModule
     Returns:    
         none
     ------------------------------------------------------------------------------  */
-    public function xxxx(){
-       
+    public function update(){
+      $ip = $this->ReadPropertyFloat("IPAddress");
+      $data = file_get_contents("http://".$ip.":8888/dynamic.json"); 
+      $data = json_decode($data); 
+      SetValue($this->ReadPropertyFloat("ID_cpuFreq"), $data['cpu_frequency']); 
+      SetValue($this->ReadPropertyFloat("ID_MemTotal"), $data['memory_available']);
+      SetValue($this->ReadPropertyFloat("ID_MemFree"), $data['memory_free']);
+      SetValue($this->ReadPropertyFloat("ID_SD_boot_used"), $data['sdcard_boot_used']);
+      SetValue($this->ReadPropertyFloat("ID_SD_root_used"), $data['sdcard_root_used']);
+      SetValue($this->ReadPropertyFloat("ID_Swap_used"), $data['swap_used']);
+      SetValue($this->ReadPropertyFloat("ID_CPU_Volt"), $data['cpu_voltage']);
+      SetValue($this->ReadPropertyFloat("ID_http"), $data['http']);
+      SetValue($this->ReadPropertyFloat("ID_https"), $data['https']);
+      SetValue($this->ReadPropertyFloat("ID_RPI_monitor"), $data['rpimonitor']);
+      SetValue($this->ReadPropertyFloat("ID_ssh"), $data['ssh']);
+      SetValue($this->ReadPropertyFloat("ID_symcon"), $data['symcon']);
+      SetValue($this->ReadPropertyFloat("ID_wss"), $data['websocketserver']);
+      SetValue($this->ReadPropertyFloat("ID_scal_Gov"), $data['scaling_governor']);
+      SetValue($this->ReadPropertyFloat("ID_CPU_Temp"), $data['soc_temp']);
+      SetValue($this->ReadPropertyFloat("ID_upgrade"), $data['upgrade']);
+      SetValue($this->ReadPropertyFloat("ID_UpTime"), $data['uptime']);
+      SetValue($this->ReadPropertyFloat("ID_CPU_load1"), $data['load1']);
+      SetValue($this->ReadPropertyFloat("ID_CPU_load5"), $data['load5']);
+      SetValue($this->ReadPropertyFloat("ID_CPU_load15"), $data['load15']);
+      SetValue($this->ReadPropertyFloat("ID_packages"), $data['packages']);
     }  
 
-
+ 
+ 
    /* _______________________________________________________________________
     * Section: Private Funtions
     * Die folgenden Funktionen sind nur zur internen Verwendung verfügbar

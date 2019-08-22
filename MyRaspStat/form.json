@@ -6,10 +6,6 @@
             "type": "CheckBox",             
             "caption": "Module Active" 
         },
-        {                               
-            "type" : "Label",               
-            "label" : "IP Adresse Raspberry PI."
-        },
 		{ 
             "name": "IPAddress",	
             "type": "ValidationTextBox", 	
@@ -20,19 +16,7 @@
             "name": "UpdateInterval",    
             "caption": "UpdateInterval", 
             "suffix": "milisekunden"
-        },
-
-
-
-        {                               
-            "type" : "Label",               
-            "label" : "WebFront verwenden."
-        },
-        { 
-            "name": "ID_WF",              
-            "type": "CheckBox",             
-            "caption": "Webfront" 
-        }   
+        }
 	],
 	"actions":
 	[
