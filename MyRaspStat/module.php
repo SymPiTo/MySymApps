@@ -113,7 +113,7 @@ class MyRaspberryPi extends IPSModule
       parent::ApplyChanges();
       if($this->ReadPropertyBoolean("Modul_Active")){
           $this->SetTimerInterval("update_Timer", $this->ReadPropertyInteger("UpdateInterval"));
-          $this->update;
+          $this->update();
       }
       else {
             $this->SetTimerInterval("update_Timer", 0);
