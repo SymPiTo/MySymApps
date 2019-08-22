@@ -143,7 +143,7 @@ class MyRaspberryPi extends IPSModule
         $variablenID =  $this->RegisterVariableString("ID_KernelStat", "IPS Kernel Status");
         IPS_SetInfo ($variablenID, "WSS"); 
       }
-      
+
       if($this->ReadPropertyBoolean("Modul_Active")){
           $this->SetTimerInterval("update_Timer", $this->ReadPropertyInteger("UpdateInterval"));
           $this->update();
@@ -237,7 +237,7 @@ class MyRaspberryPi extends IPSModule
       SetValue($this->GetIDForIdent("ID_ip"),  $ip);
 
       if($this->ReadPropertyBoolean("IPS_Server")){
-        SetValue($this->GetIDForIdent("ID_IPS_Version"),  $IPS_GetKernelVersion());
+        SetValue($this->GetIDForIdent("ID_IPS_Version"),  IPS_GetKernelVersion());
         $kernelStat = IPS_GetKernelRunlevel();
         switch ($variakernelStatble) {
           case KR_CREATE:
