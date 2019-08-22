@@ -66,7 +66,7 @@ class MyRaspberryPi extends IPSModule
         //String Variable anlegen
         //RegisterVariableString ($Ident,  $Name, $Profil, $Position )
         //Aufruf dieser Variable mit $this->GetIDForIdent("IDENTNAME")
-        $this->RegisterVariableString("ID_CPU_Volt", "CPU Voötage");
+        $this->RegisterVariableString("ID_CPU_Volt", "CPU Voltage");
         $this->RegisterVariableString("ID_http", "Port http");
         $this->RegisterVariableString("ID_https", "Port https");
         $this->RegisterVariableString("ID_RPI_monitor", "Port RPI Monitor");
