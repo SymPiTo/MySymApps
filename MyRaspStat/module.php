@@ -43,15 +43,22 @@ class MyRaspberryPi extends IPSModule
         $this->RegisterPropertyInteger("UpdateInterval", 30000);
         $this->RegisterPropertyBoolean("Modul_Active", false);
         $this->RegisterPropertyString("IPAddress", "192.168.178.28");
-        
+        $this->RegisterPropertyBoolean("IPS_Server", false);
         
         //Float Variable anlegen
-        $this->RegisterVariableFloat("ID_cpuFreq", "CPU frequnecy","", 0);
-        $this->RegisterVariableFloat("ID_MemTotal", "Memory total","", 0);
-        $this->RegisterVariableFloat("ID_MemFree", "Memory free","", 0);
-        $this->RegisterVariableFloat("ID_SD_boot_used", "SD Card Boot used","", 0);
-        $this->RegisterVariableFloat("ID_SD_root_used", "SD Card Root used","", 0);
-        $this->RegisterVariableFloat("ID_Swap_used", "Swap used","", 0);
+        
+        $variablenID =  $this->RegisterVariableFloat("ID_cpuFreq", "CPU frequnecy","", 0);
+        IPS_SetInfo ($variablenID, "WSS"); 
+        $variablenID =  $this->RegisterVariableFloat("ID_MemTotal", "Memory total","", 0);
+        IPS_SetInfo ($variablenID, "WSS"); 
+        $variablenID =  $this->RegisterVariableFloat("ID_MemFree", "Memory free","", 0);
+        IPS_SetInfo ($variablenID, "WSS"); 
+        $variablenID =  $this->RegisterVariableFloat("ID_SD_boot_used", "SD Card Boot used","", 0);
+        IPS_SetInfo ($variablenID, "WSS"); 
+        $variablenID =  $this->RegisterVariableFloat("ID_SD_root_used", "SD Card Root used","", 0);
+        IPS_SetInfo ($variablenID, "WSS"); 
+        $variablenID =  $this->RegisterVariableFloat("ID_Swap_used", "Swap used","", 0);
+        IPS_SetInfo ($variablenID, "WSS"); 
         
          //Integer Variable anlegen
         //integer RegisterVariableInteger ( string $Ident, string $Name, string $Profil, integer $Position )
@@ -66,22 +73,45 @@ class MyRaspberryPi extends IPSModule
         //String Variable anlegen
         //RegisterVariableString ($Ident,  $Name, $Profil, $Position )
         //Aufruf dieser Variable mit $this->GetIDForIdent("IDENTNAME")
-        $this->RegisterVariableString("ID_CPU_Volt", "CPU Voltage");
-        $this->RegisterVariableString("ID_http", "Port http");
-        $this->RegisterVariableString("ID_https", "Port https");
-        $this->RegisterVariableString("ID_RPI_monitor", "Port RPI Monitor");
-        $this->RegisterVariableString("ID_ssh", "Port Telnet/ssh");
-        $this->RegisterVariableString("ID_symcon", "Port symcon");
-        $this->RegisterVariableString("ID_wss", "Port WebSocketServer");
-        $this->RegisterVariableString("ID_scal_Gov", "scaling govenor");
-        $this->RegisterVariableString("ID_CPU_Temp", "CPU Temperature");
-        $this->RegisterVariableString("ID_upgrade", "Files upgradable");
-        $this->RegisterVariableString("ID_UpTime", "Up-Time");
-        $this->RegisterVariableString("ID_CPU_load1", "CPU load 1 min");
-        $this->RegisterVariableString("ID_CPU_load5", "CPU load 5 min");
-        $this->RegisterVariableString("ID_CPU_load15", "CPU load 15 min");
-        $this->RegisterVariableString("ID_packages", "update for packages");
+        $variablenID =  $this->RegisterVariableString("ID_CPU_Volt", "CPU Voltage");
+        IPS_SetInfo ($variablenID, "WSS"); 
+        $variablenID =  $this->RegisterVariableString("ID_http", "Port http");
+        IPS_SetInfo ($variablenID, "WSS"); 
+        $variablenID =  $this->RegisterVariableString("ID_https", "Port https");
+        IPS_SetInfo ($variablenID, "WSS"); 
+        $variablenID =  $this->RegisterVariableString("ID_RPI_monitor", "Port RPI Monitor");
+        IPS_SetInfo ($variablenID, "WSS"); 
+        $variablenID =  $this->RegisterVariableString("ID_ssh", "Port Telnet/ssh");
+        IPS_SetInfo ($variablenID, "WSS"); 
+        $variablenID =  $this->RegisterVariableString("ID_symcon", "Port symcon");
+        IPS_SetInfo ($variablenID, "WSS"); 
+        $variablenID =  $this->RegisterVariableString("ID_wss", "Port WebSocketServer");
+        IPS_SetInfo ($variablenID, "WSS"); 
+        $variablenID =  $this->RegisterVariableString("ID_scal_Gov", "scaling govenor");
+        IPS_SetInfo ($variablenID, "WSS"); 
+        $variablenID =  $this->RegisterVariableString("ID_CPU_Temp", "CPU Temperature");
+        IPS_SetInfo ($variablenID, "WSS"); 
+        $variablenID =  $this->RegisterVariableString("ID_upgrade", "Files upgradable");
+        IPS_SetInfo ($variablenID, "WSS"); 
+        $variablenID =  $this->RegisterVariableString("ID_UpTime", "Up-Time");
+        IPS_SetInfo ($variablenID, "WSS"); 
+        $variablenID =  $this->RegisterVariableString("ID_CPU_load1", "CPU load 1 min");
+        IPS_SetInfo ($variablenID, "WSS"); 
+        $variablenID =  $this->RegisterVariableString("ID_CPU_load5", "CPU load 5 min");
+        IPS_SetInfo ($variablenID, "WSS"); 
+        $variablenID =  $this->RegisterVariableString("ID_CPU_load15", "CPU load 15 min");
+        IPS_SetInfo ($variablenID, "WSS"); 
+        $variablenID =  $this->RegisterVariableString("ID_packages", "update for packages");
+        IPS_SetInfo ($variablenID, "WSS"); 
+        $variablenID =  $this->RegisterVariableString("ID_ip", "IP Adress Device");
+        IPS_SetInfo ($variablenID, "WSS"); 
 
+        if($this->ReadPropertyBoolean("IPS_Server")){
+          $variablenID =  $this->RegisterVariableFloat("ID_IPS_Version", "IPS Version","", 0);
+          IPS_SetInfo ($variablenID, "WSS"); 
+          $variablenID =  $this->RegisterVariableString("ID_KernelStat", "IPS Kernel Status");
+          IPS_SetInfo ($variablenID, "WSS"); 
+        }
 
 
         // Aktiviert die Standardaktion der Statusvariable zur Bedienbarkeit im Webfront
@@ -201,6 +231,35 @@ class MyRaspberryPi extends IPSModule
       SetValue($this->GetIDForIdent("ID_CPU_load5"), $data['load5']);
       SetValue($this->GetIDForIdent("ID_CPU_load15"), $data['load15']);
       SetValue($this->GetIDForIdent("ID_packages"), $data['packages']);
+      SetValue($this->GetIDForIdent("ID_ip"),  $ip);
+
+      if($this->ReadPropertyBoolean("IPS_Server")){
+        SetValue($this->GetIDForIdent("ID_IPS_Version"),  $IPS_GetKernelVersion());
+        $kernelStat = IPS_GetKernelRunlevel();
+        switch ($variakernelStatble) {
+          case KR_CREATE:
+            $ks = "Kernel wird erstellt.";
+            break;
+            case KR_INIT:
+            $ks = "Kernel wird initialisiert.";
+            break;
+            case KR_READY:
+            $ks = "Kernel ist bereit und läuft.";
+            break;
+            case KR_UNINIT:
+            $ks = "Kernel wird heruntergefahren.";
+            break;
+            case KR_SHUTDOWN:
+            $ks = "Kernel wurde beendet.";
+            break;
+          default:
+            # code...
+            break;
+        }
+      
+        SetValue($this->GetIDForIdent("ID_KernelStat"),  $ks);
+      }
+        
     }  
 
  

@@ -16,6 +16,11 @@
             "name": "UpdateInterval",    
             "caption": "UpdateInterval", 
             "suffix": "milisekunden"
+        },
+        { 
+            "name" : "IPS_Server",
+            "type" : "CheckBox",
+            "caption" : "IPS Server vorhanden."
         }
 	],
 	"actions":
