@@ -196,7 +196,7 @@ class MyRaspberryPi extends IPSModule
       SetValue($this->GetIDForIdent("ID_scal_Gov"), $data['scaling_governor']);
       SetValue($this->GetIDForIdent("ID_CPU_Temp"), $data['soc_temp']);
       SetValue($this->GetIDForIdent("ID_upgrade"), $data['upgrade']);
-      SetValue($this->GetIDForIdent("ID_UpTime"), $this->calc_uptime($data['uptime']));
+      SetValue($this->GetIDForIdent("ID_UpTime"), json_encode($this->calc_uptime($data['uptime'])));
       SetValue($this->GetIDForIdent("ID_CPU_load1"), $data['load1']);
       SetValue($this->GetIDForIdent("ID_CPU_load5"), $data['load5']);
       SetValue($this->GetIDForIdent("ID_CPU_load15"), $data['load15']);
@@ -240,7 +240,10 @@ class MyRaspberryPi extends IPSModule
     $Laufzeit['$minutes'] = $minutes;
     $Laufzeit['$hours'] = $hours;
     $Laufzeit['$days'] = $days;
-    $Laufzeit_string = implode($Laufzeit);
+     
+    
+
+     
     return $Laufzeit_string;
   }
 
