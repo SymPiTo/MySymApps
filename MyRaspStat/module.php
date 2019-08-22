@@ -239,7 +239,7 @@ class MyRaspberryPi extends IPSModule
       if($this->ReadPropertyBoolean("IPS_Server")){
         SetValue($this->GetIDForIdent("ID_IPS_Version"),  IPS_GetKernelVersion());
         $kernelStat = IPS_GetKernelRunlevel();
-        switch ($variakernelStatble) {
+        switch ($kernelStat) {
           case KR_CREATE:
             $ks = "Kernel wird erstellt.";
             break;
