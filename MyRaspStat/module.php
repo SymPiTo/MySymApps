@@ -76,7 +76,7 @@ class MyRaspberryPi extends IPSModule
         $this->RegisterVariableString("ID_scal_Gov", "scaling govenor");
         $this->RegisterVariableString("ID_CPU_Temp", "CPU Temperature");
         $this->RegisterVariableString("ID_upgrade", "Files upgradable");
-        $this->RegisterVariableString("ID_UpTime", "Start Time");
+        $this->RegisterVariableString("ID_UpTime", "Up-Time");
         $this->RegisterVariableString("ID_CPU_load1", "CPU load 1 min");
         $this->RegisterVariableString("ID_CPU_load5", "CPU load 5 min");
         $this->RegisterVariableString("ID_CPU_load15", "CPU load 15 min");
@@ -196,7 +196,7 @@ class MyRaspberryPi extends IPSModule
       SetValue($this->GetIDForIdent("ID_scal_Gov"), $data['scaling_governor']);
       SetValue($this->GetIDForIdent("ID_CPU_Temp"), $data['soc_temp']);
       SetValue($this->GetIDForIdent("ID_upgrade"), $data['upgrade']);
-      SetValue($this->GetIDForIdent("ID_UpTime"), $data['uptime']);
+      SetValue($this->GetIDForIdent("ID_UpTime"), $this->calc_uptime($data['uptime']));
       SetValue($this->GetIDForIdent("ID_CPU_load1"), $data['load1']);
       SetValue($this->GetIDForIdent("ID_CPU_load5"), $data['load5']);
       SetValue($this->GetIDForIdent("ID_CPU_load15"), $data['load15']);
@@ -211,6 +211,38 @@ class MyRaspberryPi extends IPSModule
     *   Hilfsfunktionen
     * _______________________________________________________________________
     */  
+
+    /* ----------------------------------------------------------------------------
+      Function: GetIPSVersion
+    ...............................................................................
+      gibt die instalierte IPS Version zurück
+    ...............................................................................
+      Parameters: 
+            none
+    ..............................................................................
+      Returns:   
+            $uptime (array)  days - hours - minutes - seconds
+    ------------------------------------------------------------------------------- */
+	protected function calc_uptime($uptime)
+	{
+    $sek = intval($uptime);
+    $min = ($sek/60); 
+    $std =  ($min/60);
+    $tag =  ($std/24);
+    $days = intval($tag);
+    $h = $std - $days*24;
+    $hours = intval($h);
+    $m = $min - $hours*60 - $days*24*60;
+    $minutes = intval($m);
+    $s = $sek - $hours*60*60 - $days*24*60*60 - $minutes*60;
+    $seconds = intval($s);
+    $uptime['seconds'] = $seconds;
+    $uptime['$minutes'] = $minutes;
+    $uptime['$hours'] = $hours;
+    $uptime['$days'] = $days;
+    $uptime_string = implode($uptime);
+    return $uptime_string;
+  }
 
     protected function SendToSplitter(string $payload)
 		{						
