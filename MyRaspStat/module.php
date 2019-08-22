@@ -241,10 +241,7 @@ class MyRaspberryPi extends IPSModule
     $Laufzeit['$hours'] = $hours;
     $Laufzeit['$days'] = $days;
      
-    
-
-     
-    return $Laufzeit_string;
+    return $Laufzeit;
   }
 
     protected function SendToSplitter(string $payload)
