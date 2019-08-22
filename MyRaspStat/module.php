@@ -42,7 +42,7 @@ class MyRaspberryPi extends IPSModule
         // Aufruf dieser Form Variable mit  $this->ReadPropertyFloat("IDENTNAME")
         $this->RegisterPropertyInteger("UpdateInterval", 30000);
         $this->RegisterPropertyBoolean("Modul_Active", false);
-        $this-RegisterPropertyString("IPAddress");
+        $this->RegisterPropertyString("IPAddress");
         
         
         //Float Variable anlegen
