@@ -236,12 +236,12 @@ class MyRaspberryPi extends IPSModule
     $minutes = intval($m);
     $s = $sek - $hours*60*60 - $days*24*60*60 - $minutes*60;
     $seconds = intval($s);
-    $uptime['seconds'] = $seconds;
-    $uptime['$minutes'] = $minutes;
-    $uptime['$hours'] = $hours;
-    $uptime['$days'] = $days;
-    $uptime_string = implode($uptime);
-    return $uptime_string;
+    $Laufzeit['seconds'] = $seconds;
+    $Laufzeit['$minutes'] = $minutes;
+    $Laufzeit['$hours'] = $hours;
+    $Laufzeit['$days'] = $days;
+    $Laufzeit_string = implode($Laufzeit);
+    return $Laufzeit_string;
   }
 
     protected function SendToSplitter(string $payload)
