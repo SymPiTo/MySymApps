@@ -1,12 +1,12 @@
 <?
 /**
- * Title: FS20 RSU Shutter Control
+ * Title: Status Werte eines Raspberry Pi auslesen
   *
  * author PiTo
  * 
- * GITHUB = <https://github.com/SymPiTo/MySymCodes/tree/master/MyFS20_SC>
+ * GITHUB = <https://github.com/SymPiTo/MySymApps/MyRaspStat/>
  * 
- * Version:1.0.2018.08.21
+ * Version:1.0.2019.08.22
  */
 //Class: MyRaspberryPi
 class MyRaspberryPi extends IPSModule
@@ -69,7 +69,7 @@ class MyRaspberryPi extends IPSModule
             
 
 
-    .}
+    }
    /* ------------------------------------------------------------ 
      Function: ApplyChanges 
       ApplyChanges() Wird ausgeführt, wenn auf der Konfigurationsseite "Übernehmen" gedrückt wird 
