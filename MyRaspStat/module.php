@@ -115,7 +115,7 @@ class MyRaspberryPi extends IPSModule
         //IPS_SetVariableCustomProfile(§this->GetIDForIdent("Mode"), "Rollo.Mode");
         
         //anlegen eines Timers zur Variablen Aktualisierung
-        $this->RegisterTimer("update_Timer", $this->ReadPropertyInteger("UpdateInterval"), 'MyRPI_update($_IPS["TARGET">]);');
+        $this->RegisterTimer("update_Timer", $this->ReadPropertyInteger("UpdateInterval"), 'MyRPI_update($_IPS["TARGET"]);');
             
 
 
