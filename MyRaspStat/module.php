@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Title: Status Werte eines Raspberry Pi auslesen
   *
