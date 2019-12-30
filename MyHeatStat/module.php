@@ -166,6 +166,14 @@ class MyHeatStat extends IPSModule
         $Assoc[1]['value'] = "Anwärmen";
         $Assoc[2]['value'] = "Heizen";
         $Assoc[3]['value'] = "Kalt";
+        $Assoc[0]['icon'] =  NULL;
+        $Assoc[1]['icon'] =  NULL;
+        $Assoc[2]['icon'] = NULL;
+        $Assoc[3]['icon'] = NULL;
+        $Assoc[0]['color'] = "0xFFFF00";
+        $Assoc[1]['color'] = "0xFFA500";
+        $Assoc[2]['color'] = "0xFF0000";
+        $Assoc[3]['color'] = "0x0000FF";
         $Name = "Heat.Status";
         $Vartype = 1;
         $Icon = NULL;
@@ -176,7 +184,7 @@ class MyHeatStat extends IPSModule
         $StepSize = 1;
         $Digits = NULL;
         $this->createProfile($Name, $Vartype,  $Assoc, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize, $Digits);
-                
+       
     }
 
     /* ----------------------------------------------------------------------------
