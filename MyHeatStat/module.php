@@ -79,18 +79,18 @@ class MyHeatStat extends IPSModule
         //Event bei Änderung der Variablen "VtlPos"
         $EventName = "PosEvnt";
         $varID = $this->ReadPropertyInteger("VtlPos");
-        $EventID = "IDPosEvnt";
+        $Ident = "IDPosEvnt";
         $ParentID = $varID; //Event unter die Variable hängen
         $cmd = "HS_Heat_Stat(".$this->InstanceID.");" ;
-        $this->RegisterVarEvent($EventName, $EventID, 0, $ParentID, 0, 1, $varID, $cmd);
+        $EventID = $this->RegisterVarEvent($EventName, $Ident, 0, $ParentID, 0, 1, $varID, $cmd);
 
 
         if($this->ReadPropertyBoolean("active")){
             //Event aktivieren - wenn Postion svon Aktor ändert dann Trigger Event
-            IPS_SetEventActive($this->GetIDForIdent($EventID), true);
+            IPS_SetEventActive($EventID, true);
         }
         else{
-            IPS_SetEventActive($this->GetIDForIdent($EventID), false);
+            IPS_SetEventActive($EventID, false);
         }
          
     }
@@ -311,10 +311,12 @@ class MyHeatStat extends IPSModule
                 
                 IPS_SetEventScript($EventID, $cmd );
                 IPS_SetEventActive($EventID, true);
+                return $EventID;
             } 
             else{
+                return $eid;
             }
- 
+            
     }
 
 
