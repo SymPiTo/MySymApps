@@ -40,12 +40,7 @@ class MyHeatStat extends IPSModule
        
     ------------------------------------------------------------- */
     public function Create(){
-            //Profil anlegen:
-            $assoc[0] = "Störung";
-            $assoc[1] = "Anwärmen";  
-            $assoc[2] = "Heizen";
-            $assoc[3] = "Kalt";  
-            $this->RegisterProfile("Heat.Stat", "","", "", "", "", "", "", 0, "ProfHeatStat", $assoc);
+
 	    //Never delete this line!
         parent::Create();
         
@@ -56,7 +51,7 @@ class MyHeatStat extends IPSModule
         $this->RegisterPropertyInteger("TempRueck", 0);
         $this->RegisterPropertyBoolean("DTsens", false);
 
-
+        $this->RegisterProfiles();
 
         $variablenID = $this->RegisterVariableBoolean("HeatAlarm", "Störung");
         IPS_SetInfo ($variablenID, "WSS");  
@@ -82,7 +77,6 @@ class MyHeatStat extends IPSModule
     ------------------------------------------------------------- */
     public function ApplyChanges(){
         //Never delete this line!
-
         parent::ApplyChanges();
          
     }
@@ -158,39 +152,79 @@ class MyHeatStat extends IPSModule
 	}
 
     /* ----------------------------------------------------------------------------
-    Function: RegisterProfile
+     Function: RegisterProfiles()
+    ...............................................................................
+        Profile fürVaiable anlegen falls nicht schon vorhanden
+    ...............................................................................
+    Parameters: 
+        $Vartype => 0 boolean, 1 int, 2 float, 3 string
+    ..............................................................................
+    Returns:   
+    ------------------------------------------------------------------------------- */
+    protected function RegisterProfiles(){
+        $Assoc[0]['value'] = "Störung";
+        $Assoc[1]['value'] = "Anwärmen";
+        $Assoc[3]['value'] = "Heizen";
+        $Assoc[4]['value'] = "Kalt";
+        $Name = "Heat.Status";
+        $Vartype = 1;
+        $Icon = NULL;
+        $Prefix = NULL;
+        $Suffix = NULL;
+        $MinValue = NULL;
+        $MaxValue = NULL;
+        $StepSize = NULL;
+        $Digits = NULL;
+        $this->createProfile($Name, $Vartype,  $Assoc, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize, $Digits);
+                
+    }
+
+    /* ----------------------------------------------------------------------------
+     Function: RegisterProfile
     ...............................................................................
     Erstellt ein neues Profil und ordnet es einer Variablen zu.
     ...............................................................................
-        Parameters: 
-            $Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize, $Digits, $Vartype, $VarIdent, $Assoc
-         * $Vartype: 0 boolean, 1 int, 2 float, 3 string,
-         * $Assoc: array mit statustexte
-        ..............................................................................
-        Returns:   
-            none
+    Parameters: 
+        $Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize, $Digits, $Vartype, $VarIdent, $Assoc
+     * $Vartype: 0 boolean, 1 int, 2 float, 3 string,
+     * $Assoc: array mit statustexte
+     *         $assoc[0] = "aus";
+     *         $assoc[1] = "ein";
+     * RegisterProfile("Rollo.Mode", "", "", "", "", "", "", "", 0, "", $Assoc)
+    ..............................................................................
+    Returns:   
+        none
     ------------------------------------------------------------------------------- */
-	protected function RegisterProfile($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize, $Digits, $Vartype, $VarIdent, $Assoc){
-		if (!IPS_VariableProfileExists($Name)) {
-			IPS_CreateVariableProfile($Name, $Vartype); // 0 boolean, 1 int, 2 float, 3 string,
+    protected function createProfile(string $Name, int $Vartype, $Assoc, $Icon,  $Prefix,  $Suffix,   $MinValue,   $MaxValue,  $StepSize,  $Digits){
+        if (!IPS_VariableProfileExists($Name)) {
+            IPS_CreateVariableProfile($Name, $Vartype); // 0 boolean, 1 int, 2 float, 3 string,
+            if(!is_Null($Icon)){
+                IPS_SetVariableProfileIcon($Name, $Icon);
+            }
+            if(!is_Null($Prefix)){
+                IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
+            }
+            if(!is_Null($Digits)){
+                IPS_SetVariableProfileDigits($Name, $Digits); //  Nachkommastellen
+            }
+            if(!is_Null($MinValue)){
+                IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);
+            }
+            if(!is_Null($Assoc)){
+                foreach ($Assoc as $key => $data) {
+                    if(is_null($data['icon'])){$data['icon'] = "";}; 
+                    if(is_null($data['color'])){$data['color'] = "";}; 
+                    IPS_SetVariableProfileAssociation($Name, $key, $data['value'], $data['icon'], $data['color']);  
+                }
+            }
         } 
         else {
-			$profile = IPS_GetVariableProfile($Name);
-			if ($profile['ProfileType'] != $Vartype)
-				$this->SendDebug("Alarm.Reset:", "Variable profile type does not match for profile " . $Name, 0);
-		}
-
-		//IPS_SetVariableProfileIcon($Name, $Icon);
-		//IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
-		//IPS_SetVariableProfileDigits($Name, $Digits); //  Nachkommastellen
-		//IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize); // string $ProfilName, float $Minimalwert, float $Maximalwert, float $Schrittweite
-
-        foreach ($Assoc as $key => $value) {
-            IPS_SetVariableProfileAssociation($Name, $key, $value, $Icon, 0xFFFFFF);  
+            $profile = IPS_GetVariableProfile($Name);
+            if ($profile['ProfileType'] != $Vartype){
+                   // $this->SendDebug("Alarm.Reset:", "Variable profile type does not match for profile " . $Name, 0);
+            }
         }
-        IPS_SetVariableCustomProfile($this->GetIDForIdent($VarIdent), $Name);
-    }
- 
+}	
 
     
  
