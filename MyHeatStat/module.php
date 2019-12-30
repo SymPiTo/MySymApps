@@ -90,7 +90,7 @@ class MyHeatStat extends IPSModule
             IPS_SetEventActive($EventID, true);
         }
         else{
-            IPS_SetEventActive($EventID, false);
+           // IPS_SetEventActive($EventID, false);
         }
          
     }
