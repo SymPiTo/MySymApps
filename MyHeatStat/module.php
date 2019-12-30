@@ -188,65 +188,10 @@ class MyHeatStat extends IPSModule
         IPS_SetVariableCustomProfile($this->GetIDForIdent($VarIdent), $Name);
     }
  
-    /* --------------------------------------------------------------------------- 
-    Function: RegisterEvent
-    ...............................................................................
-    legt einen Event an wenn nicht schon vorhanden
-      Beispiel:
-      ("Wochenplan", "SwitchTimeEvent".$this->InstanceID, 2, $this->InstanceID, 20);  
-      ...............................................................................
-    Parameters: 
-      $Name        -   Name des Events
-      $Ident       -   Ident Name des Events
-      $Typ         -   Typ des Events (1=cyclic 2=Wochenplan)
-      $Parent      -   ID des Parents
-      $Position    -   Position der Instanz
-    ...............................................................................
-    Returns:    
-        none
-    -------------------------------------------------------------------------------*/
-    private function RegisterEvent($Name, $Ident, $Typ, $Parent, $Position)
-    {
-            $eid = @$this->GetIDForIdent($Ident);
-            if($eid === false) {
-                    $eid = 0;
-            } elseif(IPS_GetEvent($eid)[!EventType!] <> $Typ) {
-                    IPS_DeleteEvent($eid);
-                    $eid = 0;
-            }
-            //we need to create one
-            if ($eid == 0) {
-                    $EventID = IPS_CreateEvent($Typ);
-                    IPS_SetParent($EventID, $Parent);
-                    IPS_SetIdent($EventID, $Ident);
-                    IPS_SetName($EventID, $Name);
-                    IPS_SetPosition($EventID, $Position);
-                    IPS_SetEventActive($EventID, false);  
-            }
-    }
+
     
  
-    /* ----------------------------------------------------------------------------------------------------- 
-    Function: RegisterScheduleAction
-    ...............................................................................
-     *  Legt eine Aktion für den Event fest
-     * Beispiel:
-     * ("SwitchTimeEvent".$this->InstanceID), 1, "Down", 0xFF0040, "FSSC_SetRolloDown(\$_IPS[!TARGET!]);");
-    ...............................................................................
-    Parameters: 
-      $EventID
-      $ActionID
-      $Name
-      $Color
-      $Script
-    .......................................................................................................
-    Returns:    
-        none
-    -------------------------------------------------------------------------------------------------------- */
-    private function RegisterScheduleAction($EventID, $ActionID, $Name, $Color, $Script)
-    {
-            IPS_SetEventScheduleAction($EventID, $ActionID, $Name, $Color, $Script);
-    }
+
 
 
 
