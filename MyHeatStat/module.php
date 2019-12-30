@@ -40,6 +40,12 @@ class MyHeatStat extends IPSModule
        
     ------------------------------------------------------------- */
     public function Create(){
+            //Profil anlegen:
+            $assoc[0] = "Störung";
+            $assoc[1] = "Anwärmen";  
+            $assoc[2] = "Heizen";
+            $assoc[3] = "Kalt";  
+            $this->RegisterProfile("Heat.Stat", "","", "", "", "", "", "", 0, "ProfHeatStat", $assoc);
 	    //Never delete this line!
         parent::Create();
         
@@ -49,6 +55,8 @@ class MyHeatStat extends IPSModule
         $this->RegisterPropertyInteger("TempVor", 0);
         $this->RegisterPropertyInteger("TempRueck", 0);
         $this->RegisterPropertyBoolean("DTsens", false);
+
+
 
         $variablenID = $this->RegisterVariableBoolean("HeatAlarm", "Störung");
         IPS_SetInfo ($variablenID, "WSS");  
@@ -74,12 +82,7 @@ class MyHeatStat extends IPSModule
     ------------------------------------------------------------- */
     public function ApplyChanges(){
         //Never delete this line!
-            //Profil anlegen:
-            $assoc[0] = "Störung";
-            $assoc[1] = "Anwärmen";  
-            $assoc[2] = "Heizen";
-            $assoc[3] = "Kalt";  
-            $this->RegisterProfile("Heat.Stat", "","", "", "", "", "", "", 0, "ProfHeatStat", $assoc);
+
         parent::ApplyChanges();
          
     }
