@@ -43,7 +43,8 @@ class MyHeatStat extends IPSModule
 
 	    //Never delete this line!
         parent::Create();
-        
+
+        $this->RegisterPropertyBoolean("active", false);
         $this->RegisterPropertyInteger("RaumTemp", 0);
         $this->RegisterPropertyInteger("TempSoll", 0);
         $this->RegisterPropertyInteger("VtlPos", 0);
@@ -68,16 +69,29 @@ class MyHeatStat extends IPSModule
         SYSTEM-VARIABLE:
             InstanceID - $this->InstanceID.
 
-        Profiles:
-        * Alarm.Activate
-
         EVENTS:
-            SwitchTimeEvent".$this->InstanceID   -   Wochenplan (Mo-Fr und Sa-So)
-            SunRiseEvent".$this->InstanceID       -   cyclice Time Event jeden Tag at SunRise
+  
     ------------------------------------------------------------- */
     public function ApplyChanges(){
         //Never delete this line!
         parent::ApplyChanges();
+
+        //Event bei Änderung der Variablen "VtlPos"
+        $EventName = "PosEvnt";
+        $varID = $this->ReadPropertyInteger("VtlPos");
+        $EventID = "IDPosEvnt";
+        $ParentID = $varID; //Event unter die Variable hängen
+        $cmd = "HS_Heat_Stat(".$this->InstanceID.");" ;
+        $this->RegisterVarEvent($EventName, $EventID, 0, $ParentID, 0, 1, $varID, $cmd);
+
+
+        if($this->ReadPropertyBoolean("active")){
+            //Event aktivieren - wenn Postion svon Aktor ändert dann Trigger Event
+            IPS_SetEventActive($EventID, true);
+        }
+        else{
+            IPS_SetEventActive($EventID, false);
+        }
          
     }
     
@@ -88,10 +102,10 @@ class MyHeatStat extends IPSModule
      Die folgenden Funktionen stehen automatisch zur Verfügung, wenn das Modul über die "Module Control" eingefügt wurden.
      Die Funktionen werden, mit dem selbst eingerichteten Prefix, in PHP und JSON-RPC wie folgt zur Verfügung gestellt:
     
-     FSSC_XYFunktion($Instance_id, ... );
+     HS_XYFunktion($Instance_id, ... );
      ________________________________________________________________________________________________________________________ */
     //-----------------------------------------------------------------------------
-    /* Function: xxxx
+    /* Function: Heat_Stat
     ...............................................................................
     Beschreibung
     ...............................................................................
@@ -101,8 +115,33 @@ class MyHeatStat extends IPSModule
     Returns:    
         none
     ------------------------------------------------------------------------------  */
-    public function xxxx(){
-       
+    public function Heat_Stat(){
+        if($aktiv){
+            
+            //Anwärmvorgang der Heizung - Heizung wird mit heßem Wasser befüllt
+            if ($VorlaufTemp > ($RaumTemp + 1) and ($RücklaufTemp < ($RaumTemp + 1)))
+            {
+                setvalue(ID_STATUSHEIZUNG,1);	
+            };
+
+            // Heizen - Heizkörper ist mit heißem Wasser gefüllt und Rücklauf zeigt Temperatur
+            if ($RücklaufTemp > ($RaumTemp + 1) and ($VorlaufTemp > ($RaumTemp + 1)))
+            {
+                setvalue(ID_STATUSHEIZUNG,2);	
+            };
+
+            // Heizung ist aus (Kalt) 
+            if ($RücklaufTemp < ($RaumTemp + 1) and ($VorlaufTemp < ($RaumTemp + 1)))
+            {
+                setvalue(ID_STATUSHEIZUNG,3);	
+            };
+
+
+            // Heizung ist in Störung
+        }
+        else{
+
+        }
     }  
 
 
@@ -235,7 +274,48 @@ class MyHeatStat extends IPSModule
 }	
 
     
+     /* --------------------------------------------------------------------------- 
+    Function: RegisterVarEvent
+    ...............................................................................
+    legt einen Event an wenn nicht schon vorhanden
+      Beispiel:
+      ("Wochenplan", "SwitchTimeEvent".$this->InstanceID, 2, $this->InstanceID, 20);  
+      ...............................................................................
+    Parameters: 
+      $Name        -   Name des Events
+      $Ident       -   Ident Name des Events
+      $Typ         -   Typ des Events (1=cyclic 2=Wochenplan)
+      $Trigger
+                0	Bei Variablenaktualisierung
+                1	Bei Variablenänderung
+                2	Bei Grenzüberschreitung. Grenzwert wird über IPS_SetEventTriggerValue festgelegt
+                3	Bei Grenzunterschreitung. Grenzwert wird über IPS_SetEventTriggerValue festgelegt
+                4	Bei bestimmtem Wert. Wert wird über IPS_SetEventTriggerValue festgelegt
+
+      $Parent      -   ID des Parents
+      $Position    -   Position der Instanz
+    ...............................................................................
+    Returns:    
+        none 
+    -------------------------------------------------------------------------------*/
+    private function RegisterVarEvent($Name, $Ident, $Typ, $ParentID, $Position, $trigger, $var, $cmd){
+            $eid =  @IPS_GetEventIDByName($Name, $ParentID);
+            if($eid === false) {
+                //we need to create a new one
+                $EventID = IPS_CreateEvent($Typ);
+                IPS_SetParent($EventID, $ParentID);
+                @IPS_SetIdent($EventID, $Ident);
+                IPS_SetName($EventID, $Name);
+                IPS_SetPosition($EventID, $Position);
+                IPS_SetEventTrigger($EventID, $trigger, $var);   //OnChange für Variable $var
+                
+                IPS_SetEventScript($EventID, $cmd );
+                IPS_SetEventActive($EventID, true);
+            } 
+            else{
+            }
  
+    }
 
 
 

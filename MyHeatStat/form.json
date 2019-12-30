@@ -1,17 +1,21 @@
 {
     "elements": [{
-            "type": "SelectInstance",
+            "name": "ID_active",
+            "type": "CheckBox",
+            "caption": "active"
+        },
+        {
+            "type": "SelectVariable",
             "name": "RaumTemp",
             "caption": "Raum Temperatur"
         },
-
         {
-            "type": "SelectInstance",
+            "type": "SelectVariable",
             "name": "TempSoll",
             "caption": "Soll Temperatur"
         },
         {
-            "type": "SelectInstance",
+            "type": "SelectVariable",
             "name": "VtlPos",
             "caption": "Ventilstellung"
         },
@@ -22,12 +26,12 @@
 
         },
         {
-            "type": "SelectInstance",
+            "type": "SelectVariable",
             "name": "TempVor",
             "caption": "Vorlauf Temperatur"
         },
         {
-            "type": "SelectInstance",
+            "type": "SelectVariable",
             "name": "TempRueck",
             "caption": "Ruecklauf Temperatur"
         }
