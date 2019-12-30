@@ -1,0 +1,35 @@
+{
+    "elements": [{
+            "type": "SelectInstance",
+            "name": "RaumTemp",
+            "caption": "Raum Temperatur"
+        },
+
+        {
+            "type": "SelectInstance",
+            "name": "TempSoll",
+            "caption": "Soll Temperatur"
+        },
+        {
+            "type": "SelectInstance",
+            "name": "VtlPos",
+            "caption": "Ventilstellung"
+        },
+        {
+            "name": "DTsens",
+            "type": "CheckBox",
+            "caption": "Differenz Sensor vorhanden."
+
+        },
+        {
+            "type": "SelectInstance",
+            "name": "TempVor",
+            "caption": "Vorlauf Temperatur"
+        },
+        {
+            "type": "SelectInstance",
+            "name": "TempRueck",
+            "caption": "Ruecklauf Temperatur"
+        }
+    ]
+}

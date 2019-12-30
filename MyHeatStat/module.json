@@ -1,0 +1,11 @@
+{
+    "id": "{36E34987-2F26-7E2D-A9EF-FE5023FEB509}",
+    "name": "MyHeatStat",
+    "type": 3,
+    "vendor": "PiTo",
+    "aliases": ["MyHeatStat"],
+    "parentRequirements": [],
+    "childRequirements": [],
+    "implemented": [],
+    "prefix": "HS"
+}
