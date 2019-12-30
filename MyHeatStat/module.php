@@ -171,9 +171,9 @@ class MyHeatStat extends IPSModule
         $Icon = NULL;
         $Prefix = NULL;
         $Suffix = NULL;
-        $MinValue = NULL;
-        $MaxValue = NULL;
-        $StepSize = NULL;
+        $MinValue = 0;
+        $MaxValue = 4;
+        $StepSize = 1;
         $Digits = NULL;
         $this->createProfile($Name, $Vartype,  $Assoc, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize, $Digits);
                 
