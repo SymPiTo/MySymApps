@@ -44,7 +44,7 @@ class MyHeatStat extends IPSModule
 	    //Never delete this line!
         parent::Create();
 
-        $this->RegisterPropertyBoolean("active", false);
+        $this->RegisterPropertyBoolean("active", true);
         $this->RegisterPropertyInteger("RaumTemp", 0);
         $this->RegisterPropertyInteger("TempSoll", 0);
         $this->RegisterPropertyInteger("VtlPos", 0);
