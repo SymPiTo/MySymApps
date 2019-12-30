@@ -164,8 +164,8 @@ class MyHeatStat extends IPSModule
     protected function RegisterProfiles(){
         $Assoc[0]['value'] = "Störung";
         $Assoc[1]['value'] = "Anwärmen";
-        $Assoc[3]['value'] = "Heizen";
-        $Assoc[4]['value'] = "Kalt";
+        $Assoc[2]['value'] = "Heizen";
+        $Assoc[3]['value'] = "Kalt";
         $Name = "Heat.Status";
         $Vartype = 1;
         $Icon = NULL;
