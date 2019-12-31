@@ -101,7 +101,7 @@ class MyHeatStat extends IPSModule
         }       
      
 
-        $Mem = new buffer();
+        $this->Mem = new buffer();
         
 
         //Event kann erst erstellt werden, wenn ID von VtlPos eingetragen wurde
