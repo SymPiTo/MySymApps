@@ -186,7 +186,7 @@ class MyKochbuch extends IPSModule
     Returns:    
         none
     ------------------------------------------------------------------------------  */
-    public function readKochbuch($No){
+    public function readKochbuch(int $No){
         //Einlesen der Kochbuch json Datei
         $ModulPath = "MyKochbuch";
         $JsonFileName = "Rezepte.json";
