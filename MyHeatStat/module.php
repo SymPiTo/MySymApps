@@ -94,7 +94,7 @@ class MyHeatStat extends IPSModule
             }
         } 
         else{
-            $this->SetStatus(201);
+            $this->SetStatus(102);
         }       
      
 

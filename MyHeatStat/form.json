@@ -37,14 +37,8 @@
         }
     ],
     "status": [{
-            "code": 200,
-            "icon": "active",
-            "caption": "Diff Temperaruren müssen eingetragen werden!"
-        },
-        {
-            "code": 201,
-            "icon": "active",
-            "caption": "OK"
-        }
-    ]
+        "code": 200,
+        "icon": "active",
+        "caption": "Diff Temperaruren müssen eingetragen werden!"
+    }]
 }
