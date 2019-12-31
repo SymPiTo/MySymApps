@@ -78,7 +78,7 @@ class MyHeatStat extends IPSModule
 
         //Event kann erst erstellt werden, wenn ID von VtlPos eingetragen wurde
         if($this->ReadPropertyInteger("VtlPos") >0){
-            setvalue($this->GetIDForIdent("HeatStat"));
+            setvalue($this->GetIDForIdent("HeatStat"), $this->ReadPropertyInteger("VtlPos"));
         }
 
 
