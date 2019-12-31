@@ -96,18 +96,23 @@ class MyHeatStat extends IPSModule
            $EventID = $this->RegisterVarEvent($EventName, $Ident, 0, $ParentID, 0, 1, $varID, $cmd); 
         }
 
+        if(($this->ReadPropertyInteger("TempVor") === 0) or ($this->ReadPropertyInteger("TempRueck") === 0)){
+            IPS_SetProperty($this->InstanceID, "DTsens", false);
+        }
+        
 
 
         if($this->ReadPropertyBoolean("ID_active")){
             //Überprüfen dass die Links gesetzt wurden
             if($this->ReadPropertyInteger("VtlPos") >0){
-                //Event aktivieren - wenn Postion svon Aktor ändert dann Trigger Event
+                //Event aktivieren - wenn Postion von Aktor sich ändert dann Trigger Event
                 IPS_SetEventActive($EventID, true);
             }
         }
         else{
             if($this->ReadPropertyInteger("VtlPos") >0){    
-                IPS_SetEventActive($EventID, false);
+                IPS_SetEventActive($EventID, false);            //Event deaktivieren
+                $this->SetTimerInterval('HS_T_TodZeit', 0);     //Timer abschalten
             }
         }
          
