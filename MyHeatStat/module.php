@@ -78,22 +78,23 @@ class MyHeatStat extends IPSModule
 
         //Event kann erst erstellt werden, wenn ID von VtlPos eingetragen wurde
         if($this->ReadPropertyInteger("VtlPos") >0){
-            
-        }
-
-
-
-        if($this->ReadPropertyBoolean("ID_active")){
            //Event bei Änderung der Variablen "VtlPos"
            $EventName = "PosEvnt";
            $varID = $this->ReadPropertyInteger("VtlPos");
            $Ident = "IDPosEvnt";
            $ParentID = $varID; //Event unter die Variable hängen
            $cmd = "HS_Heat_Stat(".$this->InstanceID.");" ;
-           $EventID = $this->RegisterVarEvent($EventName, $Ident, 0, $ParentID, 0, 1, $varID, $cmd);
+           $EventID = $this->RegisterVarEvent($EventName, $Ident, 0, $ParentID, 0, 1, $varID, $cmd); 
+        }
 
-            //Event aktivieren - wenn Postion svon Aktor ändert dann Trigger Event
-            IPS_SetEventActive($EventID, true);
+
+
+        if($this->ReadPropertyBoolean("ID_active")){
+            //Überprüfen dass die Links gesetzt wurden
+            if($this->ReadPropertyInteger("VtlPos") >0){
+                //Event aktivieren - wenn Postion svon Aktor ändert dann Trigger Event
+                IPS_SetEventActive($EventID, true);
+            }
         }
         else{
            // IPS_SetEventActive($EventID, false);
