@@ -123,7 +123,7 @@ class MyHeatStat extends IPSModule
     ------------------------------------------------------------------------------  */
     public function Heat_Stat(){
         
-        if($this->ReadPropertyInteger("ID_active")){
+        if($this->ReadPropertyBoolean("ID_active")){
             $VorlaufTemp = getvalue($this->ReadPropertyInteger("TempVor"));
             $RücklaufTemp = getvalue($this->ReadPropertyInteger("TempRueck"));
             $RaumTemp = getvalue($this->ReadPropertyInteger("RaumTemp"));
@@ -154,7 +154,7 @@ class MyHeatStat extends IPSModule
         }
     }  
 
-    
+
 
    /* _______________________________________________________________________
     * Section: Private Funtions
