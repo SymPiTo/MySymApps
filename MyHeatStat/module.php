@@ -78,7 +78,7 @@ class MyHeatStat extends IPSModule
 
         //Event kann erst erstellt werden, wenn ID von VtlPos eingetragen wurde
         if($this->ReadPropertyInteger("VtlPos") >0){
-            setvalue($this->GetIDForIdent("HeatStat"), $this->ReadPropertyInteger("VtlPos"));
+            
         }
 
 
@@ -123,23 +123,26 @@ class MyHeatStat extends IPSModule
     ------------------------------------------------------------------------------  */
     public function Heat_Stat(){
         if($aktiv){
-            
+            $VorlaufTemp = getvalue($this->ReadPropertyInteger("TempVor"));
+            $RücklaufTemp = getvalue($this->ReadPropertyInteger("TempRueck"));
+            $RaumTemp = getvalue($this->ReadPropertyInteger("RaumTemp"));
+
             //Anwärmvorgang der Heizung - Heizung wird mit heßem Wasser befüllt
             if ($VorlaufTemp > ($RaumTemp + 1) and ($RücklaufTemp < ($RaumTemp + 1)))
             {
-                setvalue(ID_STATUSHEIZUNG,1);	
+                setvalue($this->GetIDForIdent("HeatStat"), 1);	
             };
 
             // Heizen - Heizkörper ist mit heißem Wasser gefüllt und Rücklauf zeigt Temperatur
             if ($RücklaufTemp > ($RaumTemp + 1) and ($VorlaufTemp > ($RaumTemp + 1)))
             {
-                setvalue(ID_STATUSHEIZUNG,2);	
+                setvalue($this->GetIDForIdent("HeatStat"), 2);	
             };
 
             // Heizung ist aus (Kalt) 
             if ($RücklaufTemp < ($RaumTemp + 1) and ($VorlaufTemp < ($RaumTemp + 1)))
             {
-                setvalue(ID_STATUSHEIZUNG,3);	
+                setvalue($this->GetIDForIdent("HeatStat"), 3);	
             };
 
 
