@@ -97,10 +97,13 @@ class MyHeatStat extends IPSModule
         }
         //Difff Temp Sensoren wurden aktiviert - Links zu den Sensoren fehlen !
         if(($this->ReadPropertyInteger("TempVor") === 0) or ($this->ReadPropertyInteger("TempRueck") === 0)){
+            $this->SendDebug("Status Meldung: ", $this->ReadPropertyInteger("TempVor"), 0);
+            $this->SendDebug("Status Meldung: ", $this->ReadPropertyInteger("TempRueck"), 0);
             if($this->ReadPropertyBoolean("DTsens")){
                 $this->SetStatus(200);
             }
-        }   
+        } 
+  
      
         
 
