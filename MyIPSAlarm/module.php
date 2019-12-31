@@ -636,7 +636,7 @@ class MyAlarm extends IPSModule
         Returns:   
              none
         ------------------------------------------------------------------------------- */
-	public function cryptPW($password){  
+	public function cryptPW(string $password){  
            $hash = password_hash($password, PASSWORD_DEFAULT); 
            $this->SendDebug("Password", $hash, 0);
            return $hash;
