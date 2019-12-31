@@ -35,5 +35,10 @@
             "name": "TempRueck",
             "caption": "Ruecklauf Temperatur"
         }
-    ]
+    ],
+    "status": [{
+        "code": 200,
+        "icon": "error",
+        "caption": "Diff Temperaruren müssen eingetragen werden!"
+    }]
 }
