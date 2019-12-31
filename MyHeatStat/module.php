@@ -106,7 +106,9 @@ class MyHeatStat extends IPSModule
             }
         }
         else{
+            if($this->ReadPropertyInteger("VtlPos") >0){    
                 IPS_SetEventActive($EventID, false);
+            }
         }
          
     }
