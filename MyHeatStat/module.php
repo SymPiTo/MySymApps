@@ -92,8 +92,11 @@ class MyHeatStat extends IPSModule
             if($this->ReadPropertyBoolean("DTsens")){
                 $this->SetStatus(200);
             }
-        }        
-        parent::ApplyChanges();
+        } 
+        else{
+            $this->SetStatus(201);
+        }       
+     
 
         $Mem = new buffer();
         
