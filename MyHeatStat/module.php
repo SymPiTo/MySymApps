@@ -80,6 +80,11 @@ class MyHeatStat extends IPSModule
     ------------------------------------------------------------- */
     public function ApplyChanges(){
 
+
+        //Never delete this line!
+        parent::ApplyChanges();
+
+
         //Difff Temp Sensoren wurden aktiviert - Links zu den Sensoren fehlen !
         if(($this->ReadPropertyInteger("TempVor") === 0) or ($this->ReadPropertyInteger("TempRueck") === 0)){
             $this->SendDebug("Status Meldung: ", $this->ReadPropertyInteger("TempVor"), 0);
@@ -88,7 +93,6 @@ class MyHeatStat extends IPSModule
                 $this->SetStatus(200);
             }
         }        
-        //Never delete this line!
         parent::ApplyChanges();
 
         $Mem = new buffer();
