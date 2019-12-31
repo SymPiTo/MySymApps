@@ -43,8 +43,8 @@
         },
         {
             "code": 201,
-            "icon": "Logged in!",
-            "caption": "active."
+            "icon": "active",
+            "caption": "OK"
         }
     ]
 }
