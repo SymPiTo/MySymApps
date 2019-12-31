@@ -124,7 +124,7 @@ class MyHeatStat extends IPSModule
         else{
             if($this->ReadPropertyInteger("VtlPos") >0){    
                 IPS_SetEventActive($EventID, false);            //Event deaktivieren
-                $this->SetTimerInterval('HS_T_TodZeit', 0);     //Timer abschalten
+                $this->SetTimerInterval('T_TodZeit', 0);     //Timer abschalten
             }
         }
          
