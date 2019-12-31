@@ -1,5 +1,5 @@
 <?
-// require_once(__DIR__ . "/../libs/MyTraits.php");
+
 
 /**
  * Title: Heat Alarm
@@ -467,7 +467,7 @@ class MyHeatStat extends IPSModule
 		
 }
 
-Class buffer {
+Class buffer extends MyHeatStat{
     Public $timerOn = false;
     Public $Todzeit = false;
     Public $RT_before = 0;
