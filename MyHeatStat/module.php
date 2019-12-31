@@ -467,7 +467,7 @@ class MyHeatStat extends IPSModule
 		
 }
 
-Class buffer extends MyHeatStat{
+Class buffer {
     Public $timerOn = false;
     Public $Todzeit = false;
     Public $RT_before = 0;
