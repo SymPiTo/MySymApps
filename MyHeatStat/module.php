@@ -79,6 +79,15 @@ class MyHeatStat extends IPSModule
   
     ------------------------------------------------------------- */
     public function ApplyChanges(){
+
+        //Difff Temp Sensoren wurden aktiviert - Links zu den Sensoren fehlen !
+        if(($this->ReadPropertyInteger("TempVor") === 0) or ($this->ReadPropertyInteger("TempRueck") === 0)){
+            $this->SendDebug("Status Meldung: ", $this->ReadPropertyInteger("TempVor"), 0);
+            $this->SendDebug("Status Meldung: ", $this->ReadPropertyInteger("TempRueck"), 0);
+            if($this->ReadPropertyBoolean("DTsens")){
+                $this->SetStatus(200);
+            }
+        }        
         //Never delete this line!
         parent::ApplyChanges();
 
@@ -95,14 +104,7 @@ class MyHeatStat extends IPSModule
            $cmd = "HS_Heat_Stat(".$this->InstanceID.");" ;
            $EventID = $this->RegisterVarEvent($EventName, $Ident, 0, $ParentID, 0, 1, $varID, $cmd); 
         }
-        //Difff Temp Sensoren wurden aktiviert - Links zu den Sensoren fehlen !
-        if(($this->ReadPropertyInteger("TempVor") === 0) or ($this->ReadPropertyInteger("TempRueck") === 0)){
-            $this->SendDebug("Status Meldung: ", $this->ReadPropertyInteger("TempVor"), 0);
-            $this->SendDebug("Status Meldung: ", $this->ReadPropertyInteger("TempRueck"), 0);
-            if($this->ReadPropertyBoolean("DTsens")){
-                $this->SetStatus(200);
-            }
-        } 
+
   
      
         
