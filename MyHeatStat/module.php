@@ -92,6 +92,9 @@ class MyHeatStat extends IPSModule
             if($this->ReadPropertyBoolean("DTsens")){
                 $this->SetStatus(200);
             }
+            else{
+                $this->SetStatus(102);
+            }
         } 
         else{
             $this->SetStatus(102);
