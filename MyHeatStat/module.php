@@ -1,4 +1,6 @@
 <?
+// require_once(__DIR__ . "/../libs/MyTraits.php");
+
 /**
  * Title: Heat Alarm
   *
@@ -58,8 +60,12 @@ class MyHeatStat extends IPSModule
         IPS_SetInfo ($variablenID, "WSS");  
         $variablenID = $this->RegisterVariableInteger("HeatStat", "Status", "Heat.Status");  
         IPS_SetInfo ($variablenID, "WSS");    
+        $variablenID = $this->RegisterVariableString("Message", "Meldung");  
+        IPS_SetInfo ($variablenID, "WSS");  
 
-
+        // Timer erstellen
+        $this->RegisterTimer("T_TodZeit", 0,  'HS_Todzeit_Reached(' . $this->InstanceID . ');');
+        
     }
    /* ------------------------------------------------------------ 
     Function: ApplyChanges 
@@ -75,6 +81,9 @@ class MyHeatStat extends IPSModule
     public function ApplyChanges(){
         //Never delete this line!
         parent::ApplyChanges();
+
+        $Mem = new buffer();
+        
 
         //Event kann erst erstellt werden, wenn ID von VtlPos eingetragen wurde
         if($this->ReadPropertyInteger("VtlPos") >0){
@@ -97,7 +106,7 @@ class MyHeatStat extends IPSModule
             }
         }
         else{
-           // IPS_SetEventActive($EventID, false);
+                IPS_SetEventActive($EventID, false);
         }
          
     }
@@ -128,32 +137,88 @@ class MyHeatStat extends IPSModule
             $VorlaufTemp = getvalue($this->ReadPropertyInteger("TempVor"));
             $RücklaufTemp = getvalue($this->ReadPropertyInteger("TempRueck"));
             $RaumTemp = getvalue($this->ReadPropertyInteger("RaumTemp"));
+            $VtlPos =  getvalue($this->ReadPropertyInteger("VtlPos"));
 
-            //Anwärmvorgang der Heizung - Heizung wird mit heßem Wasser befüllt
-            if ($VorlaufTemp > ($RaumTemp + 1) and ($RücklaufTemp < ($RaumTemp + 1)))
-            {
-                setvalue($this->GetIDForIdent("HeatStat"), 1);	
-            };
+            // Heizung ist in Störung 
+            // Ventil ist auf aber Rücklauftemperatur erhöht sich nicht nach 5 Min
+            if($Mem->Todzeit){
+                if($VtlPos > 0 and ($RücklaufTemp <= $Mem->RLFT_before)){
+                    setvalue($this->GetIDForIdent("HeatStat"), 0);	// Störung - RaumTemperatur wurde innerhalb 5 Minuten nicht erhöht
+                    setvalue($this->GetIDForIdent("Message"), "Vtl öffnet nicht.");  //Ventil öffnet nicht.
+                }
+                // Ventil ist auf aber Raumtemperatur erhöht sich nicht nach Todzeit  (5min)  
+                elseif ($VtlPos > 0 and ($Mem->RT_before <= $RaumTemp)){
+                    setvalue($this->GetIDForIdent("HeatStat"), 0);	// Störung - RaumTemperatur wurde innerhalb 5 Minuten nicht erhöht
+                    setvalue($this->GetIDForIdent("Message"), "Vtl schwergängig.");  //Ventil ist schwergängig
+                }
+                else{
+                    //Anwärmvorgang der Heizung - Heizung wird mit heßem Wasser befüllt
+                    if ($VorlaufTemp > ($RaumTemp + 1) and ($RücklaufTemp < ($RaumTemp + 1))){
+                        setvalue($this->GetIDForIdent("HeatStat"), 1);	
 
-            // Heizen - Heizkörper ist mit heißem Wasser gefüllt und Rücklauf zeigt Temperatur
-            if ($RücklaufTemp > ($RaumTemp + 1) and ($VorlaufTemp > ($RaumTemp + 1)))
-            {
-                setvalue($this->GetIDForIdent("HeatStat"), 2);	
-            };
+                        // Timer starten wenn nicht schon am laufen - Todzeit - Zeit bis Raumtemperatur sich ändert beim heizen
+                        if($Mem->timerOn === false){
+                            $this->SetTimerInterval('HS_T_TodZeit', 1800000);   //Timer auf 5 Minuten setzen
+                            $Mem->RT_before = $RaumTemp;
+                            $Mem->RLFT_before = $RücklaufTemp;
+                        }
+                    }
+                    // Heizen - Heizkörper ist mit heißem Wasser gefüllt und Rücklauf zeigt Temperatur
+                    if ($RücklaufTemp > ($RaumTemp + 1) and ($VorlaufTemp > ($RaumTemp + 1))){
+                        setvalue($this->GetIDForIdent("HeatStat"), 2);	
+                    }
+                    // Heizung ist aus (Kalt) 
+                    if ($RücklaufTemp < ($RaumTemp + 1) and ($VorlaufTemp < ($RaumTemp + 1))) {
+                        setvalue($this->GetIDForIdent("HeatStat"), 3);	
+                    }
+                }
+            }
+            else{
+                    //Anwärmvorgang der Heizung - Heizung wird mit heßem Wasser befüllt
+                    if ($VorlaufTemp > ($RaumTemp + 1) and ($RücklaufTemp < ($RaumTemp + 1))){
+                        setvalue($this->GetIDForIdent("HeatStat"), 1);	
 
-            // Heizung ist aus (Kalt) 
-            if ($RücklaufTemp < ($RaumTemp + 1) and ($VorlaufTemp < ($RaumTemp + 1)))
-            {
-                setvalue($this->GetIDForIdent("HeatStat"), 3);	
-            };
-
-
-            // Heizung ist in Störung
+                        // Timer starten wenn nicht schon am laufen - Todzeit - Zeit bis Raumtemperatur sich ändert beim heizen
+                        if($Mem->timerOn === false){
+                            $this->SetTimerInterval('HS_T_TodZeit', 1800000);   //Timer auf 5 Minuten setzen
+                            $Mem->RT_before = $RaumTemp;
+                            $Mem->RLFT_before = $RücklaufTemp;
+                        }
+                    }
+                    // Heizen - Heizkörper ist mit heißem Wasser gefüllt und Rücklauf zeigt Temperatur
+                    if ($RücklaufTemp > ($RaumTemp + 1) and ($VorlaufTemp > ($RaumTemp + 1))){
+                        setvalue($this->GetIDForIdent("HeatStat"), 2);	
+                    }
+                    // Heizung ist aus (Kalt) 
+                    if ($RücklaufTemp < ($RaumTemp + 1) and ($VorlaufTemp < ($RaumTemp + 1))) {
+                        setvalue($this->GetIDForIdent("HeatStat"), 3);	
+                    }  
+            }
         }
         else{
 
         }
     }  
+
+
+     //-----------------------------------------------------------------------------
+    /* Function: Todzeit_Reached
+    ...............................................................................
+    Beschreibung:
+        Funktion wird vom Timer Todzeit getriggert
+    ...............................................................................
+    Parameters: 
+        none
+    ...............................................................................
+    Returns:    
+        none
+    ------------------------------------------------------------------------------  */
+    public function Todzeit_Reached(){  
+        $Mem->Todzeit = true;                           // Merker setzen
+        $this->SetTimerInterval('HS_T_TodZeit', 0);     //Timer abschalten
+        $this->Heat_Stat();
+
+    }
 
 
 
@@ -335,4 +400,12 @@ class MyHeatStat extends IPSModule
 
 
 		
+}
+
+Class buffer {
+    Public $timerOn = false;
+    Public $Todzeit = false;
+    Public $RT_before = 0;
+    Public $RLFT_before = 0;
+
 }
