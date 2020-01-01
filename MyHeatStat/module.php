@@ -159,7 +159,7 @@ class MyHeatStat extends IPSModule
         none
     ------------------------------------------------------------------------------  */
     public function Heat_Stat(){
-        $M = $Mem;
+        $M = (object) $Mem;
         if($this->ReadPropertyBoolean("ID_active")){
             if($this->ReadPropertyBoolean("DTsens")){
                 $VorlaufTemp = getvalue($this->ReadPropertyInteger("TempVor"));
