@@ -234,7 +234,7 @@ class MyHeatStat extends IPSModule
                         // Heizen - Heizkörper ist mit heißem Wasser gefüllt und Rücklauf zeigt Temperatur
                         if ($RücklaufTemp > ($RaumTemp + 1) and ($VorlaufTemp > ($RaumTemp + 1))){
                             setvalue($this->GetIDForIdent("HeatStat"), 2);	
-                            this->SendDebug("Heizen", "Rücklauf zeigt Temperatur = ".$RücklaufTemp, 0);
+                            $this->SendDebug("Heizen", "Rücklauf zeigt Temperatur = ".$RücklaufTemp, 0);
                         }
                         // Heizung ist aus (Kalt) 
                         if ($RücklaufTemp < ($RaumTemp + 1) and ($VorlaufTemp < ($RaumTemp + 1))) {
