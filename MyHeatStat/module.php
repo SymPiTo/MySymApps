@@ -500,10 +500,21 @@ class MyHeatStat extends IPSModule
 }
 
 Class puffer {
-    Public $timerOn = false;
-    Public $Todzeit = false;
-    Public $RT_before = 0;
-    Public $RLFT_before = 0;
-    Public $test = "Hallo";
+    private $Items = array();
 
+
+
+     public function __construct($Frame = null, $Payload = null)
+     {
+        $this->Items[0]["timerOn"] = false;
+        $this->Items[0]["Todzeit"] = false;
+        $this->Items[0]["RT_before"] = 0;
+        $this->Items[0]["RLFT_before"] = 0;
+        $this->Items[0]["test"] = "Hallo";
+     }
+
+    public function __sleep()
+    {
+        return array('Items');
+    }
 }
