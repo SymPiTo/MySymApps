@@ -268,7 +268,7 @@ class MyHeatStat extends IPSModule
                 //----------------------------------------
                 // Heizung ist in Störung 
                 
-                if($MemVal->getMem("Todzeit"){
+                if($MemVal->getMem("Todzeit")){
  
                     // Ventil ist auf aber Raumtemperatur erhöht sich nicht nach Todzeit  (5min)  
                     if ($VtlPos > 0 and ($MemVal->RT_before <= $RaumTemp)){
