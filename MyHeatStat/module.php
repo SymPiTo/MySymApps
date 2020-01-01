@@ -1,5 +1,5 @@
 <?
-
+require_once(__DIR__ . "/../libs/MemHelper.php");
 
 /**
  * Title: Heat Alarm
@@ -13,8 +13,7 @@
 //Class: MyHeatAlarm
 class MyHeatStat extends IPSModule
 {    
-    Public $test = "Hallo";
-    Public $n = 0;
+ 
     
     /* 
     _______________________________________________________________________ 
@@ -167,10 +166,10 @@ class MyHeatStat extends IPSModule
     ------------------------------------------------------------------------------  */
     public function Heat_Stat(){
       
-         //  $MemVal =  $this->Mem; 
-        $this->n = $this->n + 1;
-        $this->SendDebug("Start:MemVal->test", $this->test, 0);
-        $this->test = $this->n;    
+         $MemVal =  $this->Mem; 
+  
+        $this->SendDebug("Start:MemVal->test", $this->MemVal->test, 0);
+       
         $this->SendDebug("Start:MemVal->test", $this->n, 0);
         $this->SendDebug("Start:MemVal->Todzeit", $MemVal->Todzeit, 0);
         $this->SendDebug("Start:MemVal->timerOn", $MemVal->timerOn, 0);
@@ -504,20 +503,3 @@ class MyHeatStat extends IPSModule
 
 		
 }
-
-Class puffer extends MyHeatStat{
-    Public $timerOn = false;
-    Public $Todzeit = false;
-    Public $RT_before = 0;
-    Public $RLFT_before = 0;
-    Public $test = "Hallo";
-  
-
- 
-    public function __construct()
-    {
- 
-    }
-
- 
-} 
