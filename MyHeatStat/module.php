@@ -164,7 +164,7 @@ class MyHeatStat extends IPSModule
     ------------------------------------------------------------------------------  */
     public function Heat_Stat(){
         $MemVal = $this->Mem; 
-       
+        $this->SendDebug("MemVal->Todzeit", $MemVal->Todzeit, 0);
 
         if($this->ReadPropertyBoolean("ID_active")){
             if($this->ReadPropertyBoolean("DTsens")){
@@ -178,34 +178,43 @@ class MyHeatStat extends IPSModule
                 // Heizung ist in Störung 
                 // Ventil ist auf aber Rücklauftemperatur erhöht sich nicht nach 5 Min
                 if($MemVal->Todzeit){
+                    $this->SendDebug("MemVal->Todzeit", $MemVal->Todzeit, 0);
+
                     if($VtlPos > 0 and ($RücklaufTemp <= $MemVal->RLFT_before)){
                         setvalue($this->GetIDForIdent("HeatStat"), 0);	// Störung - RaumTemperatur wurde innerhalb 5 Minuten nicht erhöht
                         setvalue($this->GetIDForIdent("Message"), "Vtl öffnet nicht.");  //Ventil öffnet nicht.
+                        $this->SendDebug("Störung :", "Ventil öffent nicht, weil VtlPos= ".$VtlPos." und RücklaufTemp = ".$RücklaufTemp." <= MemVal->RLFT_before = ".$MemVal->RLFT_before , 0);
+
                     }
                     // Ventil ist auf aber Raumtemperatur erhöht sich nicht nach Todzeit  (5min)  
                     elseif ($VtlPos > 0 and ($MemVal->RT_before <= $RaumTemp)){
                         setvalue($this->GetIDForIdent("HeatStat"), 0);	// Störung - RaumTemperatur wurde innerhalb 5 Minuten nicht erhöht
                         setvalue($this->GetIDForIdent("Message"), "Vtl schwergängig.");  //Ventil ist schwergängig
+                        $this->SendDebug("Störung :", "Raumtemp steigt nicht, weil VtlPos= ".$VtlPos." und RaumTemp >= ".$RücklaufTemp." <= MemVal->RLFT_before = ".$MemVal->RLFT_before , 0);
                     }
                     else{
                         //Anwärmvorgang der Heizung - Heizung wird mit heßem Wasser befüllt
                         if ($VorlaufTemp > ($RaumTemp + 1) and ($RücklaufTemp < ($RaumTemp + 1))){
                             setvalue($this->GetIDForIdent("HeatStat"), 1);	
-
+                            $this->SendDebug("Anwärmen: ", "VorlaufTemp = ".$VorlaufTemp. " und RücklaufTemp = ".$RücklaufTemp, 0);
                             // Timer starten wenn nicht schon am laufen - Todzeit - Zeit bis Raumtemperatur sich ändert beim heizen
                             if($MemVal->timerOn === false){
-                                $this->SetTimerInterval('HS_T_TodZeit', 1800000);   //Timer auf 5 Minuten setzen
+                                $this->SetTimerInterval('T_TodZeit', 1800000);   //Timer auf 5 Minuten setzen
                                 $MemVal->RT_before = $RaumTemp;
                                 $MemVal->RLFT_before = $RücklaufTemp;
+                                $this->SendDebug("Anwärmen:", "Timer gestartet, in 5 Minuten muss sich RcklfTemp  und RaumTemp: ".$MemVal->RLFT_before." - ".$MemVal->RT_before, 0);
                             }
                         }
                         // Heizen - Heizkörper ist mit heißem Wasser gefüllt und Rücklauf zeigt Temperatur
                         if ($RücklaufTemp > ($RaumTemp + 1) and ($VorlaufTemp > ($RaumTemp + 1))){
                             setvalue($this->GetIDForIdent("HeatStat"), 2);	
+
+                            $this->SendDebug("Heizen", "Rücklauf zeigt Temperatur = ".$RücklaufTemp, 0);
                         }
                         // Heizung ist aus (Kalt) 
                         if ($RücklaufTemp < ($RaumTemp + 1) and ($VorlaufTemp < ($RaumTemp + 1))) {
                             setvalue($this->GetIDForIdent("HeatStat"), 3);	
+                            $this->SendDebug("Kalt", "Vorlauf und Rücklauf kalt  = "$VorlaufTemp." - ".$RücklaufTemp, 0);
                         }
                     }
                 }
