@@ -64,6 +64,7 @@ class MyHeatStat extends IPSModule
         IPS_SetInfo ($variablenID, "WSS");    
         $variablenID = $this->RegisterVariableString("Message", "Meldung");  
         IPS_SetInfo ($variablenID, "WSS");  
+        $this->RegisterVariableString("puffer", "Puffer"); 
 
         // Timer erstellen
         //$this->RegisterTimer("T_TodZeit", 0,  'HS_Todzeit_Reached(' . $this->InstanceID . ');');
@@ -107,8 +108,13 @@ class MyHeatStat extends IPSModule
         }       
         
 
-        $this->Mem = new puffer();
-        $this->SendDebug("InitStart:MemVal->test", $this->Mem->test, 0);
+        $Mem = new puffer($this->GetIDForIdent("puffer"));
+        $timerOn = false;
+        $Todzeit = false;
+        $RT_before = 0;
+        $RLFT_before = 0;
+        $VarArray = array("timerOn", "Todzeit", "RT_before", "RLFT_before");
+        $Mem->defineVars($VarArray);
 
         //Event kann erst erstellt werden, wenn ID von VtlPos eingetragen wurde
         if($this->ReadPropertyInteger("VtlPos") >0){
@@ -166,15 +172,15 @@ class MyHeatStat extends IPSModule
     ------------------------------------------------------------------------------  */
     public function Heat_Stat(){
       
-         $MemVal =  $this->Mem; 
+        $MemVal = new puffer($this->GetIDForIdent("puffer"));
   
-        $this->SendDebug("Start:MemVal->test", $this->MemVal->test, 0);
-       
-        $this->SendDebug("Start:MemVal->test", $this->n, 0);
-        $this->SendDebug("Start:MemVal->Todzeit", $MemVal->Todzeit, 0);
-        $this->SendDebug("Start:MemVal->timerOn", $MemVal->timerOn, 0);
-        $this->SendDebug("Start:MemVal->RT_before", $MemVal->RT_before, 0);
-        $this->SendDebug("Start:MemVal->RLFT_before", $MemVal->RLFT_before, 0);
+   
+        $MemVal->getMem("Todzeit");
+        
+        $this->SendDebug("Start:MemVal->Todzeit", $MemVal->getMem("Todzeit"), 0);
+        $this->SendDebug("Start:MemVal->timerOn", $MemVal->getMem("timerOn"), 0);
+        $this->SendDebug("Start:MemVal->RT_before", $MemVal->getMem("RT_before"), 0);
+        $this->SendDebug("Start:MemVal->RLFT_before", $MemVal->getMem("RLFT_before"), 0);
 
         if($this->ReadPropertyBoolean("ID_active")){
             if($this->ReadPropertyBoolean("DTsens")){
