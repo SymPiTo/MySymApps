@@ -65,9 +65,9 @@ class MyHeatStat extends IPSModule
 
         // Timer erstellen
         //$this->RegisterTimer("T_TodZeit", 0,  'HS_Todzeit_Reached(' . $this->InstanceID . ');');
-        $this->RegisterTimer("T_TodZeit", 0, "HS_Todzeit_Reached($_IPS['TARGET']);");
+        $this->RegisterTimer("T_TodZeit", 0, 'HS_Todzeit_Reached($_IPS[\'TARGET\']);');
 
-
+        
     }
    /* ------------------------------------------------------------ 
     Function: ApplyChanges 
