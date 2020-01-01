@@ -166,7 +166,7 @@ class MyHeatStat extends IPSModule
     public function Heat_Stat(){
         $this->MemVal =  $this->Mem; 
    
-        $this->SendDebug("Start:MemVal->test", $MemVal->test, 0);
+        $this->SendDebug("Start:MemVal->test", $this->MemVal->test, 0);
         $this->SendDebug("Start:MemVal->Todzeit", $MemVal->Todzeit, 0);
         $this->SendDebug("Start:MemVal->timerOn", $MemVal->timerOn, 0);
         $this->SendDebug("Start:MemVal->RT_before", $MemVal->RT_before, 0);
