@@ -307,7 +307,7 @@ class MyHeatStat extends IPSModule
     ------------------------------------------------------------------------------  */
     public function Todzeit_Reached(){  
         
-        $MemVal = $this->Mem;
+        //$MemVal = $this->Mem;
        
 
         $MemVal->Todzeit = true;                           // Merker setzen
