@@ -65,7 +65,10 @@ class MyHeatStat extends IPSModule
 
         // Timer erstellen
         $this->RegisterTimer("T_TodZeit", 0,  'HS_Todzeit_Reached(' . $this->InstanceID . ');');
-        
+
+        $Mem = new puffer();
+        $Mem->test = "So ein Scheiss";
+
     }
    /* ------------------------------------------------------------ 
     Function: ApplyChanges 
@@ -102,8 +105,7 @@ class MyHeatStat extends IPSModule
             $this->SetStatus(102);
         }       
      
-        $Mem = new puffer();
-        $Mem->test = "So ein Scheiss";
+ 
 
 
         //Event kann erst erstellt werden, wenn ID von VtlPos eingetragen wurde
