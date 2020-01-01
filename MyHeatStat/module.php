@@ -64,8 +64,8 @@ class MyHeatStat extends IPSModule
         IPS_SetInfo ($variablenID, "WSS");  
 
         // Timer erstellen
-        $this->RegisterTimer("T_TodZeit", 0,  'HS_Todzeit_Reached(' . $this->InstanceID . ');');
-
+        //$this->RegisterTimer("T_TodZeit", 0,  'HS_Todzeit_Reached(' . $this->InstanceID . ');');
+        $this->RegisterTimer("T_TodZeit", 0, "HS_Todzeit_Reached($_IPS['TARGET']);");
 
 
     }
@@ -163,7 +163,7 @@ class MyHeatStat extends IPSModule
         none
     ------------------------------------------------------------------------------  */
     public function Heat_Stat(){
-        $MemVal = $this->Mem; 
+        $MemVal = (object) $this->Mem; 
         $this->SendDebug("Start:MemVal->Todzeit", $MemVal->Todzeit, 0);
 
         if($this->ReadPropertyBoolean("ID_active")){
@@ -199,7 +199,7 @@ class MyHeatStat extends IPSModule
                             $this->SendDebug("Anwärmen: ", "VorlaufTemp = ".$VorlaufTemp. " und RücklaufTemp = ".$RücklaufTemp, 0);
                             // Timer starten wenn nicht schon am laufen - Todzeit - Zeit bis Raumtemperatur sich ändert beim heizen
                             if($MemVal->timerOn === false){
-                                $this->SetTimerInterval('T_TodZeit', 1800000);   //Timer auf 5 Minuten setzen
+                                $this->SetTimerInterval('T_TodZeit', 1800);   //Timer auf 5 Minuten setzen
                                 $MemVal->RT_before = $RaumTemp;
                                 $MemVal->RLFT_before = $RücklaufTemp;
                                 $this->SendDebug("Anwärmen:", "Timer gestartet, in 5 Minuten muss sich RcklfTemp  und RaumTemp: ".$MemVal->RLFT_before." - ".$MemVal->RT_before, 0);
@@ -226,7 +226,7 @@ class MyHeatStat extends IPSModule
                             // Timer starten wenn nicht schon am laufen - Todzeit - Zeit bis Raumtemperatur sich ändert beim heizen
                             $this->SendDebug("Status TimerOn: ", $MemVal->timerOn, 0);
                             if($MemVal->timerOn === false){
-                                $this->SetTimerInterval('T_TodZeit', 1800000);   //Timer auf 5 Minuten setzen
+                                $this->SetTimerInterval('T_TodZeit', 1800);   //Timer auf 5 Minuten setzen
                                 $MemVal->RT_before = $RaumTemp;
                                 $MemVal->RLFT_before = $RücklaufTemp;
                                 $this->SendDebug("Anwärmen: Todzeit = 0: ", "Timer starten - RT und RLfT".$MemVal->RT_before." - ".$MemVal->RLFT_before, 0);
