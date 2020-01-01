@@ -126,6 +126,8 @@ class MyHeatStat extends IPSModule
                 //Event aktivieren - wenn Postion von Aktor sich ändert dann Trigger Event
                 IPS_SetEventActive($EventID, true);
             }
+            // initiales ausführen
+            $this->Heat_Stat();
         }
         else{
             if($this->ReadPropertyInteger("VtlPos") >0){    
