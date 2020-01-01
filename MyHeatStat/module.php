@@ -116,6 +116,9 @@ class MyHeatStat extends IPSModule
         $VarArray = array("timerOn", "Todzeit", "RT_before", "RLFT_before");
         $Mem->defineVars($VarArray);
 
+        $this->SendDebug("Apply: ", $Mem->getMem("Todzeit"), 0);
+
+
         //Event kann erst erstellt werden, wenn ID von VtlPos eingetragen wurde
         if($this->ReadPropertyInteger("VtlPos") >0){
            //Event bei Änderung der Variablen "VtlPos"
@@ -193,7 +196,7 @@ class MyHeatStat extends IPSModule
             if($this->ReadPropertyBoolean("DTsens")){
                 // Heizung ist in Störung 
                 // Ventil ist auf aber Rücklauftemperatur erhöht sich nicht nach 5 Min
-                if($MemVal->Todzeit){
+                if($MemVal->getMem("Todzeit")){
                     $this->SendDebug("MemVal->Todzeit", $MemVal->Todzeit, 0);
 
                     if($VtlPos > 0 and ($RücklaufTemp <= $MemVal->RLFT_before)){
