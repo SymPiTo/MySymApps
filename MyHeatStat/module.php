@@ -164,8 +164,8 @@ class MyHeatStat extends IPSModule
         none
     ------------------------------------------------------------------------------  */
     public function Heat_Stat(){
-        $MVal =  $this->Mem; 
-        $MemVal = (object) $MVal;
+        $MemVal =  $this->Mem; 
+         
 
         $this->SendDebug("Start:MemVal->Todzeit", $MemVal->Todzeit, 0);
 
@@ -304,8 +304,8 @@ class MyHeatStat extends IPSModule
     ------------------------------------------------------------------------------  */
     public function Todzeit_Reached(){  
         
-        $MVal = $this->Mem;
-        $MemVal = (object) $MVal;
+        $MemVal = $this->Mem;
+       
 
         $MemVal->Todzeit = true;                           // Merker setzen
         $this->SendDebug("Todzeit_Reached", "Timer ist abgelaufen: ".$MemVal->Todzeit, 0);
