@@ -506,14 +506,7 @@ Class puffer {
     Public $RT_before = 0;
     Public $RLFT_before = 0;
     Public $test = "Hallo";
-    /**
-     * Liefert die Daten welche behalten werden mÃ¼ssen.
-     * @access public
-     */
-    public function __sleep()
-    {
-        return array('timerOn', 'Todzeit', 'RT_before', 'RLFT_before', 'test');
-    }
+  
 
  
     public function __construct()
