@@ -163,7 +163,13 @@ class MyHeatStat extends IPSModule
         none
     ------------------------------------------------------------------------------  */
     public function Heat_Stat(){
-        $MemVal =  $this->Mem; 
+        if(getvalue(37056)){
+            
+        }
+        else{
+            $MemVal =  $this->Mem; 
+        }
+        
    
         $this->SendDebug("Start:MemVal->test", $MemVal->test, 0);
         $this->SendDebug("Start:MemVal->Todzeit", $MemVal->Todzeit, 0);
@@ -306,8 +312,8 @@ class MyHeatStat extends IPSModule
         none
     ------------------------------------------------------------------------------  */
     public function Todzeit_Reached(){  
-        
-        //$MemVal = $this->Mem;
+        setvalue(37056,true);
+         $MemVal = $this->Mem;
        
 
         $MemVal->Todzeit = true;                           // Merker setzen
