@@ -78,7 +78,7 @@ class MyHeatStat extends IPSModule
         EVENTS:
   
     ------------------------------------------------------------- */
-    public $Mem;
+   
 
     public function ApplyChanges(){
 
@@ -161,8 +161,8 @@ class MyHeatStat extends IPSModule
         none
     ------------------------------------------------------------------------------  */
     public function Heat_Stat(){
-         
-        $this->SendDebug("TEST: ", $Mem->test, 0);
+        $testclass = $this->Mem; 
+        $this->SendDebug("TEST: ", $testclass->test, 0);
 
         if($this->ReadPropertyBoolean("ID_active")){
             if($this->ReadPropertyBoolean("DTsens")){
