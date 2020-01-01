@@ -80,8 +80,7 @@ class MyHeatStat extends IPSModule
     ------------------------------------------------------------- */
     public function ApplyChanges(){
 
-        $Mem = new puffer();
-        $Mem->test = "So ein Scheiss";
+
         //Never delete this line!
         parent::ApplyChanges();
 
@@ -101,7 +100,8 @@ class MyHeatStat extends IPSModule
             $this->SetStatus(102);
         }       
      
-        
+        $Mem = new puffer();
+        $Mem->test = "So ein Scheiss";
 
 
         //Event kann erst erstellt werden, wenn ID von VtlPos eingetragen wurde
@@ -159,8 +159,8 @@ class MyHeatStat extends IPSModule
         none
     ------------------------------------------------------------------------------  */
     public function Heat_Stat(){
-        $Mem = new puffer();
-        $this->SendDebug("TEST: ", $Mem->test, 0);
+         
+        $this->SendDebug("TEST: ", $Mem::test, 0);
 
         if($this->ReadPropertyBoolean("ID_active")){
             if($this->ReadPropertyBoolean("DTsens")){
