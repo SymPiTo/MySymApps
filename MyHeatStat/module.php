@@ -78,7 +78,7 @@ class MyHeatStat extends IPSModule
         EVENTS:
   
     ------------------------------------------------------------- */
-    public $Mem = object;
+    public $Mem;
 
     public function ApplyChanges(){
 
