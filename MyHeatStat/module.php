@@ -164,9 +164,9 @@ class MyHeatStat extends IPSModule
         none
     ------------------------------------------------------------------------------  */
     public function Heat_Stat(){
-        $MemVal =  $this->Mem(); 
+        $MemVal =  $this->Mem; 
    
-        $this->SendDebug("Start:MemVal->test", $MemVal::test, 0);
+        $this->SendDebug("Start:MemVal->test", $MemVal->test, 0);
         $this->SendDebug("Start:MemVal->Todzeit", $MemVal->Todzeit, 0);
         $this->SendDebug("Start:MemVal->timerOn", $MemVal->timerOn, 0);
         $this->SendDebug("Start:MemVal->RT_before", $MemVal->RT_before, 0);
@@ -290,6 +290,7 @@ class MyHeatStat extends IPSModule
         else{
 
         }
+        $MemVal->update($MemVal->test, $MemVal->Todzeit, $MemVal->timerOn, $MemVal->RT_before, $MemVal->RLFT_before);
     }  
 
 
@@ -523,4 +524,12 @@ Class puffer {
         $this->RLFT_before = $RLFT_before;
         $this->test = $test;
     }
-}
+
+    public function update($a, $b, $c, $d, $e){
+        $this->test = $a;
+        $this->Todzeit = $b;
+        $this->timerOn = $c;
+        $this->RT_before = $d;
+        $this->RLFT_before = $e;
+    }
+} 
