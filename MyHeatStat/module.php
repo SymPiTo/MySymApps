@@ -166,8 +166,8 @@ class MyHeatStat extends IPSModule
     ------------------------------------------------------------------------------  */
     public function Heat_Stat(){
       
-          
-            $MemVal instanceof $this->Mem ;
+           // $MemVal =  $this->Mem; 
+ 
         
    
         $this->SendDebug("Start:MemVal->test", $MemVal->test, 0);
@@ -504,7 +504,7 @@ class MyHeatStat extends IPSModule
 		
 }
 
-Class puffer {
+Class puffer extends MyHeatStat{
     Public $timerOn = false;
     Public $Todzeit = false;
     Public $RT_before = 0;
