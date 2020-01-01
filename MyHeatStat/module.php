@@ -105,8 +105,8 @@ class MyHeatStat extends IPSModule
         }       
         
 
-        $this->Me = new puffer();
-        $this->Mem = (object) $this->Me;
+        $this->Mem = new puffer();
+        
 
 
         //Event kann erst erstellt werden, wenn ID von VtlPos eingetragen wurde
@@ -164,7 +164,9 @@ class MyHeatStat extends IPSModule
         none
     ------------------------------------------------------------------------------  */
     public function Heat_Stat(){
-        $MemVal =  $this->Mem; 
+        $MVal =  $this->Mem; 
+        $MemVal = (object) $MVal;
+        
         $this->SendDebug("Start:MemVal->Todzeit", $MemVal->Todzeit, 0);
 
         if($this->ReadPropertyBoolean("ID_active")){
