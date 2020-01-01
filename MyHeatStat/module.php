@@ -12,7 +12,10 @@
  */
 //Class: MyHeatAlarm
 class MyHeatStat extends IPSModule
-{
+{    
+    Public $MemVal;
+    Public $Mem;
+    
     /* 
     _______________________________________________________________________ 
      Section: Internal Modul Funtions
@@ -163,12 +166,9 @@ class MyHeatStat extends IPSModule
         none
     ------------------------------------------------------------------------------  */
     public function Heat_Stat(){
-        if(getvalue(37056)){
-            
-        }
-        else{
+      
             $MemVal =  $this->Mem; 
-        }
+ 
         
    
         $this->SendDebug("Start:MemVal->test", $MemVal->test, 0);
