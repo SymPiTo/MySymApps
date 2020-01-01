@@ -105,7 +105,7 @@ class MyHeatStat extends IPSModule
         }       
      
         $this->Mem = new puffer();
-        $this->Mem->test = "So ein Scheiss";
+        
 
 
         //Event kann erst erstellt werden, wenn ID von VtlPos eingetragen wurde
