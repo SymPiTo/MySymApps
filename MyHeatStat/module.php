@@ -159,7 +159,8 @@ class MyHeatStat extends IPSModule
         none
     ------------------------------------------------------------------------------  */
     public function Heat_Stat(){
-        $M = (object) $Mem;
+        $this->SendDebug("TEST: ", $Mem->test, 0);
+        
         if($this->ReadPropertyBoolean("ID_active")){
             if($this->ReadPropertyBoolean("DTsens")){
                 $VorlaufTemp = getvalue($this->ReadPropertyInteger("TempVor"));
@@ -171,7 +172,7 @@ class MyHeatStat extends IPSModule
             if($this->ReadPropertyBoolean("DTsens")){
                 // Heizung ist in Störung 
                 // Ventil ist auf aber Rücklauftemperatur erhöht sich nicht nach 5 Min
-                if($M->Todzeit){
+                if($Mem->Todzeit){
                     if($VtlPos > 0 and ($RücklaufTemp <= $Mem->RLFT_before)){
                         setvalue($this->GetIDForIdent("HeatStat"), 0);	// Störung - RaumTemperatur wurde innerhalb 5 Minuten nicht erhöht
                         setvalue($this->GetIDForIdent("Message"), "Vtl öffnet nicht.");  //Ventil öffnet nicht.
@@ -474,5 +475,6 @@ Class puffer {
     Public $Todzeit = false;
     Public $RT_before = 0;
     Public $RLFT_before = 0;
+    Public $test = "Hallo";
 
 }
