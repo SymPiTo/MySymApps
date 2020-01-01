@@ -216,7 +216,7 @@ class MyHeatStat extends IPSModule
 
                             // Timer starten wenn nicht schon am laufen - Todzeit - Zeit bis Raumtemperatur sich ändert beim heizen
                             if($MemVal->timerOn === false){
-                                $this->SetTimerInterval('HS_T_TodZeit', 1800000);   //Timer auf 5 Minuten setzen
+                                $this->SetTimerInterval('T_TodZeit', 1800000);   //Timer auf 5 Minuten setzen
                                 $MemVal->RT_before = $RaumTemp;
                                 $MemVal->RLFT_before = $RücklaufTemp;
                             }
@@ -289,7 +289,7 @@ class MyHeatStat extends IPSModule
     public function Todzeit_Reached(){  
         $MemVal = $this->Mem;
         $MemVal->Todzeit = true;                           // Merker setzen
-        $this->SetTimerInterval('HS_T_TodZeit', 0);     //Timer abschalten
+        $this->SetTimerInterval('T_TodZeit', 0);     //Timer abschalten
         $this->Heat_Stat();
 
     }
