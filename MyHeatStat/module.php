@@ -159,7 +159,7 @@ class MyHeatStat extends IPSModule
         none
     ------------------------------------------------------------------------------  */
     public function Heat_Stat(){
-        $this->SendDebug("TEST: ", $Mem->test, 0);
+        $this->SendDebug("TEST: ", $this->Mem->test, 0);
 
         if($this->ReadPropertyBoolean("ID_active")){
             if($this->ReadPropertyBoolean("DTsens")){
