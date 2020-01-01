@@ -100,9 +100,9 @@ class MyHeatStat extends IPSModule
             $this->SetStatus(102);
         }       
      
-        $Mem = (object) "";
-        $Mem = new puffer();
         
+        $Mem = new puffer();
+        $Mem->test = "So ein Scheiss";
 
         //Event kann erst erstellt werden, wenn ID von VtlPos eingetragen wurde
         if($this->ReadPropertyInteger("VtlPos") >0){
@@ -160,7 +160,7 @@ class MyHeatStat extends IPSModule
     ------------------------------------------------------------------------------  */
     public function Heat_Stat(){
         $this->SendDebug("TEST: ", $Mem->test, 0);
-        
+
         if($this->ReadPropertyBoolean("ID_active")){
             if($this->ReadPropertyBoolean("DTsens")){
                 $VorlaufTemp = getvalue($this->ReadPropertyInteger("TempVor"));
