@@ -14,6 +14,7 @@
 class MyHeatStat extends IPSModule
 {    
     Public $test = "Hallo";
+    Public $n = 0;
     
     /* 
     _______________________________________________________________________ 
@@ -167,10 +168,10 @@ class MyHeatStat extends IPSModule
     public function Heat_Stat(){
       
          //  $MemVal =  $this->Mem; 
- 
-         $this->SendDebug("Start:MemVal->test", $this->test, 0);
-        $this->test = "Scheisse";    
+        $this->n = $this->n + 1;
         $this->SendDebug("Start:MemVal->test", $this->test, 0);
+        $this->test = $this->n;    
+        $this->SendDebug("Start:MemVal->test", $this->n, 0);
         $this->SendDebug("Start:MemVal->Todzeit", $MemVal->Todzeit, 0);
         $this->SendDebug("Start:MemVal->timerOn", $MemVal->timerOn, 0);
         $this->SendDebug("Start:MemVal->RT_before", $MemVal->RT_before, 0);
