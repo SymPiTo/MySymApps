@@ -214,7 +214,7 @@ class MyHeatStat extends IPSModule
                         // Heizung ist aus (Kalt) 
                         if ($RücklaufTemp < ($RaumTemp + 1) and ($VorlaufTemp < ($RaumTemp + 1))) {
                             setvalue($this->GetIDForIdent("HeatStat"), 3);	
-                            $this->SendDebug("Kalt", "Vorlauf und Rücklauf kalt  = "$VorlaufTemp." - ".$RücklaufTemp, 0);
+                            $this->SendDebug("Kalt", "Vorlauf und Rücklauf kalt  = ".$VorlaufTemp." - ".$RücklaufTemp, 0);
                         }
                     }
                 }
