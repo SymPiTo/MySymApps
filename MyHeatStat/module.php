@@ -108,7 +108,7 @@ class MyHeatStat extends IPSModule
         
 
         $this->Mem = new puffer();
-        $this->SendDebug("Start:MemVal->test", $this->Mem->test, 0);
+        $this->SendDebug("InitStart:MemVal->test", $this->Mem->test, 0);
 
         //Event kann erst erstellt werden, wenn ID von VtlPos eingetragen wurde
         if($this->ReadPropertyInteger("VtlPos") >0){
@@ -166,7 +166,7 @@ class MyHeatStat extends IPSModule
     ------------------------------------------------------------------------------  */
     public function Heat_Stat(){
       
-           // $MemVal =  $this->Mem; 
+           $MemVal =  $this->Mem; 
  
         
    
