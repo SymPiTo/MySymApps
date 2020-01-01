@@ -166,7 +166,7 @@ class MyHeatStat extends IPSModule
     public function Heat_Stat(){
         $MemVal =  $this->Mem; 
    
-        $this->SendDebug("Start:MemVal->test", $MemVal->Items[0]['test'], 0);
+        $this->SendDebug("Start:MemVal->test", $MemVal->test, 0);
         $this->SendDebug("Start:MemVal->Todzeit", $MemVal->Todzeit, 0);
         $this->SendDebug("Start:MemVal->timerOn", $MemVal->timerOn, 0);
         $this->SendDebug("Start:MemVal->RT_before", $MemVal->RT_before, 0);
@@ -500,21 +500,27 @@ class MyHeatStat extends IPSModule
 }
 
 Class puffer {
-    private $Items = array();
-
-
-
-     public function __construct($Frame = null, $Payload = null)
-     {
-        $this->Items[0]["timerOn"] = false;
-        $this->Items[0]["Todzeit"] = false;
-        $this->Items[0]["RT_before"] = 0;
-        $this->Items[0]["RLFT_before"] = 0;
-        $this->Items[0]["test"] = "Hallo";
-     }
-
+    Public $timerOn = false;
+    Public $Todzeit = false;
+    Public $RT_before = 0;
+    Public $RLFT_before = 0;
+    Public $test = "Hallo";
+    /**
+     * Liefert die Daten welche behalten werden mÃ¼ssen.
+     * @access public
+     */
     public function __sleep()
     {
-        return array('Items');
+        return array('timerOn', 'Todzeit', 'RT_before', 'RLFT_before', 'test');
+    }
+
+ 
+    public function __construct()
+    {
+        $this->timerOn = $timerOn;
+        $this->Todzeit = $Todzeit;
+        $this->RT_before = $RT_before;
+        $this->RLFT_before = $RLFT_before;
+        $this->test = $test;
     }
 }
