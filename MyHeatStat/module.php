@@ -103,7 +103,7 @@ class MyHeatStat extends IPSModule
         else{
             $this->SetStatus(102);
         }       
-        $this->Mem = object;
+        
 
         $this->Mem = new puffer();
         
