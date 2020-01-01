@@ -222,21 +222,24 @@ class MyHeatStat extends IPSModule
                         //Anwärmvorgang der Heizung - Heizung wird mit heßem Wasser befüllt
                         if ($VorlaufTemp > ($RaumTemp + 1) and ($RücklaufTemp < ($RaumTemp + 1))){
                             setvalue($this->GetIDForIdent("HeatStat"), 1);	
-
+                            $this->SendDebug("Anwärmen: Todzeit = 0: ", "Anwärmen", 0);
                             // Timer starten wenn nicht schon am laufen - Todzeit - Zeit bis Raumtemperatur sich ändert beim heizen
                             if($MemVal->timerOn === false){
                                 $this->SetTimerInterval('T_TodZeit', 1800000);   //Timer auf 5 Minuten setzen
                                 $MemVal->RT_before = $RaumTemp;
                                 $MemVal->RLFT_before = $RücklaufTemp;
+                                $this->SendDebug("Anwärmen: Todzeit = 0: ", "Timer starten - RT und RLfT".$MemVal->RT_before." - ".$MemVal->RLFT_before, 0);
                             }
                         }
                         // Heizen - Heizkörper ist mit heißem Wasser gefüllt und Rücklauf zeigt Temperatur
                         if ($RücklaufTemp > ($RaumTemp + 1) and ($VorlaufTemp > ($RaumTemp + 1))){
                             setvalue($this->GetIDForIdent("HeatStat"), 2);	
+                            this->SendDebug("Heizen", "Rücklauf zeigt Temperatur = ".$RücklaufTemp, 0);
                         }
                         // Heizung ist aus (Kalt) 
                         if ($RücklaufTemp < ($RaumTemp + 1) and ($VorlaufTemp < ($RaumTemp + 1))) {
                             setvalue($this->GetIDForIdent("HeatStat"), 3);	
+                            $this->SendDebug("Kalt", "Vorlauf und Rücklauf kalt  = ".$VorlaufTemp." - ".$RücklaufTemp, 0);
                         }  
                 }
             }

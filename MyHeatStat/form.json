@@ -40,5 +40,16 @@
         "code": 200,
         "icon": "active",
         "caption": "Diff Temperaruren müssen eingetragen werden!"
-    }]
+    }],
+    "actions": [{
+            "type": "Label",
+            "label": "check staten"
+        },
+        {
+            "type": "Button",
+            "label": "Heat_Stat",
+            "onClick": "HS_Heat_Stat($id);"
+        }
+
+    ]
 }
