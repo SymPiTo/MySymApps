@@ -199,14 +199,14 @@ class MyHeatStat extends IPSModule
                     if($VtlPos > 0 and ($RücklaufTemp <= $MemVal->getMem("RLFT_before"))){
                         setvalue($this->GetIDForIdent("HeatStat"), 0);	// Störung - RaumTemperatur wurde innerhalb 5 Minuten nicht erhöht
                         setvalue($this->GetIDForIdent("Message"), "Vtl öffnet nicht.");  //Ventil öffnet nicht.
-                        $this->SendDebug("Störung :", "Ventil öffent nicht, weil VtlPos= ".$VtlPos." und RücklaufTemp = ".$RücklaufTemp." <= MemVal->RLFT_before = ".$MemVal->RLFT_before , 0);
+                        $this->SendDebug("Störung :", "Ventil öffent nicht, weil VtlPos= ".$VtlPos." und RücklaufTemp = ".$RücklaufTemp." <= MemVal->RLFT_before = ".$MemVal->getMem("RLFT_before") , 0);
 
                     }
                     // Ventil ist auf aber Raumtemperatur erhöht sich nicht nach Todzeit  (5min)  
                     elseif ($VtlPos > 0 and ($MemVal->getMem("RT_before") <= $RaumTemp)){
                         setvalue($this->GetIDForIdent("HeatStat"), 0);	// Störung - RaumTemperatur wurde innerhalb 5 Minuten nicht erhöht
                         setvalue($this->GetIDForIdent("Message"), "Vtl schwergängig.");  //Ventil ist schwergängig
-                        $this->SendDebug("Störung :", "Raumtemp steigt nicht, weil VtlPos= ".$VtlPos." und RaumTemp >= ".$RücklaufTemp." <= MemVal->RLFT_before = ".$MemVal->RLFT_before , 0);
+                        $this->SendDebug("Störung :", "Raumtemp steigt nicht, weil VtlPos= ".$VtlPos." und RaumTemp >= ".$RücklaufTemp." <= MemVal->RLFT_before = ".$MemVal->getMem("RLFT_before") , 0);
                     }
                     else{
                         //Anwärmvorgang der Heizung - Heizung wird mit heßem Wasser befüllt
@@ -218,7 +218,7 @@ class MyHeatStat extends IPSModule
                                 $this->SetTimerInterval('T_TodZeit', 1800);   //Timer auf 5 Minuten setzen
                                 $MemVal->setMem("RT_before", $RaumTemp);
                                 $MemVal->stMem("RLFT_before", $RücklaufTemp);
-                                $this->SendDebug("Anwärmen:", "Timer gestartet, in 5 Minuten muss sich RcklfTemp  und RaumTemp: ".$MemVal->RLFT_before." - ".$MemVal->RT_before, 0);
+                                $this->SendDebug("Anwärmen:", "Timer gestartet, in 5 Minuten muss sich RcklfTemp  und RaumTemp: ".$MemVal->getMem("RLFT_before")." - ".$MemVal->getMem("RT_before"), 0);
                             }
                         }
                         // Heizen - Heizkörper ist mit heißem Wasser gefüllt und Rücklauf zeigt Temperatur
