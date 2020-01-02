@@ -241,7 +241,7 @@ class MyHeatStat extends IPSModule
                             $this->SendDebug("Anwärmen: Todzeit = 0: ", "Anwärmen", 0);
                             // Timer starten wenn nicht schon am laufen - Todzeit - Zeit bis Raumtemperatur sich ändert beim heizen
                             $this->SendDebug("Status TimerOn: ", $MemVal->getMem("timerOn"), 0);
-                            if($MemVal->timerOn === false){
+                            if($MemVal->getMem("timerOn") === false){
                                 $this->SetTimerInterval('T_TodZeit', 1800);   //Timer auf 5 Minuten setzen
                                 $MemVal->setMem("RT_before", $RaumTemp);
                                 $MemVal->setMem("RLFT_before", $RücklaufTemp);
