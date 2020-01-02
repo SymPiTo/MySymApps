@@ -42,6 +42,6 @@ Class puffer{
         $MemArray = unserialize(getvalue($this->ID_Mem));
         $MemArray[$var] = $value;
         setvalue($this->ID_Mem, serialize($MemArray));
-        return $result[$var];
+        return $MemArray[$var];
     }
 } 
