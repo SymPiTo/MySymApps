@@ -215,7 +215,7 @@ class MyHeatStat extends IPSModule
                             $this->SendDebug("Anwärmen: ", "VorlaufTemp = ".$VorlaufTemp. " und RücklaufTemp = ".$RücklaufTemp, 0);
                             // Timer starten wenn nicht schon am laufen - Todzeit - Zeit bis Raumtemperatur sich ändert beim heizen
                             if($MemVal->timerOn === false){
-                                $this->SetTimerInterval('T_TodZeit', 1800);   //Timer auf 5 Minuten setzen
+                                $this->SetTimerInterval('T_TodZeit', 1800000);   //Timer auf 5 Minuten setzen
                                 $MemVal->setMem("RT_before", $RaumTemp);
                                 $MemVal->stMem("RLFT_before", $RücklaufTemp);
                                 $this->SendDebug("Anwärmen:", "Timer gestartet, in 5 Minuten muss sich RcklfTemp  und RaumTemp: ".$MemVal->getMem("RLFT_before")." - ".$MemVal->getMem("RT_before"), 0);
@@ -242,7 +242,7 @@ class MyHeatStat extends IPSModule
                             // Timer starten wenn nicht schon am laufen - Todzeit - Zeit bis Raumtemperatur sich ändert beim heizen
                             $this->SendDebug("Status TimerOn: ", $MemVal->getMem("timerOn"), 0);
                             if($MemVal->getMem("timerOn") === false){
-                                $this->SetTimerInterval('T_TodZeit', 1800);   //Timer auf 5 Minuten setzen
+                                $this->SetTimerInterval('T_TodZeit', 1800000);   //Timer auf 5 Minuten setzen
                                 $MemVal->setMem("RT_before", $RaumTemp);
                                 $MemVal->setMem("RLFT_before", $RücklaufTemp);
                                 $this->SendDebug("Anwärmen: Todzeit = 0: ", "Timer starten - RT und RLfT".$MemVal->getMem("RT_before")." - ".$MemVal->getMem("RLFT_before"), 0);
