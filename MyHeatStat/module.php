@@ -109,14 +109,14 @@ class MyHeatStat extends IPSModule
         
 
         $Mem = new puffer($this->GetIDForIdent("puffer"));
-        $timerOn = false;
-        $Todzeit = false;
-        $RT_before = 0;
-        $RLFT_before = 0;
         $VarArray = array("timerOn", "Todzeit", "RT_before", "RLFT_before");
         $Mem->defineVars($VarArray);
+        $Mem->setMem("timerOn", false);
+        $Mem->setMem("Todzeit", false);
+        $Mem->setMem("RT_before", 0);
+        $Mem->setMem("RLFT_before", 0);
 
-        $this->SendDebug("Apply: ", $Mem->getMem("Todzeit"), 0);
+        $this->SendDebug("Apply: ", "Memory Variable setzen.", 0);
 
 
         //Event kann erst erstellt werden, wenn ID von VtlPos eingetragen wurde
@@ -176,10 +176,7 @@ class MyHeatStat extends IPSModule
     public function Heat_Stat(){
       
         $MemVal = new puffer($this->GetIDForIdent("puffer"));
-  
-   
-        $MemVal->getMem("Todzeit");
-        
+    
         $this->SendDebug("Start:MemVal->Todzeit", $MemVal->getMem("Todzeit"), 0);
         $this->SendDebug("Start:MemVal->timerOn", $MemVal->getMem("timerOn"), 0);
         $this->SendDebug("Start:MemVal->RT_before", $MemVal->getMem("RT_before"), 0);
