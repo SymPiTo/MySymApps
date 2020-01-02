@@ -194,16 +194,16 @@ class MyHeatStat extends IPSModule
                 // Heizung ist in Störung 
                 // Ventil ist auf aber Rücklauftemperatur erhöht sich nicht nach 5 Min
                 if($MemVal->getMem("Todzeit")){
-                    $this->SendDebug("MemVal->Todzeit", $MemVal->Todzeit, 0);
+                    $this->SendDebug("MemVal->Todzeit", $MemVal->getMem("Todzeit"), 0);
 
-                    if($VtlPos > 0 and ($RücklaufTemp <= $MemVal->RLFT_before)){
+                    if($VtlPos > 0 and ($RücklaufTemp <= $MemVal->getMem("RLFT_before"))){
                         setvalue($this->GetIDForIdent("HeatStat"), 0);	// Störung - RaumTemperatur wurde innerhalb 5 Minuten nicht erhöht
                         setvalue($this->GetIDForIdent("Message"), "Vtl öffnet nicht.");  //Ventil öffnet nicht.
                         $this->SendDebug("Störung :", "Ventil öffent nicht, weil VtlPos= ".$VtlPos." und RücklaufTemp = ".$RücklaufTemp." <= MemVal->RLFT_before = ".$MemVal->RLFT_before , 0);
 
                     }
                     // Ventil ist auf aber Raumtemperatur erhöht sich nicht nach Todzeit  (5min)  
-                    elseif ($VtlPos > 0 and ($MemVal->RT_before <= $RaumTemp)){
+                    elseif ($VtlPos > 0 and ($MemVal->getMem("RT_before") <= $RaumTemp)){
                         setvalue($this->GetIDForIdent("HeatStat"), 0);	// Störung - RaumTemperatur wurde innerhalb 5 Minuten nicht erhöht
                         setvalue($this->GetIDForIdent("Message"), "Vtl schwergängig.");  //Ventil ist schwergängig
                         $this->SendDebug("Störung :", "Raumtemp steigt nicht, weil VtlPos= ".$VtlPos." und RaumTemp >= ".$RücklaufTemp." <= MemVal->RLFT_before = ".$MemVal->RLFT_before , 0);
@@ -216,8 +216,8 @@ class MyHeatStat extends IPSModule
                             // Timer starten wenn nicht schon am laufen - Todzeit - Zeit bis Raumtemperatur sich ändert beim heizen
                             if($MemVal->timerOn === false){
                                 $this->SetTimerInterval('T_TodZeit', 1800);   //Timer auf 5 Minuten setzen
-                                $MemVal->RT_before = $RaumTemp;
-                                $MemVal->RLFT_before = $RücklaufTemp;
+                                $MemVal->setMem("RT_before", $RaumTemp);
+                                $MemVal->stMem("RLFT_before", $RücklaufTemp);
                                 $this->SendDebug("Anwärmen:", "Timer gestartet, in 5 Minuten muss sich RcklfTemp  und RaumTemp: ".$MemVal->RLFT_before." - ".$MemVal->RT_before, 0);
                             }
                         }
@@ -240,11 +240,11 @@ class MyHeatStat extends IPSModule
                             setvalue($this->GetIDForIdent("HeatStat"), 1);	
                             $this->SendDebug("Anwärmen: Todzeit = 0: ", "Anwärmen", 0);
                             // Timer starten wenn nicht schon am laufen - Todzeit - Zeit bis Raumtemperatur sich ändert beim heizen
-                            $this->SendDebug("Status TimerOn: ", $MemVal->timerOn, 0);
+                            $this->SendDebug("Status TimerOn: ", $MemVal->getMem("timerOn"), 0);
                             if($MemVal->timerOn === false){
                                 $this->SetTimerInterval('T_TodZeit', 1800);   //Timer auf 5 Minuten setzen
-                                $MemVal->RT_before = $RaumTemp;
-                                $MemVal->RLFT_before = $RücklaufTemp;
+                                $MemVal->setMem("RT_before", $RaumTemp);
+                                $MemVal->setMem("RLFT_before", $RücklaufTemp);
                                 $this->SendDebug("Anwärmen: Todzeit = 0: ", "Timer starten - RT und RLfT".$MemVal->RT_before." - ".$MemVal->RLFT_before, 0);
                             }
                         }
@@ -317,11 +317,11 @@ class MyHeatStat extends IPSModule
         none
     ------------------------------------------------------------------------------  */
     public function Todzeit_Reached(){  
-        setvalue(37056,true);
-         $MemVal = $this->Mem;
+         
+         $MemVal = new puffer($this->GetIDForIdent("puffer"));
        
 
-        $MemVal->Todzeit = true;                           // Merker setzen
+        $MemVal->setMem("Todzeit", true);                           // Merker setzen
         $this->SendDebug("Todzeit_Reached", "Timer ist abgelaufen: ".$MemVal->Todzeit, 0);
         $this->SetTimerInterval('T_TodZeit', 0);     //Timer abschalten
         $this->Heat_Stat();
