@@ -217,19 +217,20 @@ class MyHeatStat extends IPSModule
                             if($MemVal->timerOn === false){
                                 $this->SetTimerInterval('T_TodZeit', 1800000);   //Timer auf 5 Minuten setzen
                                 $MemVal->setMem("RT_before", $RaumTemp);
-                                $MemVal->stMem("RLFT_before", $RücklaufTemp);
+                                $MemVal->setMem("RLFT_before", $RücklaufTemp);
                                 $this->SendDebug("Anwärmen:", "Timer gestartet, in 5 Minuten muss sich RcklfTemp  und RaumTemp: ".$MemVal->getMem("RLFT_before")." - ".$MemVal->getMem("RT_before"), 0);
                             }
                         }
                         // Heizen - Heizkörper ist mit heißem Wasser gefüllt und Rücklauf zeigt Temperatur
                         if ($RücklaufTemp > ($RaumTemp + 1) and ($VorlaufTemp > ($RaumTemp + 1))){
                             setvalue($this->GetIDForIdent("HeatStat"), 2);	
-
-                            $this->SendDebug("Heizen", "Rücklauf zeigt Temperatur = ".$RücklaufTemp, 0);
+                            setvalue($this->GetIDForIdent("Message"), "");	// Störung behoben Meldung zurücksetzen
+                            $this->SendDebug("Heizen", "Rücklauf zeigt Temperaturerhöhung = ".$RücklaufTemp, 0);
                         }
                         // Heizung ist aus (Kalt) 
                         if ($RücklaufTemp < ($RaumTemp + 1) and ($VorlaufTemp < ($RaumTemp + 1))) {
                             setvalue($this->GetIDForIdent("HeatStat"), 3);	
+                            setvalue($this->GetIDForIdent("Message"), "");	// Störung behoben Meldung zurücksetzen
                             $this->SendDebug("Kalt", "Vorlauf und Rücklauf kalt  = ".$VorlaufTemp." - ".$RücklaufTemp, 0);
                         }
                     }
@@ -251,11 +252,13 @@ class MyHeatStat extends IPSModule
                         // Heizen - Heizkörper ist mit heißem Wasser gefüllt und Rücklauf zeigt Temperatur
                         if ($RücklaufTemp > ($RaumTemp + 1) and ($VorlaufTemp > ($RaumTemp + 1))){
                             setvalue($this->GetIDForIdent("HeatStat"), 2);	
+                            setvalue($this->GetIDForIdent("Message"), "");	// Störung behoben Meldung zurücksetzen
                             $this->SendDebug("Heizen", "Rücklauf zeigt Temperatur = ".$RücklaufTemp, 0);
                         }
                         // Heizung ist aus (Kalt) 
                         if ($RücklaufTemp < ($RaumTemp + 1) and ($VorlaufTemp < ($RaumTemp + 1))) {
                             setvalue($this->GetIDForIdent("HeatStat"), 3);	
+                            setvalue($this->GetIDForIdent("Message"), "");	// Störung behoben Meldung zurücksetzen
                             $this->SendDebug("Kalt", "Vorlauf und Rücklauf kalt  = ".$VorlaufTemp." - ".$RücklaufTemp, 0);
                         }  
                 }
