@@ -64,8 +64,8 @@ class MyHeatStat extends IPSModule
         IPS_SetInfo ($variablenID, "WSS");    
         $variablenID = $this->RegisterVariableString("Message", "Meldung");  
         IPS_SetInfo ($variablenID, "WSS");  
-        $this->RegisterVariableString("puffer", "Puffer"); 
-
+        variablenID = $this->RegisterVariableString("puffer", "Puffer"); 
+        IPS_SetHidden(variablenID, true); //Objekt verstecken
         // Timer erstellen
         //$this->RegisterTimer("T_TodZeit", 0,  'HS_Todzeit_Reached(' . $this->InstanceID . ');');
         $this->RegisterTimer("T_TodZeit", 0, 'HS_Todzeit_Reached($_IPS[\'TARGET\']);');
