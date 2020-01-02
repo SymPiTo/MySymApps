@@ -245,7 +245,7 @@ class MyHeatStat extends IPSModule
                                 $this->SetTimerInterval('T_TodZeit', 1800);   //Timer auf 5 Minuten setzen
                                 $MemVal->setMem("RT_before", $RaumTemp);
                                 $MemVal->setMem("RLFT_before", $RücklaufTemp);
-                                $this->SendDebug("Anwärmen: Todzeit = 0: ", "Timer starten - RT und RLfT".$MemVal->getMem("RT_before")." - ".$MemVal->hetMem("RLFT_before"), 0);
+                                $this->SendDebug("Anwärmen: Todzeit = 0: ", "Timer starten - RT und RLfT".$MemVal->getMem("RT_before")." - ".$MemVal->getMem("RLFT_before"), 0);
                             }
                         }
                         // Heizen - Heizkörper ist mit heißem Wasser gefüllt und Rücklauf zeigt Temperatur
