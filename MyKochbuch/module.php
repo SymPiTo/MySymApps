@@ -227,7 +227,7 @@ class MyKochbuch extends IPSModule
             $str     =  $Kochbuch[$No]['recipeInstructions'];
             $replace = '.<br>';
             $NewRezept = str_replace($suchMuster, $replace, $str);
-            if($this->ReadPropertyBoolean('ID_WF'){
+            if($this->ReadPropertyBoolean('ID_WF')){
                 $this->setvalue('ID_WFRezept', $NewRezept);
                 $this->setvalue('ID_WFBild', $imageHTML);
                 $this->setvalue('ID_WFZutaten', $ZutatenHTML);            
