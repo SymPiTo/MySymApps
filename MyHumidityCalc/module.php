@@ -210,22 +210,22 @@ class MyHumidityCalc extends IPSModule
         // gefühltes Klima auswerten
         $value = $this->GetValue("WaterContentOutdoor");
         if($value <= 13){
-            $this->setvalue("Klima"). "trocken";
+            $this->setvalue("Klima". "trocken");
         }
         elseif($value > 13 and $value <16){
-            $this->setvalue("Klima"). "trocken - feucht";
+            $this->setvalue("Klima". "trocken - feucht");
         }
         elseif($value >= 16 and $value <18){
-            $this->setvalue("Klima"). "feucht";
+            $this->setvalue("Klima". "feucht");
         }
         elseif($value > 16 and $value <18){
-            $this->setvalue("Klima"). "feucht - schwül";
+            $this->setvalue("Klima". "feucht - schwül");
         }
         elseif($value >= 18 and $value <21){
-            $this->setvalue("Klima"). "schwül";
+            $this->setvalue("Klima". "schwül");
         }
         elseif($value >=23){
-            $this->setvalue("Klima"). "drückend";
+            $this->setvalue("Klima". "drückend");
         }
     }
     /**
