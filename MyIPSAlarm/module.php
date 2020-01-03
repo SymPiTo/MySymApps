@@ -292,18 +292,18 @@ class MyAlarm extends IPSModule
              case "A_SecActivate":
                 if ($Value == true){ 
                     $this->activateSecAlarm();  
-                    setvalue($this->GetIDForIdent("A_SecActivate"),true);
+                    $this->setvalue("A_SecActivate",true);
                 }
                 else {
-                   setvalue($this->GetIDForIdent("A_SecWarning"),"Sicherheits Code eingeben."); 
-                   setvalue($this->GetIDForIdent("A_SecActivate"),true); 
+                    $this->setvalue("A_SecWarning","Sicherheits Code eingeben."); 
+                    $this->setvalue("A_SecActivate",true); 
                 }
                 break;
              case "Alexa_SecActivate":
                 $this->activateSecAlarm();  
                 break;
               case "A_SecCode":
-                setvalue($this->GetIDForIdent("A_SecCode"),"$Value");
+                $this->setvalue("A_SecCode","$Value");
                 $this->checkCode();  
                 break;
             default:
@@ -352,7 +352,7 @@ class MyAlarm extends IPSModule
             none
         ------------------------------------------------------------------------------  */
         public function ResetAlarm(){
-            setvalue($this->GetIDForIdent("A_AlarmCode"), 0);
+            $this->setvalue("A_AlarmCode", 0);
         }  
 
 
@@ -369,8 +369,8 @@ class MyAlarm extends IPSModule
             none
         ------------------------------------------------------------------------------  */
         public function receiveCode(string $key){
-            $code = getvalue($this->GetIDForIdent("A_SecCode"));
-            setvalue($this->GetIDForIdent("A_SecCode"), $code.$key);    
+            $code = $this->getvalue("A_SecCode");
+            $this->setvalue("A_SecCode", $code.$key);    
         }  
 
         //-----------------------------------------------------------------------------
@@ -386,7 +386,7 @@ class MyAlarm extends IPSModule
             none
         ------------------------------------------------------------------------------  */
         public function resetCode(){
-            setvalue($this->GetIDForIdent("A_SecCode"), "");    
+            $this->setvalue("A_SecCode", "");    
         }  
 
         //-----------------------------------------------------------------------------
@@ -402,14 +402,14 @@ class MyAlarm extends IPSModule
             none
         ------------------------------------------------------------------------------  */
         public function checkCode(){
-            $password = getvalue($this->GetIDForIdent("A_SecCode"));
+            $password = $this->getvalue("A_SecCode");
             //Passwort verschlüsseln
             $hash = $this->cryptPW($this->ReadPropertyString("Password"));
              
             $this->SendDebug("Password hash", $hash, 0);
             if (password_verify($password, $hash)) {
                 $this->resetCode();
-                setvalue($this->GetIDForIdent("A_SecWarning"),"Code wurde akzeptiert."); 
+                $this->setvalue("A_SecWarning","Code wurde akzeptiert."); 
                 
                 if($this->ReadPropertyBoolean("AlexaTTS")){
                     //Sprachausgabe
@@ -422,7 +422,7 @@ class MyAlarm extends IPSModule
             }  
             else{
                 $this->resetCode();
-                setvalue($this->GetIDForIdent("A_SecWarning"),"Falscher Code."); 
+                $this->setvalue("A_SecWarning","Falscher Code."); 
                     //Sprachausgabe
                 if($this->ReadPropertyBoolean("AlexaTTS")){
                     $text_to_speech = "falscher code";
@@ -453,7 +453,7 @@ class MyAlarm extends IPSModule
             sleep(30);
             SetValueBoolean($this->GetIDForIdent("A_SecActive"),true);
             SetValueBoolean($this->GetIDForIdent("A_SecActivate"),true);
-            setvalue($this->GetIDForIdent("A_SecWarning"),"Alarm Anlage is aktiv."); 
+            $this->setvalue("A_SecWarning","Alarm Anlage is aktiv."); 
             //Sprachausgabe
             if($this->ReadPropertyBoolean("AlexaTTS")){
                 $text_to_speech = "Alarmanlage ist aktiviert.";
@@ -494,9 +494,9 @@ class MyAlarm extends IPSModule
                 $this->SendDebug( "$lastTriggerVarID: ", $ltv, 0); 
                 if($ltv == 1){
                     // Wasser erkannt, Alarm auslösen
-                    setvalue($this->GetIDForIdent("A_WaterAlarm"), "WaterSensor: ".$VarWaterName." Alarm");
+                    $this->setvalue("A_WaterAlarm", "WaterSensor: ".$VarWaterName." Alarm");
                     //AlarmCode auf 2 setzen
-                    setvalue($this->GetIDForIdent("A_AlarmCode"), 3);
+                    $this->setvalue("A_AlarmCode", 3);
                     //Telegram message senden
                     if($this->ReadPropertyBoolean("Telegram")){
                         $message = "Achtung Wassersensor ".$VarWaterName." hat angesprochen!";
@@ -509,13 +509,13 @@ class MyAlarm extends IPSModule
                     }
                 }
                 else{
-                    setvalue($this->GetIDForIdent("A_WaterAlarm"), ""); 
-                    setvalue($this->GetIDForIdent("A_AlarmCode"), 0);   
+                    $this->setvalue("A_WaterAlarm", ""); 
+                    $this->setvalue("A_AlarmCode", 0);   
                 }
             } 
             else{
-               setvalue($this->GetIDForIdent("A_WaterAlarm"), ""); 
-               setvalue($this->GetIDForIdent("A_AlarmCode"), 0);
+                $this->setvalue("A_WaterAlarm", ""); 
+                $this->setvalue("A_AlarmCode", 0);
             }
         }          
         
@@ -552,18 +552,18 @@ class MyAlarm extends IPSModule
                 $this->SendDebug( "$lastTriggerVarID: ", $ltv, 0); 
                 if($ltv == 1){
                     // Batterie ist Low Alarm auslösen
-                    setvalue($this->GetIDForIdent("A_BatAlarm"), "Battery Low: ".$VarBatName);
+                    $this->setvalue("A_BatAlarm", "Battery Low: ".$VarBatName);
                     //AlarmCode auf 1 setzen
-                    setvalue($this->GetIDForIdent("A_AlarmCode"), 1);
+                    $this->setvalue("A_AlarmCode", 1);
                 }
                 else{
-                    setvalue($this->GetIDForIdent("A_BatAlarm"), ""); 
-                    setvalue($this->GetIDForIdent("A_AlarmCode"), 0);   
+                    $this->setvalue("A_BatAlarm", ""); 
+                    $this->setvalue("A_AlarmCode", 0);   
                 }
             } 
             else{
-               setvalue($this->GetIDForIdent("A_BatAlarm"), ""); 
-               setvalue($this->GetIDForIdent("A_AlarmCode"), 0);
+                $this->setvalue("A_BatAlarm", ""); 
+                $this->setvalue("A_AlarmCode", 0);
             }
         }  
 
@@ -580,7 +580,7 @@ class MyAlarm extends IPSModule
              none
         ------------------------------------------------------------------------------- */
 	public function SecurityAlarm(){   
-            $AlarmAnlageActive = getvalue($this->GetIDForIdent("A_SecActive"));
+            $AlarmAnlageActive = $this->getvalue("A_SecActive");
             if($AlarmAnlageActive){
                 //überprüfen welches Ereignis ausgelöst hat 
                 $SecAlarms = json_decode($this->ReadPropertyString("SecAlarms"));
@@ -599,13 +599,13 @@ class MyAlarm extends IPSModule
                 if($lastTriggerVarID){
                     $ltv = getvalue($lastTriggerVarID);
                     //AlarmCode auf 2 setzen = Einbruch
-                    setvalue($this->GetIDForIdent("A_AlarmCode"), 2);
+                    $this->setvalue("A_AlarmCode", 2);
                     
                     //Meldung in Log File schreiben.
                     $text = "Unbefugter Zugang zur Wohnung. ";
                     $array = "wurde erkannt.";
                     $this->ModErrorLog("MyIPSAlarm", $text, $array);
-                    setvalue($this->GetIDForIdent("A_SecWarning"),"Alarm ausgelöst."); 
+                    $this->setvalue("A_SecWarning","Alarm ausgelöst."); 
                     //Telegram Message senden
                     if($this->ReadPropertyBoolean("Telegram")){
                         $this->SendDebug("ALARM:", "Eine Telegram wird verschickt.", 0);
@@ -621,7 +621,7 @@ class MyAlarm extends IPSModule
                 } 
                 else{
              
-                   setvalue($this->GetIDForIdent("A_AlarmCode"), 0);
+                    $this->setvalue("A_AlarmCode", 0);
                 } 
             }
         }     
