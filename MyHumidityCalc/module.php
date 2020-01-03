@@ -63,6 +63,8 @@ class MyHumidityCalc extends IPSModule
         $create = $this->ReadPropertyBoolean('CreateWaterContent');
         $this->MaintainVariable('WaterContentOutdoor', 'Wassergehalt Aussen', vtFloat, 'THS.WaterContent', 6, $create);
         $this->MaintainVariable('WaterContentIndoor', 'Wassergehalt Innen', vtFloat, 'THS.WaterContent', 7, $create);
+
+        $this->MaintainVariable('Klima', 'gefühltes Klima', vtString, 'THS.Climate', 8, $create);
     }
     /**
      * This function will be available automatically after the module is imported with the module control.
@@ -204,6 +206,27 @@ class MyHumidityCalc extends IPSModule
                 }
             }
         }
+
+        // gefühltes Klima auswerten
+        $value = $this->GetValue("WaterContentOutdoor");
+        if($value <= 13){
+            $this->setvalue("Klima"). "trocken";
+        }
+        elseif($value > 13 and $value <16){
+            $this->setvalue("Klima"). "trocken - feucht";
+        }
+        elseif($value >= 16 and $value <18){
+            $this->setvalue("Klima"). "feucht";
+        }
+        elseif($value > 16 and $value <18){
+            $this->setvalue("Klima"). "feucht - schwül";
+        }
+        elseif($value >= 18 and $value <21){
+            $this->setvalue("Klima"). "schwül";
+        }
+        elseif($value >=23){
+            $this->setvalue("Klima"). "drückend";
+        }
     }
     /**
      * This function will be available automatically after the module is imported with the module control.
@@ -231,4 +254,6 @@ class MyHumidityCalc extends IPSModule
         IPS_SetProperty($this->InstanceID, 'MessageThreshold', $threshold);
         IPS_ApplyChanges($this->InstanceID);
     }
+
+
 }
