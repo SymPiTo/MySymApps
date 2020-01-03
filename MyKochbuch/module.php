@@ -152,7 +152,7 @@ class MyKochbuch extends IPSModule
          switch($Ident) {
             case "UpDown":
                 SetValue($this->GetIDForIdent($Ident), $Value);
-                if(getvalue($this->GetIDForIdent($Ident))){
+                if($this->getvalue($Ident)){
                     $this->SetRolloDown();  
                 }
                 else{
@@ -227,18 +227,18 @@ class MyKochbuch extends IPSModule
             $str     =  $Kochbuch[$No]['recipeInstructions'];
             $replace = '.<br>';
             $NewRezept = str_replace($suchMuster, $replace, $str);
-            if($this->ReadPropertyBoolean('ID_WF')){
-                setvalue($this->GetIDForIdent('ID_WFRezept'), $NewRezept);
-                setvalue($this->GetIDForIdent('ID_WFBild'), $imageHTML);
-                setvalue($this->GetIDForIdent('ID_WFZutaten'), $ZutatenHTML);            
+            if($this->ReadPropertyBoolean('ID_WF'){
+                $this->setvalue('ID_WFRezept', $NewRezept);
+                $this->setvalue('ID_WFBild', $imageHTML);
+                $this->setvalue('ID_WFZutaten', $ZutatenHTML);            
             }
 
 
-            setvalue($this->GetIDForIdent('ID_Kochbuch'),json_encode($KochbuchIndex));
-            setvalue($this->GetIDForIdent('ID_Rezept'), $Kochbuch[$No]['recipeInstructions']);
-            setvalue($this->GetIDForIdent('ID_Bild'), $Kochbuch[$No]['image']);
-            setvalue($this->GetIDForIdent('ID_Zutaten'), json_encode($Kochbuch[$No]['recipeIngredient'])) ;
-            setvalue($this->GetIDForIdent('ID_Titel'), $Kochbuch[$No]['name']);    
+            $this->setvalue('ID_Kochbuch',json_encode($KochbuchIndex));
+            $this->setvalue('ID_Rezept', $Kochbuch[$No]['recipeInstructions']);
+            $this->setvalue('ID_Bild', $Kochbuch[$No]['image']);
+            $this->setvalue('ID_Zutaten', json_encode($Kochbuch[$No]['recipeIngredient'])) ;
+            $this->setvalue('ID_Titel', $Kochbuch[$No]['name']);    
             $status = true;
         }
         else {
@@ -261,13 +261,13 @@ class MyKochbuch extends IPSModule
         none
     ------------------------------------------------------------------------------  */
     public function nextRezept(){ 
-        $nn = getvalue($this->GetIDForIdent('ID_No'));
+        $nn = $this->getvalue('ID_No');
         $nn = $nn + 1;
         $result = $this->readKochbuch($nn);
         if(!$result){
             $nn = $$nn - 1;
         }
-        setvalue($this->GetIDForIdent('ID_No'), $nn);
+        $this->setvalue('ID_No', $nn);
     }   
     
     //-----------------------------------------------------------------------------
@@ -282,7 +282,7 @@ class MyKochbuch extends IPSModule
         none
     ------------------------------------------------------------------------------  */
     public function prevRezept(){ 
-        $nn = getvalue($this->GetIDForIdent('ID_No'));
+        $nn = $this->getvalue('ID_No');
         if ($nn > 0){
             $nn = $nn - 1;
             $result = $this->readKochbuch($nn);
@@ -290,7 +290,7 @@ class MyKochbuch extends IPSModule
         else{
             $nn = 0;
         }
-        setvalue($this->GetIDForIdent('ID_No'), $nn);
+        $this->setvalue('ID_No', $nn);
     }
 
     
