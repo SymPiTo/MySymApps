@@ -64,7 +64,8 @@ class MyHumidityCalc extends IPSModule
         $this->MaintainVariable('WaterContentOutdoor', 'Wassergehalt Aussen', vtFloat, 'THS.WaterContent', 6, $create);
         $this->MaintainVariable('WaterContentIndoor', 'Wassergehalt Innen', vtFloat, 'THS.WaterContent', 7, $create);
 
-        $this->MaintainVariable('Klima', 'gefühltes Klima', vtString, "", 8, $create);
+        $this->MaintainVariable('KlimaAussen', 'gefühltes Klima Aussen', vtString, "", 8, $create);
+        $this->MaintainVariable('KlimaInnen', 'Klima Innen', vtString, "", 8, $create);
     }
     /**
      * This function will be available automatically after the module is imported with the module control.
@@ -210,24 +211,33 @@ class MyHumidityCalc extends IPSModule
         // gefühltes Klima auswerten
         $value = $this->GetValue("DewPointOutdoor");
         if($value <= 13){
-            $this->SetValue("Klima", "trocken");
+            $this->SetValue("KlimaAussen", "trocken");
         }
         elseif($value > 13 and $value <16){
-            $this->SetValue("Klima", "trocken - feucht");
+            $this->SetValue("KlimaAussen", "trocken - feucht");
         }
         elseif($value >= 16 and $value <18){
-            $this->SetValue("Klima", "feucht");
+            $this->SetValue("KlimaAussen", "feucht");
         }
         elseif($value > 16 and $value <18){
-            $this->SetValue("Klima", "feucht - schwül");
+            $this->SetValue("KlimaAussen", "feucht - schwül");
         }
         elseif($value >= 18 and $value <21){
-            $this->SetValue("Klima", "schwül");
+            $this->SetValue("KlimaAussen", "schwül");
         }
         elseif($value >=23){
-            $this->SetValue("Klima","drückend");
+            $this->SetValue("KlimaAussen","drückend");
         }
+        
+        // Klima Innen
+        // wenn Taupunkt über 13 liegt => Raum zu Feucht
+        $TPInnen = $this->GetValue("DewPointIndoor");
+        if($TPInnen >= 13){
+            $this->SetValue("KlimaInnen", "zu Feucht");
+        } 
+
     }
+
     /**
      * This function will be available automatically after the module is imported with the module control.
      * Using the custom prefix this function will be callable from PHP and JSON-RPC through:.
