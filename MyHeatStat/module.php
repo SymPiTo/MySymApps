@@ -184,12 +184,12 @@ class MyHeatStat extends IPSModule
 
         if($this->ReadPropertyBoolean("ID_active")){
             if($this->ReadPropertyBoolean("DTsens")){
-                $VorlaufTemp = $this->getvalue("TempVor");
-                $RücklaufTemp = $this->getvalue("TempRueck");
+                $VorlaufTemp = getvalue($this->ReadPropertyInteger("TempVor"));
+                $RücklaufTemp = getvalue($this->ReadPropertyInteger("TempRueck"));
             }
 
-            $RaumTemp = $this->getvalue("RaumTemp");
-            $VtlPos =  $this->getvalue("VtlPos");
+            $RaumTemp = getvalue($this->ReadPropertyInteger("RaumTemp"));
+            $VtlPos =  getvalue($this->ReadPropertyInteger("VtlPos"));
             if($this->ReadPropertyBoolean("DTsens")){
                 // Heizung ist in Störung 
                 // Ventil ist auf aber Rücklauftemperatur erhöht sich nicht nach 5 Min
