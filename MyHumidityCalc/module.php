@@ -208,7 +208,7 @@ class MyHumidityCalc extends IPSModule
         }
 
         // gefühltes Klima auswerten
-        $value = $this->GetValue("WaterContentOutdoor");
+        $value = $this->GetValue("DewPointOutdoor");
         if($value <= 13){
             $this->SetValue("Klima", "trocken");
         }
