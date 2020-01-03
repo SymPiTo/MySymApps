@@ -64,7 +64,7 @@ class MyHumidityCalc extends IPSModule
         $this->MaintainVariable('WaterContentOutdoor', 'Wassergehalt Aussen', vtFloat, 'THS.WaterContent', 6, $create);
         $this->MaintainVariable('WaterContentIndoor', 'Wassergehalt Innen', vtFloat, 'THS.WaterContent', 7, $create);
 
-        $this->MaintainVariable('Klima', 'gefühltes Klima', vtString, 'THS.Climate', 8, $create);
+        $this->MaintainVariable('Klima', 'gefühltes Klima', vtString, "", 8, $create);
     }
     /**
      * This function will be available automatically after the module is imported with the module control.
