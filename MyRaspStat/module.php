@@ -173,7 +173,7 @@ class MyRaspberryPi extends IPSModule
          switch($Ident) {
             case "UpDown":
                 SetValue($this->GetIDForIdent($Ident), $Value);
-                if(getvalue($this->GetIDForIdent($Ident))){
+                if($this->getvalue($Ident)){
                     $this->SetRolloDown();  
                 }
                 else{
