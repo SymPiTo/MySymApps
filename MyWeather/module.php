@@ -125,7 +125,7 @@ class MyWeather extends IPSModule
          switch($Ident) {
             case "UpDown":
                 SetValue($this->GetIDForIdent($Ident), $Value);
-                if(getvalue($this->GetIDForIdent($Ident))){
+                if($this->getvalue($Ident)){
                     $this->SetRolloDown();  
                 }
                 else{
@@ -241,8 +241,8 @@ class MyWeather extends IPSModule
         $wetterNowData['summary'] = $weather_now['summary'];
         $wetterNowData['time'] = $weather_now['time'];
         
-        setvalue($this->GetIDForIdent("ID_Now"),$html);
-        setvalue($this->GetIDForIdent("ID_NowData"), json_encode($wetterNowData));      
+        $this->setvalue("ID_Now",$html);
+        $this->setvalue("ID_NowData", json_encode($wetterNowData));      
         return $wetterNowData; 
     } 
 
@@ -338,8 +338,8 @@ class MyWeather extends IPSModule
                 $html .= '</body> 
             </html>'; 
                 
-            setvalue($this->GetIDForIdent("ID_Week"),$html);
-            setvalue($this->GetIDForIdent("ID_WeekData"), json_encode($wetterData));
+            $this->setvalue("ID_Week",$html);
+            $this->setvalue("ID_WeekData", json_encode($wetterData));
             return $wetterData; 
         }  
         
