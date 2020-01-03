@@ -1,0 +1,14 @@
+{
+    "id": "{75F5B055-778C-AC26-856B-A2B416E31F0E}",
+    "name": "MyHumidityCalc",
+    "type": 3,
+    "vendor": "PiTo",
+    "aliases": [
+        "Luftfeuchtigkeitssensor",
+        "Luftfeuchtigkeitsrechner"
+    ],
+    "parentRequirements": [],
+    "childRequirements": [],
+    "implemented": [],
+    "prefix": "THS"
+}
