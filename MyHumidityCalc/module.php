@@ -35,7 +35,7 @@ class MyHumidityCalc extends IPSModule
         // Profile "THS.AirOrNot"
         $association = [
             [0, 'Nicht Lüften!', 'Window-100', 0xFF0000],
-            [1, 'Lüften!', 'Window-0', 0x00FF00],
+            [1, 'Lüften möglich!', 'Window-0', 0x00FF00],
         ];
         $this->RegisterProfile(vtBoolean, 'THS.AirOrNot', 'Window', '', '', 0, 0, 0, 0, $association);
         // Profile "THS.WaterContent"
