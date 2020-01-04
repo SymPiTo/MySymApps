@@ -232,9 +232,12 @@ class MyHumidityCalc extends IPSModule
         // Klima Innen
         // wenn Taupunkt über 13 liegt => Raum zu Feucht
         $TPInnen = $this->GetValue("DewPointIndoor");
-        if($TPInnen >= 13){
+        $TI08 = $this->Getvalue(ReadPropertyInteger("TempIndoor")) * 0.8;
+        if($TI08 <= $TPInnen){
             $this->SetValue("KlimaInnen", "zu Feucht");
         } 
+        // Kritisch wenn innen Temperatur unterhal des Taupunktes Innen liegt. Grenzwert ist 80%
+        //Bsp.: TP = 14 *  und T = 16 * 0,8 = 12,8 => kritisch 
 
     }
 
