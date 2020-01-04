@@ -236,6 +236,9 @@ class MyHumidityCalc extends IPSModule
         if($TI08 <= $TPInnen){
             $this->SetValue("KlimaInnen", "zu Feucht");
         } 
+        else{
+            $this->SetValue("KlimaInnen", "OK");
+        }
         // Kritisch wenn innen Temperatur unterhal des Taupunktes Innen liegt. Grenzwert ist 80%
         //Bsp.: TP = 14 *  und T = 16 * 0,8 = 12,8 => kritisch 
 
