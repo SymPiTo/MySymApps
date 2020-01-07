@@ -14,6 +14,8 @@ class MyHumidityCalc extends IPSModule
         // Indoor variables
         $this->RegisterPropertyInteger('TempIndoor', 0);
         $this->RegisterPropertyInteger('HumyIndoor', 0);
+        // Fenster Kontakt variables
+        $this->RegisterPropertyInteger('FensterKontakt', 0);
         // Dashboard
         $this->RegisterPropertyInteger('ScriptMessage', 0);
         $this->RegisterPropertyString('RoomName', 'Unknown');
@@ -64,6 +66,7 @@ class MyHumidityCalc extends IPSModule
         $this->MaintainVariable('WaterContentOutdoor', 'Wassergehalt Aussen', vtFloat, 'THS.WaterContent', 6, $create);
         $this->MaintainVariable('WaterContentIndoor', 'Wassergehalt Innen', vtFloat, 'THS.WaterContent', 7, $create);
 
+        $this->MaintainVariable('Auswertung', "Auswertung", vtString, "", 9, true);
         $this->MaintainVariable('KlimaAussen', 'gefühltes Klima Aussen', vtString, "", 8, $create);
         $this->MaintainVariable('KlimaInnen', 'Klima Innen', vtString, "", 8, $create);
     }
@@ -241,6 +244,43 @@ class MyHumidityCalc extends IPSModule
         }
         // Kritisch wenn innen Temperatur unterhal des Taupunktes Innen liegt. Grenzwert ist 80%
         //Bsp.: TP = 14 *  und T = 16 * 0,8 = 12,8 => kritisch 
+
+    }
+
+    private function warning(){
+        if (IPS_VariableExists(GetIDForIdent('FensterKontakt'))){
+                $windowId = $this->ReadPropertyInteger('Fensterkontakt');
+                $HumidtyID = $this->ReadPropertyInteger('HumyIndoor');
+            $Humidity = getvalue($HumidtyID);
+            $window = getValue($windowId);
+            $Diff = $this->GetValue('Difference');
+            $Hinweis   = $this->GetValue>('Hint');  //Bool
+             
+            if($window){
+                //prüfen wie lange das Fenster geöffnet ist - zumachen
+                $t_open = IPS_GetVariable($windowId)['VariableChanged'];  // Wert in Unix time in Sekunden seit
+                
+                // wenn Meldung Lüften und Fenster > 5 Minuten offen dann Meldung Lüfen beendet.
+                if(($this->getvalue('Auswertung') == 'lüften')  & ((time() - $t_open) > 300)){
+                    $this->SetValue('Auswertung', 'lüften beenden.');
+                }
+                // wenn draussen zu feucht und Fenster auf dann Alarm
+                elseif(!$Hinweis){
+                    $this->SetValue('Auswertung', 'Fenster schliessen.');
+                }
+            }
+            else{
+                // Fenster ist zu . relative Luftfeuchtigkeit >60% und Differenz >50% und Lüften erlaubt
+                if (($Humidity > 60) and ($Diff > 50) & $Hinweis){
+                    $this->SetValue('Auswertung', 'lüften!');
+                }
+            }
+            // wenn Werte ok dann Meldung zurücksetzen
+            if(($Humidity < 55) and ($Diff < 30)){
+                $this->SetValue('Auswertung', 'alles OK.');
+            }
+
+        }
 
     }
 

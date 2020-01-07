@@ -31,6 +31,15 @@
         },
         {
             "type": "ExpansionPanel",
+            "caption": "Tür/Fensterkontakt",
+            "items": [{
+                "type": "SelectVariable",
+                "name": "FensterKontakt",
+                "caption": "Fenster Kontakt:"
+            }]
+        },
+        {
+            "type": "ExpansionPanel",
             "caption": "Dashboard",
             "items": [{
                     "type": "Label",
