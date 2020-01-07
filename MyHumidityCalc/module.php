@@ -252,7 +252,7 @@ class MyHumidityCalc extends IPSModule
     private function warning(){
         
         if (IPS_VariableExists($this->ReadPropertyInteger('FensterKontakt'))){
-                $windowId = $this->ReadPropertyInteger('Fensterkontakt');
+                $windowId = $this->ReadPropertyInteger('FensterKontakt');
                 $HumidtyID = $this->ReadPropertyInteger('HumyIndoor');
             $Humidity = getvalue($HumidtyID);
             $window = getValue($windowId);
