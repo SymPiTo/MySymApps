@@ -245,6 +245,8 @@ class MyHumidityCalc extends IPSModule
         // Kritisch wenn innen Temperatur unterhal des Taupunktes Innen liegt. Grenzwert ist 80%
         //Bsp.: TP = 14 *  und T = 16 * 0,8 = 12,8 => kritisch 
 
+        $this->warning();
+
     }
 
     private function warning(){
