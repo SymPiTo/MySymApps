@@ -250,7 +250,6 @@ class MyHumidityCalc extends IPSModule
     }
 
     private function warning(){
-        
         if (IPS_VariableExists($this->ReadPropertyInteger('FensterKontakt'))){
                 $windowId = $this->ReadPropertyInteger('FensterKontakt');
                 $HumidtyID = $this->ReadPropertyInteger('HumyIndoor');
@@ -279,9 +278,13 @@ class MyHumidityCalc extends IPSModule
                 elseif($Humidity > 60){
                     $this->SetValue('Auswertung', 'gelegentlich lüften!');
                 }
+                elseif(($Humidity > 60) and ($Diff > 30) & $Hinweis){
+                    $this->SetValue('Auswertung', 'gelegentlich lüften!'); 
+                }
+                 
             }
             // wenn Werte ok dann Meldung zurücksetzen
-            if(($Humidity < 55) and ($Diff < 30)){
+            if(($Humidity < 60) and ($Diff < 30)){
                 $this->SetValue('Auswertung', 'alles OK.');
             }
 
