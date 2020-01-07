@@ -257,8 +257,7 @@ class MyHumidityCalc extends IPSModule
             $Humidity = getvalue($HumidtyID);
             $window = getValue($windowId);
             $Diff = $this->GetValue('Difference');
-            $Hinweis   = $this->GetValue>('Hint');  //Bool
-             
+            $Hinweis = $this->GetValue('Hint');  //Bool 
             if($window){
                 //prüfen wie lange das Fenster geöffnet ist - zumachen
                 $t_open = IPS_GetVariable($windowId)['VariableChanged'];  // Wert in Unix time in Sekunden seit
