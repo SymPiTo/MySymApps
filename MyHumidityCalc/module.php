@@ -276,6 +276,9 @@ class MyHumidityCalc extends IPSModule
                 if (($Humidity > 60) and ($Diff > 50) & $Hinweis){
                     $this->SetValue('Auswertung', 'lüften!');
                 }
+                elseif($Humidity > 60){
+                    $this->SetValue('Auswertung', 'gelegentlich lüften!');
+                }
             }
             // wenn Werte ok dann Meldung zurücksetzen
             if(($Humidity < 55) and ($Diff < 30)){
