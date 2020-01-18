@@ -282,7 +282,7 @@ class MyHumidityCalc extends IPSModule
             }
             else{
                 // Fenster ist zu . relative Luftfeuchtigkeit >60% und Differenz >50% und Lüften erlaubt
-                if(TPi >13 and $Hinweis){
+                if($TPi >13 and $Hinweis){
                     $this->SetValue('Auswertung', 'dringend lüften!');
                 }    
                 elseif (($Humidity > 60) and ($Diff > 50) & $Hinweis){
