@@ -55,20 +55,29 @@ class MyHumidityCalc extends IPSModule
         $this->RegisterProfile(vtFloat, 'THS.Difference', 'Window', '', '', 0, 0, 0, 2, $association);
         // Ergebnis & Hinweis & Differenz
         $this->MaintainVariable('Hint', 'Hinweis', vtBoolean, 'THS.AirOrNot', 1, true);
+        IPS_SetInfo ($this->GetIDForIdent("Hint"), "WSS");   
         $this->MaintainVariable('Result', 'Ergebnis', vtString, '', 2, true);
+        IPS_SetInfo ($this->GetIDForIdent("Result"), "WSS");  
         $this->MaintainVariable('Difference', 'Differenz', vtFloat, 'THS.Difference', 3, true);
+        IPS_SetInfo ($this->GetIDForIdent("Difference"), "WSS");  
         // Taupunkt
         $create = $this->ReadPropertyBoolean('CreateDewPoint');
         $this->MaintainVariable('DewPointOutdoor', 'Taupunkt Aussen', vtFloat, '~Temperature', 4, $create);
+        IPS_SetInfo ($this->GetIDForIdent("DewPointOutdoor"), "WSS");  
         $this->MaintainVariable('DewPointIndoor', 'Taupunkt Innen', vtFloat, '~Temperature', 5, $create);
+        IPS_SetInfo ($this->GetIDForIdent("DewPointIndoor"), "WSS");  
         // Wassergehalt (WaterContent)
         $create = $this->ReadPropertyBoolean('CreateWaterContent');
         $this->MaintainVariable('WaterContentOutdoor', 'Wassergehalt Aussen', vtFloat, 'THS.WaterContent', 6, $create);
+        IPS_SetInfo ($this->GetIDForIdent("WaterContentOutdoor"), "WSS");  
         $this->MaintainVariable('WaterContentIndoor', 'Wassergehalt Innen', vtFloat, 'THS.WaterContent', 7, $create);
+        IPS_SetInfo ($this->GetIDForIdent("WaterContentIndoor"), "WSS");  
 
         $this->MaintainVariable('Auswertung', "Auswertung", vtString, "", 9, true);
+        IPS_SetInfo ($this->GetIDForIdent("Auswertung"), "WSS");  
         $this->MaintainVariable('KlimaAussen', 'gefühltes Klima Aussen', vtString, "", 8, $create);
         $this->MaintainVariable('KlimaInnen', 'Klima Innen', vtString, "", 8, $create);
+        IPS_SetInfo ($this->GetIDForIdent("KlimaInnen"), "WSS");  
     }
     /**
      * This function will be available automatically after the module is imported with the module control.
@@ -251,8 +260,9 @@ class MyHumidityCalc extends IPSModule
 
     private function warning(){
         if (IPS_VariableExists($this->ReadPropertyInteger('FensterKontakt'))){
-                $windowId = $this->ReadPropertyInteger('FensterKontakt');
-                $HumidtyID = $this->ReadPropertyInteger('HumyIndoor');
+            $windowId = $this->ReadPropertyInteger('FensterKontakt');
+            $HumidtyID = $this->ReadPropertyInteger('HumyIndoor');
+            $TPi = $this->getvalue("DewPointIndoor");
             $Humidity = getvalue($HumidtyID);
             $window = getValue($windowId);
             $Diff = $this->GetValue('Difference');
@@ -272,7 +282,10 @@ class MyHumidityCalc extends IPSModule
             }
             else{
                 // Fenster ist zu . relative Luftfeuchtigkeit >60% und Differenz >50% und Lüften erlaubt
-                if (($Humidity > 60) and ($Diff > 50) & $Hinweis){
+                if(TPi >13 and $Hinweis){
+                    $this->SetValue('Auswertung', 'dringend lüften!');
+                }    
+                elseif (($Humidity > 60) and ($Diff > 50) & $Hinweis){
                     $this->SetValue('Auswertung', 'lüften!');
                 }
                 elseif($Humidity > 60){
@@ -284,7 +297,7 @@ class MyHumidityCalc extends IPSModule
                  
             }
             // wenn Werte ok dann Meldung zurücksetzen
-            if(($Humidity < 60) and ($Diff < 30)){
+            if(($Humidity < 60) and ($Diff < 35)){
                 $this->SetValue('Auswertung', 'alles OK.');
             }
 
