@@ -267,6 +267,7 @@ class MyHumidityCalc extends IPSModule
             $window = getValue($windowId);
             $Diff = $this->GetValue('Difference');
             $Hinweis = $this->GetValue('Hint');  //Bool 
+            $Tin = this->IPS_GetProperty("TempIndoor")
             if($window){
                 //prüfen wie lange das Fenster geöffnet ist - zumachen
                 $t_open = IPS_GetVariable($windowId)['VariableChanged'];  // Wert in Unix time in Sekunden seit
@@ -283,7 +284,7 @@ class MyHumidityCalc extends IPSModule
             else{
                 // Fenster ist zu . relative Luftfeuchtigkeit >60% und Differenz >50% und Lüften erlaubt
                 if($TPi >13 and $Hinweis){
-                    $this->SetValue('Auswertung', 'dringend lüften!');
+                    $this->SetValue('Auswertung', 'Schimmel Alarm');
                 }    
                 elseif (($Humidity > 60) and ($Diff > 50) & $Hinweis){
                     $this->SetValue('Auswertung', 'lüften!');
@@ -291,10 +292,15 @@ class MyHumidityCalc extends IPSModule
                 elseif(($Humidity > 60) and ($Diff > 40) & $Hinweis){
                     $this->SetValue('Auswertung', 'gelegentlich lüften!'); 
                 }
-                 
+                elseif(($Tin *0.8)<$TPi and $Hinweis){
+                    $this->SetValue('Auswertung', 'dringend lüften!');
+                }
+                else{
+                    $this->SetValue('Auswertung', 'alles OK.');
+                } 
             }
             // wenn Werte ok dann Meldung zurücksetzen
-            if(($Diff < 30)){
+            if(($Diff < 40)){
                 $this->SetValue('Auswertung', 'alles OK.');
             }
 
