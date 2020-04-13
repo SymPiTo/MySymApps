@@ -557,7 +557,7 @@ class MyAlarm extends IPSModule
                     $this->setvalue("A_AlarmCode", 1);
                     //Sprachausgabe
                     if($this->ReadPropertyBoolean("AlexaTTS")){
-                        $text_to_speech = "Batterie".VarBatName."ist leer.";
+                        $text_to_speech = "Batterie ist leer.";
                         EchoRemote_TextToSpeech($this->ReadPropertyInteger("EchoID"), $text_to_speech);
                     }
                 }
