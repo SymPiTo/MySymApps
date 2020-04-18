@@ -197,14 +197,14 @@ class MyHeatStat extends IPSModule
                     $this->SendDebug("MemVal->Todzeit", $MemVal->getMem("Todzeit"), 0);
 
                     if($VtlPos > 0 and ($RücklaufTemp <= $MemVal->getMem("RLFT_before"))){
-                        $this->setvalue("HeatStat", 0);	// Störung - RaumTemperatur wurde innerhalb 5 Minuten nicht erhöht
+                        $this->setvalue("HeatStat", 3);	// Störung - RaumTemperatur wurde innerhalb 5 Minuten nicht erhöht
                         $this->setvalue("Message", "Vtl öffnet nicht.");  //Ventil öffnet nicht.
                         $this->SendDebug("Störung :", "Ventil öffent nicht, weil VtlPos= ".$VtlPos." und RücklaufTemp = ".$RücklaufTemp." <= MemVal->RLFT_before = ".$MemVal->getMem("RLFT_before") , 0);
 
                     }
                     // Ventil ist auf aber Raumtemperatur erhöht sich nicht nach Todzeit  (5min)  
                     elseif ($VtlPos > 0 and ($MemVal->getMem("RT_before") <= $RaumTemp)){
-                        $this->setvalue("HeatStat", 0);	// Störung - RaumTemperatur wurde innerhalb 5 Minuten nicht erhöht
+                        $this->setvalue("HeatStat", 3);	// Störung - RaumTemperatur wurde innerhalb 5 Minuten nicht erhöht
                         $this->setvalue("Message", "Vtl schwergängig.");  //Ventil ist schwergängig
                         $this->SendDebug("Störung :", "Raumtemp steigt nicht, weil VtlPos= ".$VtlPos." und RaumTemp >= ".$RücklaufTemp." <= MemVal->RLFT_before = ".$MemVal->getMem("RLFT_before") , 0);
                     }
@@ -229,7 +229,7 @@ class MyHeatStat extends IPSModule
                         }
                         // Heizung ist aus (Kalt) 
                         if ($RücklaufTemp < ($RaumTemp + 1) and ($VorlaufTemp < ($RaumTemp + 1))) {
-                            $this->setvalue("HeatStat", 3);	
+                            $this->setvalue("HeatStat", 0);	
                             $this->setvalue("Message", "");	// Störung behoben Meldung zurücksetzen
                             $this->SendDebug("Kalt", "Vorlauf und Rücklauf kalt  = ".$VorlaufTemp." - ".$RücklaufTemp, 0);
                         }
@@ -257,7 +257,7 @@ class MyHeatStat extends IPSModule
                         }
                         // Heizung ist aus (Kalt) 
                         if ($RücklaufTemp < ($RaumTemp + 1) and ($VorlaufTemp < ($RaumTemp + 1))) {
-                            $this->setvalue("HeatStat", 3);	
+                            $this->setvalue("HeatStat", 0);	
                             $this->setvalue("Message", "");	// Störung behoben Meldung zurücksetzen
                             $this->SendDebug("Kalt", "Vorlauf und Rücklauf kalt  = ".$VorlaufTemp." - ".$RücklaufTemp, 0);
                         }  
@@ -272,7 +272,7 @@ class MyHeatStat extends IPSModule
  
                     // Ventil ist auf aber Raumtemperatur erhöht sich nicht nach Todzeit  (5min)  
                     if ($VtlPos > 0 and ($MemVal->getMem("RT_before") <= $RaumTemp)){
-                        $this->setvalue("HeatStat", 0);	// Störung - RaumTemperatur wurde innerhalb 5 Minuten nicht erhöht
+                        $this->setvalue("HeatStat", 3);	// Störung - RaumTemperatur wurde innerhalb 5 Minuten nicht erhöht
                         $this->setvalue("Message", "Vtl schwergängig.");  //Ventil ist schwergängig
                     }
                     else{
@@ -283,7 +283,7 @@ class MyHeatStat extends IPSModule
                         }
                         // Heizung ist aus (Kalt) 
                         if ($VtlPos === 0) {
-                            $this->setvalue("HeatStat", 3);	
+                            $this->setvalue("HeatStat", 0);	
                         }
                     }
                 }
@@ -294,7 +294,7 @@ class MyHeatStat extends IPSModule
                         }
                         // Heizung ist aus (Kalt) 
                         if ($VtlPos === 0) {
-                            $this->setvalue("HeatStat", 3);	
+                            $this->setvalue("HeatStat", 0);	
                         }  
                 }
 
@@ -389,10 +389,10 @@ class MyHeatStat extends IPSModule
     Returns:   
     ------------------------------------------------------------------------------- */
     protected function RegisterProfiles(){
-        $Assoc[0]['value'] = "Störung";
+        $Assoc[0]['value'] = "Kalt";
         $Assoc[1]['value'] = "Anwärmen";
         $Assoc[2]['value'] = "Heizen";
-        $Assoc[3]['value'] = "Kalt";
+        $Assoc[3]['value'] = "Störung";
         $Assoc[0]['icon'] =  NULL;
         $Assoc[1]['icon'] =  NULL;
         $Assoc[2]['icon'] = NULL;
