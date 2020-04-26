@@ -111,6 +111,8 @@ class MyAlarm extends IPSModule
         IPS_SetInfo ($variablenID, "WSS");
         $variablenID = $this->RegisterVariableString("A_WaterAlarm", "Water Alarm");
         IPS_SetInfo ($variablenID, "WSS");
+        $variablenID = $this->RegisterVariableString("A_WOAlarm", "Waindow open Alarm");
+        IPS_SetInfo ($variablenID, "WSS");
         $variablenID = $this->RegisterVariableString("A_SecCode", "Security Code");
         IPS_SetInfo ($variablenID, "WSS");
         $variablenID = $this->RegisterVariableString("A_SecWarning", "Security Meldung");  
@@ -206,8 +208,8 @@ class MyAlarm extends IPSModule
         $this->CreateLink("Alarmanlage aktivieren", $secID, $this->GetIDForIdent("A_SecActivate"));  
         
         $this->CreateLink("Battery", $MeldID, $this->GetIDForIdent("A_BatAlarm")); 
-        $this->CreateLink("WaterSensor", $MeldID, $this->GetIDForIdent("A_WaterAlarm")); 
-        
+        $this->CreateLink("Window Open", $MeldID, $this->GetIDForIdent("A_WOAlarm")); 
+
         if (@IPS_VariableExists($this->GetIDForIdent("A_SecKeyboard"))){
            @IPS_DeleteVariable($this->GetIDForIdent("A_SecKeyboard")); 
         }
@@ -238,7 +240,20 @@ class MyAlarm extends IPSModule
             $cmd = "A_BatAlarm(".$this->InstanceID.");" ;
             $this->RegisterVarEvent($Name, $Ident, $Typ, $ParentID, 0, 1, $sensor->ID, $cmd  );
         }       
-        
+
+        //Unterkategorie Window Open Alarme anlegen
+        $AlarmCatID = $this->RegisterCategory("WOEvntIdent", "WOAlarmEvents");
+        // für jedes Liste ID ein Event anlegen
+        $windows = json_decode($this->ReadPropertyString("WinOpen"));
+        foreach($windows as $sensor) {
+            $ParentID = $AlarmCatID;
+            $Typ = 0;
+            $Ident = "AE".$sensor->ID;
+            $Name = "AEvent".$sensor->ID;
+            $cmd = "A_WinOpenAlarm(".$this->InstanceID.");" ;
+            $this->RegisterVarEvent($Name, $Ident, $Typ, $ParentID, 0, 1, $sensor->ID, $cmd  );
+        } 
+
          //Unterkategorie Sec  Alarme anlegen
         $SecAlarmCatID = $this->RegisterCategory("AlarmEvntIdent","SecAlarmEvents");
         // für jedes Liste ID ein Event anlegen
@@ -568,6 +583,59 @@ class MyAlarm extends IPSModule
             } 
             else{
                 $this->setvalue("A_BatAlarm", ""); 
+                $this->setvalue("A_AlarmCode", 0);
+            }
+        }  
+
+        
+        /* ----------------------------------------------------------------------------
+         Function: WinOpenAlarm
+        ...............................................................................
+        Erzeugt einen Alarm wenn Fenster zu lange auf ist
+        ...............................................................................
+        Parameters: 
+            none.
+        ..............................................................................
+        Returns:   
+             none
+        ------------------------------------------------------------------------------- */
+        public function WinOpenAlarm(){
+            //überprüfen welches Ereignis ausgelöst hat 
+            $Windows = json_decode($this->ReadPropertyString("WinOpen"));
+            $ParentID =   @IPS_GetObjectIDByName("WOAlarmEvents", $this->InstanceID);
+            $lastEvent = 0;
+            $lastTriggerVarID = false; 
+            foreach($Windows as $sensor) {
+                $EreignisID = @IPS_GetEventIDByName("AEvent".$sensor->ID, $ParentID);
+                $EreignisInfo = IPS_GetEvent($EreignisID);
+                $aktEvent = $EreignisInfo["LastRun"];
+                if($aktEvent > $lastEvent){
+                    $lastEvent = $aktEvent;
+                    $lastTriggerVarID = $EreignisInfo["TriggerVariableID"];
+                }
+            }
+            if($lastTriggerVarID){
+                $ltv =  getvalue($lastTriggerVarID);
+                $VarWOName = IPS_GetLocation($lastTriggerVarID);
+                $this->SendDebug( "$lastTriggerVarID: ", $ltv, 0); 
+                if($ltv == 1){
+                    // Fenster zu lange auf Alarm auslösen
+                    $this->setvalue("A_WOAlarm", "Fenster ist auf: ".$VarWOName);
+                    //AlarmCode auf 1 setzen
+                    $this->setvalue("A_AlarmCode", 1);
+                    //Sprachausgabe
+                    if($this->ReadPropertyBoolean("AlexaTTS")){
+                        $text_to_speech = "Fenster ist auf.";
+                        EchoRemote_TextToSpeech($this->ReadPropertyInteger("EchoID"), $text_to_speech);
+                    }
+                }
+                else{
+                    $this->setvalue("A_WOAlarm", ""); 
+                    $this->setvalue("A_AlarmCode", 0);   
+                }
+            } 
+            else{
+                $this->setvalue("A_WOAlarm", ""); 
                 $this->setvalue("A_AlarmCode", 0);
             }
         }  
