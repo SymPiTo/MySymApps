@@ -276,15 +276,18 @@ class MyHumidityCalc extends IPSModule
                 $t_open = IPS_GetVariable($windowId)['VariableChanged'];  // Wert in Unix time in Sekunden seit
                 
                 // wenn Meldung Lüften und Fenster > 5 Minuten offen dann Meldung Lüfen beendet.
-                if(($this->getvalue('Auswertung') == 'lüften')  & ((time() - $t_open) > 300)){
+                if(($this->getvalue('Auswertung') == 'lüften')  & ((time() - $t_open) > 600)){
                     $this->SetValue('Auswertung', 'lüften beenden.');
+                    $this->SetValue('WinOpen', true);
                 }
                 // wenn draussen zu feucht und Fenster auf dann Alarm
                 elseif(!$Hinweis){
                     $this->SetValue('Auswertung', 'Fenster schliessen.');
+                    $this->SetValue('WinOpen', true);
                 }
             }
             else{
+                $this->SetValue('WinOpen', false);
                 // Fenster ist zu . relative Luftfeuchtigkeit >60% und Differenz >50% und Lüften erlaubt
                 if($TPi >13 and $Hinweis){
                     $this->SetValue('Auswertung', 'Schimmel Alarm');
