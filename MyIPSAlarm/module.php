@@ -50,7 +50,7 @@ class MyAlarm extends IPSModule
      * A_SecWarning    -   Meldetext (string)
     
     IPS Variable:
-     * A_SecActive          -   Status Alermanlage aktiv (Bool)
+     * A_SecActive          -   Status Alarmanlage aktiv (Bool) Alarmanlage hat ausgelöst
      *  
     IPS Action Variable:
      * A_AlarmCode          -   Alarm.Code (integer)
