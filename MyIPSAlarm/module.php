@@ -76,7 +76,7 @@ class MyAlarm extends IPSModule
             $this->RegisterPropertyString("SecAlarms", "[]");
             $this->RegisterPropertyString("WaterSensors", "[]");
             $this->RegisterPropertyString("Password", "");
-            
+            $this->RegisterPropertyString("WinOpen", "[]");
             
           
         //Integer Variable anlegen
