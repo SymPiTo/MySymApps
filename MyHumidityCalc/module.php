@@ -54,7 +54,7 @@ class MyHumidityCalc extends IPSModule
         ];
         $this->RegisterProfile(vtFloat, 'THS.Difference', 'Window', '', '', 0, 0, 0, 2, $association);
         // Warnmeldung Fenster offen
-        $this->MaintainVariable('WinOpen', 'WindowOpen', vtBoolean, '', 1, false);
+        $this->MaintainVariable('WinOpen', 'WindowOpen', vtBoolean, '', 10, true);
         IPS_SetInfo ($this->GetIDForIdent("WinOpen"), "WSS");
         // Ergebnis & Hinweis & Differenz
         $this->MaintainVariable('Hint', 'Hinweis', vtBoolean, 'THS.AirOrNot', 1, true);
