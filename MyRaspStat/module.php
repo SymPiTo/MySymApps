@@ -1,7 +1,10 @@
 <?php
 /**
  * Title: Status Werte eines Raspberry Pi auslesen
-  *
+ * Vorraussetzung RPI Monitor muss aus Raspberry installiert sein
+ * https://xavierberger.github.io/RPi-Monitor-docs/01_features.html
+ * Abrufe der Daten mit: http://ips-raspi:8888/dynamic.json
+ * Aufruf der Webseite: http://ips-raspi:8888/status.html
  * author PiTo
  * 
  * GITHUB = <https://github.com/SymPiTo/MySymApps/MyRaspStat/>
