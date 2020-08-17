@@ -155,7 +155,7 @@ class MyRaspberryPi extends IPSModule
       if (!$connection) {
             
           $this->SendDebug('SocketOpen', $errstr , 0);
-          $this->SetValue("RPIServer",exec("sudo /etc/init.d/rpimonitor start") ); 
+          exec("sudo /etc/init.d/rpimonitor start"); 
       }
       else{
         if($this->ReadPropertyBoolean("Modul_Active")){
