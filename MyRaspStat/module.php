@@ -243,7 +243,16 @@ class MyRaspberryPi extends IPSModule
     ------------------------------------------------------------------------------  */
     public function update(){
       $this->SendDebug('Update:', "hole Werte", 0);
+      $connection = @fsockopen("192.168.178.28", 8888,$errno, $errstr, 20);
+       
+      if ($errno == 0) {
+            
+          $this->SendDebug('SocketOpen', $errstr , 0);
+          exec("sudo /etc/init.d/rpimonitor start"); 
+      }
+      else{
 
+        @fclose($connection);
 
       $ip = $this->ReadPropertyString("IPAddress");
       try {
@@ -279,7 +288,7 @@ class MyRaspberryPi extends IPSModule
       SetValue($this->GetIDForIdent("ID_CPU_load15"), $data['load15']);
       SetValue($this->GetIDForIdent("ID_packages"), $data['packages']);
       SetValue($this->GetIDForIdent("ID_ip"),  $ip);
-
+    }
       if($this->ReadPropertyBoolean("IPS_Server")){
         SetValue($this->GetIDForIdent("ID_IPS_Version"),  IPS_GetKernelVersion());
         $kernelStat = IPS_GetKernelRunlevel();
