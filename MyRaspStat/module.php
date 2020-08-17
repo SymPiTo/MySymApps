@@ -152,13 +152,14 @@ class MyRaspberryPi extends IPSModule
       }
       $connection = @fsockopen("192.168.178.28", 8888,$errno, $errstr, 20);
        
-      if (!$connection) {
+      if ($errno == 0) {
             
           $this->SendDebug('SocketOpen', $errstr , 0);
           exec("sudo /etc/init.d/rpimonitor start"); 
       }
       else{
         if($this->ReadPropertyBoolean("Modul_Active")){
+          @fclose($connection);
           $this->SetTimerInterval("update_Timer", $this->ReadPropertyInteger("UpdateInterval"));
           $this->update();
         }
