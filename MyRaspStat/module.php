@@ -150,11 +150,11 @@ class MyRaspberryPi extends IPSModule
         $variablenID =  $this->RegisterVariableString("ID_KernelStat", "IPS Kernel Status");
         IPS_SetInfo ($variablenID, "WSS"); 
       }
-      $connection = @fsockopen("192.168.178.28", 8888);
+      $connection = @fsockopen("192.168.178.28", 8888,$errno, $errstr, 20);
        
       if (!$connection) {
            
-          $this->SendDebug('SocketOpen', $connection , 0);
+          $this->SendDebug('SocketOpen', $errstr ($errno) , 0);
       }
 
       if($this->ReadPropertyBoolean("Modul_Active")){
