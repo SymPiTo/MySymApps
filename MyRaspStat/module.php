@@ -256,7 +256,7 @@ class MyRaspberryPi extends IPSModule
 
       $ip = $this->ReadPropertyString("IPAddress");
  
-        $data = file_get_contents("http://".$ip.":8888/dynamic.json");
+        $data = @file_get_contents("http://".$ip.":8888/dynamic.json");
         $this->SendDebug('Update', $data, 0);
 
     
