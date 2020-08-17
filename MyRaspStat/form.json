@@ -8,6 +8,17 @@
             "name": "IPAddress",
             "type": "ValidationTextBox",
             "caption": "IP-Address/RaspberryPi"
+        },
+        {
+            "type": "NumberSpinner",
+            "name": "UpdateInterval",
+            "caption": "UpdateInterval",
+            "suffix": "milisekunden"
+        },
+        {
+            "name": "IPS_Server",
+            "type": "CheckBox",
+            "caption": "IPS Server vorhanden."
         }
     ],
     "actions": [

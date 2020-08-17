@@ -18,7 +18,7 @@ require_once(__DIR__ . "/../libs/NetworkTraits1.php");
 class MyRaspberryPi extends IPSModule
 {
     //Traits verbinden
-    use MyDebugHelper;
+    use MyDebugHelper1;
      
 /*_______________________________________________________________________ 
      Section: Internal Modul Funtions
