@@ -156,14 +156,16 @@ class MyRaspberryPi extends IPSModule
            
           $this->SendDebug('SocketOpen', $errstr , 0);
       }
-
-      if($this->ReadPropertyBoolean("Modul_Active")){
+      else{
+        if($this->ReadPropertyBoolean("Modul_Active")){
           $this->SetTimerInterval("update_Timer", $this->ReadPropertyInteger("UpdateInterval"));
           $this->update();
+        }
+        else {
+              $this->SetTimerInterval("update_Timer", 0);
+        }
       }
-      else {
-            $this->SetTimerInterval("update_Timer", 0);
-      }
+
     }
     
    /* ------------------------------------------------------------ 
