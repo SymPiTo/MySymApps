@@ -113,7 +113,7 @@ class MyRaspberryPi extends IPSModule
         $variablenID =  $this->RegisterVariableString("ID_ip", "IP Adress Device");
         IPS_SetInfo ($variablenID, "WSS"); 
 
-
+        $variablenID =  $this->RegisterVariableBoolean("RPIServer", "RPI Monitor Server");
 
 
         // Aktiviert die Standardaktion der Statusvariable zur Bedienbarkeit im Webfront
@@ -153,8 +153,9 @@ class MyRaspberryPi extends IPSModule
       $connection = @fsockopen("192.168.178.28", 8888,$errno, $errstr, 20);
        
       if (!$connection) {
-           
+            
           $this->SendDebug('SocketOpen', $errstr , 0);
+          $this->SetValue("RPIServer",exec("sudo /etc/init.d/rpimonitor start") ); 
       }
       else{
         if($this->ReadPropertyBoolean("Modul_Active")){
