@@ -144,30 +144,39 @@ class MyRaspberryPi extends IPSModule
 	    //Never delete this line!
       parent::ApplyChanges();
 
+
+
       if($this->ReadPropertyBoolean("IPS_Server")){
         $variablenID =  $this->RegisterVariableFloat("ID_IPS_Version", "IPS Version","", 0);
         IPS_SetInfo ($variablenID, "WSS"); 
         $variablenID =  $this->RegisterVariableString("ID_KernelStat", "IPS Kernel Status");
         IPS_SetInfo ($variablenID, "WSS"); 
       }
-      $connection = @fsockopen("192.168.178.28", 8888,$errno, $errstr, 20);
-        
-      if ($errno != 0) {
-            
-          $this->SendDebug('SocketOpen', $errstr , 0);
-          exec("sudo /etc/init.d/rpimonitor start"); 
+
+      if(!$this->ReadPropertyBoolean("Modul_Active")){
+        //Modul wurde deaktiviert
+        $this->SetTimerInterval("update_Timer", 0);
       }
       else{
-        if($this->ReadPropertyBoolean("Modul_Active")){
-          @fclose($connection);
-          $this->SetTimerInterval("update_Timer", $this->ReadPropertyInteger("UpdateInterval"));
-          $this->update();
+        //Modul ist aktiviert
+        //prüfe of RPI Monitor Service läuft
+        $connection = @fsockopen("192.168.178.28", 8888,$errno, $errstr, 20);
+          
+        if ($errno != 0) {
+            //Service läuft nicht => Versuche Service zu starten  
+            $this->SendDebug('SocketOpen', $errstr , 0);
+            exec("sudo /etc/init.d/rpimonitor start"); 
         }
-        else {
-              $this->SetTimerInterval("update_Timer", 0);
+        else{
+          //Service läuft und Modul ist aktiviert
+          if($this->ReadPropertyBoolean("Modul_Active")){
+            @fclose($connection);
+            $this->SetTimerInterval("update_Timer", $this->ReadPropertyInteger("UpdateInterval"));
+            $this->update();
+          }
+      
         }
       }
-
     }
     
    /* ------------------------------------------------------------ 
