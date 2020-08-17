@@ -248,7 +248,7 @@ class MyRaspberryPi extends IPSModule
       $ip = $this->ReadPropertyString("IPAddress");
       try {
         $data = file_get_contents("http://".$ip.":8888/dynamic.json");
-        throw new Exception("Value must be 1 or below");
+        $this->SendDebug('Update', $data, 0);
       }
       catch (Exception $e) {
         $this->SendDebug('Update', $e->getMessage(), 0);
