@@ -242,6 +242,7 @@ class MyRaspberryPi extends IPSModule
         none
     ------------------------------------------------------------------------------  */
     public function update(){
+      $this->SendDebug('Update:', "hole Werte", 0);
       $ip = $this->ReadPropertyString("IPAddress");
       try {
         $data = file_get_contents("http://".$ip.":8888/dynamic.json");
