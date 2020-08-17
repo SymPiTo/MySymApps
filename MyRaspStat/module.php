@@ -151,8 +151,8 @@ class MyRaspberryPi extends IPSModule
         IPS_SetInfo ($variablenID, "WSS"); 
       }
       $connection = @fsockopen("192.168.178.28", 8888,$errno, $errstr, 20);
-       
-      if ($errno == 0) {
+        
+      if ($errno != 0) {
             
           $this->SendDebug('SocketOpen', $errstr , 0);
           exec("sudo /etc/init.d/rpimonitor start"); 
