@@ -12,14 +12,19 @@
  * Version:1.0.2019.08.22
  */
 //Class: MyRaspberryPi
+
+require_once(__DIR__ . "/../libs/NetworkTraits1.php");
+
 class MyRaspberryPi extends IPSModule
 {
-    /* 
-    _______________________________________________________________________ 
+    //Traits verbinden
+    use MyDebugHelper;
+     
+/*_______________________________________________________________________ 
      Section: Internal Modul Funtions
      Die folgenden Funktionen sind Standard Funktionen zur Modul Erstellung.
-    _______________________________________________________________________ 
-     */
+  _______________________________________________________________________ */
+ 
             
     /* ------------------------------------------------------------ 
     Function: Create  
@@ -191,6 +196,21 @@ class MyRaspberryPi extends IPSModule
         }
  
     }
+
+    /*------------------------------------------------------------ 
+      Function: MessageSink  
+      MessageSink() wird nur bei registrierten 
+      NachrichtenIDs/SenderIDs-Kombinationen aufgerufen. 
+    -------------------------------------------------------------*/
+    public function MessageSink($TimeStamp, $SenderID, $Message, $Data) {
+      //IPS_LogMessage("MessageSink", "Message from SenderID ".$SenderID." with Message ".$Message."\r\n Data: ".print_r($Data, true));
+      $this->SendDebug('MessageSink', $Message, 0);
+      switch ($Message) {
+          case IPS_KERNELSTARTED:
+              $this->KernelReady();
+          break;
+      }
+    } //Function: MessageSink End
 
   /* ______________________________________________________________________________________________________________________
      Section: Public Funtions

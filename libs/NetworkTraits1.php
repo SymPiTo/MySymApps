@@ -67,7 +67,7 @@ if (!defined("IPS_INSTANCEMESSAGE")) {
     define('IPS_INSTANCEMESSAGE', IPS_BASE + 500);         //Instance Manager Message
     define('IM_CREATE', IPS_INSTANCEMESSAGE + 1);          //Instance created
     define('IM_DELETE', IPS_INSTANCEMESSAGE + 2);          //Instance deleted
-    define('IM_CONNECT', IPS_INSTANCEMESSAGE + 3);         //Instance connectged
+    define('IM_CONNECT', IPS_INSTANCEMESSAGE + 3);         //Instance connected
     define('IM_DISCONNECT', IPS_INSTANCEMESSAGE + 4);      //Instance disconncted
     define('IM_CHANGESTATUS', IPS_INSTANCEMESSAGE + 5);    //Status was Changed
     define('IM_CHANGESETTINGS', IPS_INSTANCEMESSAGE + 6);  //Settings were Changed
