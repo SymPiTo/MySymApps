@@ -154,7 +154,7 @@ class MyRaspberryPi extends IPSModule
        
       if (!$connection) {
            
-          $this->SendDebug('SocketOpen', $errstr ($errno) , 0);
+          $this->SendDebug('SocketOpen', $errstr , 0);
       }
 
       if($this->ReadPropertyBoolean("Modul_Active")){
