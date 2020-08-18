@@ -309,6 +309,17 @@ class MyRaspberryPi extends IPSModule
       SetValue($this->GetIDForIdent("ID_ip"),  $ip);
     }
       if($this->ReadPropertyBoolean("IPS_Server")){
+        //check if service is running
+        $connection = @fsockopen("192.168.178.28", 3777,$errno, $errstr, 20);
+        if ($errno != 0) {
+            //Service läuft nicht => Versuche Service zu starten  
+            $this->SendDebug('IP Symcon Service:', $errstr , 0);
+            $this->SetValue('IpsServer', false);
+            exec("sudo /etc/init.d/rpimonitor start"); 
+        }
+        else{
+        //IP Symcon Service läuft  
+        $this->SetValue('IpsServer', true);  
         SetValue($this->GetIDForIdent("ID_IPS_Version"),  IPS_GetKernelVersion());
         $kernelStat = IPS_GetKernelRunlevel();
         switch ($kernelStat) {
