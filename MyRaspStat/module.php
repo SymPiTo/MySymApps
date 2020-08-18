@@ -114,13 +114,15 @@ class MyRaspberryPi extends IPSModule
         IPS_SetInfo ($variablenID, "WSS"); 
 
         $variablenID =  $this->RegisterVariableBoolean("RPIServer", "RPI Monitor Server");
-
+        $variablenID =  $this->RegisterVariableBoolean("IpsServer", "Symcon Server");
 
         // Aktiviert die Standardaktion der Statusvariable zur Bedienbarkeit im Webfront
-        //$this->EnableAction("IDENTNAME");
+        $this->EnableAction("RPIServer");
+        $this->EnableAction("IpsServer");
         
-        //IPS_SetVariableCustomProfile(§this->GetIDForIdent("Mode"), "Rollo.Mode");
-        
+        IPS_SetVariableCustomProfile($this->GetIDForIdent("RPIServer"), "FBX.InternetState");
+        IPS_SetVariableCustomProfile($this->GetIDForIdent("IpsServer"), "FBX.InternetState");
+
         //anlegen eines Timers zur Variablen Aktualisierung
         $this->RegisterTimer("update_Timer", $this->ReadPropertyInteger("UpdateInterval"), 'MyRPI_update($_IPS["TARGET"]);');
             
@@ -165,6 +167,7 @@ class MyRaspberryPi extends IPSModule
         if ($errno != 0) {
             //Service läuft nicht => Versuche Service zu starten  
             $this->SendDebug('SocketOpen', $errstr , 0);
+            $this->SetValue('RPIServer', false);
             exec("sudo /etc/init.d/rpimonitor start"); 
         }
         else{
@@ -172,6 +175,7 @@ class MyRaspberryPi extends IPSModule
           if($this->ReadPropertyBoolean("Modul_Active")){
             @fclose($connection);
             $this->SetTimerInterval("update_Timer", $this->ReadPropertyInteger("UpdateInterval"));
+            $this->SetValue('RPIServer', true);
             $this->update();
           }
       
@@ -198,17 +202,27 @@ class MyRaspberryPi extends IPSModule
      ------------------------------------------------------------- */
     public function RequestAction($Ident, $Value) {
          switch($Ident) {
-            case "UpDown":
+            case "RPIServer":
                 SetValue($this->GetIDForIdent($Ident), $Value);
                 if($this->getvalue($Ident)){
-                    $this->SetRolloDown();  
+                  //RPI Monitor Service starten
+                  exec("sudo /etc/init.d/rpimonitor start"); 
                 }
                 else{
-                    $this->SetRolloUp();
+                  //RPI Monitor Service stoppen
+                  exec("sudo /etc/init.d/rpimonitor stop"); 
                 }
                 break;
-             case "Mode":
-                $this->SetMode($Value);  
+            case "IpsServer":
+              SetValue($this->GetIDForIdent($Ident), $Value);
+              if($this->getvalue($Ident)){
+                //Symcon Service starten
+                exec("sudo /etc/init.d/symcon start"); 
+              }
+              else{
+                //Symcon Service stoppen
+                exec("sudo /etc/init.d/symcon stop"); 
+              } 
                 break;
             default:
                 throw new Exception("Invalid Ident");
