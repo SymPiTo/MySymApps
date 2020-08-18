@@ -267,7 +267,10 @@ class MyRaspberryPi extends IPSModule
     public function update(){
       $this->SendDebug('Update:', "hole Werte", 0);
       $connection = @fsockopen("192.168.178.28", 8888,$errno, $errstr, 20);
-       
+      $services =  exec("sudo service --status-all"); 
+      $this->SendDebug('ServiceListe', $services , 0);
+
+
       if ($errno != 0) {
             
           $this->SendDebug('SocketOpen', $errstr , 0);
