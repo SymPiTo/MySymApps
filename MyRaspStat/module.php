@@ -315,10 +315,12 @@ class MyRaspberryPi extends IPSModule
             //Service läuft nicht => Versuche Service zu starten  
             $this->SendDebug('IP Symcon Service:', $errstr , 0);
             $this->SetValue('IpsServer', false);
-            exec("sudo /etc/init.d/rpimonitor start"); 
+            @fclose($connection);
+            exec("sudo /etc/init.d/symcon start"); 
         }
         else{
         //IP Symcon Service läuft  
+        @fclose($connection);
         $this->SetValue('IpsServer', true);  
         SetValue($this->GetIDForIdent("ID_IPS_Version"),  IPS_GetKernelVersion());
         $kernelStat = IPS_GetKernelRunlevel();
@@ -347,7 +349,7 @@ class MyRaspberryPi extends IPSModule
       }
         
     }  
-
+    }
  
  
    /* _______________________________________________________________________
