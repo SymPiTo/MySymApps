@@ -268,12 +268,12 @@ class MyRaspberryPi extends IPSModule
       $this->SendDebug('Update:', "hole Werte", 0);
       $connection = @fsockopen("192.168.178.28", 8888,$errno, $errstr, 20);
       $services =  exec("sudo service symcon status"); 
-      
+
       $this->SendDebug('ServiceListe', $services , 0);
 
 
       if ($errno != 0) {
-            
+          @fclose($connection);  
           $this->SendDebug('SocketOpen', $errstr , 0);
           exec("sudo /etc/init.d/rpimonitor start"); 
       }
@@ -284,10 +284,9 @@ class MyRaspberryPi extends IPSModule
       $ip = $this->ReadPropertyString("IPAddress");
  
         $data = @file_get_contents("http://".$ip.":8888/dynamic.json");
-        $this->SendDebug('Update', $data, 0);
+        //$this->SendDebug('Update', $data, 0);
 
-    
-       
+          
       $data = json_decode($data, true); 
       SetValue($this->GetIDForIdent("ID_cpuFreq"), $data['cpu_frequency']); 
       SetValue($this->GetIDForIdent("ID_MemTotal"), $data['memory_available']);
