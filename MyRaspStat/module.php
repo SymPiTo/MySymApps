@@ -307,8 +307,7 @@ class MyRaspberryPi extends IPSModule
       //SetValue($this->GetIDForIdent("ID_https"), $data['https']);
       SetValue($this->GetIDForIdent("ID_RPI_monitor"), $data['rpimonitor']);
       SetValue($this->GetIDForIdent("ID_ssh"), $data['ssh']);
-      SetValue($this->GetIDForIdent("ID_symcon"), $data['symcon']);
-      SetValue($this->GetIDForIdent("ID_wss"), $data['websocketserver']);
+
       SetValue($this->GetIDForIdent("ID_scal_Gov"), $data['scaling_governor']);
       SetValue($this->GetIDForIdent("ID_CPU_Temp"), $data['soc_temp']);
       SetValue($this->GetIDForIdent("ID_upgrade"), $data['upgrade']);
@@ -318,6 +317,11 @@ class MyRaspberryPi extends IPSModule
       SetValue($this->GetIDForIdent("ID_CPU_load15"), $data['load15']);
       SetValue($this->GetIDForIdent("ID_packages"), $data['packages']);
       SetValue($this->GetIDForIdent("ID_ip"),  $ip);
+if(ReadPropertyBoolean("IPS_Server")){
+  SetValue($this->GetIDForIdent("ID_symcon"), $data['symcon']);
+  SetValue($this->GetIDForIdent("ID_wss"), $data['websocketserver']);
+}
+
     }
       if($this->ReadPropertyBoolean("IPS_Server")){
         //check if service is running
