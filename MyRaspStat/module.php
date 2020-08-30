@@ -168,7 +168,8 @@ class MyRaspberryPi extends IPSModule
       else{
         //Modul ist aktiviert
         //prüfe of RPI Monitor Service läuft
-        $connection = @fsockopen("192.168.178.28", 8888,$errno, $errstr, 20);
+        $ip = $this->ReadPropertyString("IPAddress");
+        $connection = @fsockopen($ip, 8888,$errno, $errstr, 20);
           
         if ($errno != 0) {
             //Service läuft nicht => Versuche Service zu starten  
@@ -272,7 +273,8 @@ class MyRaspberryPi extends IPSModule
     ------------------------------------------------------------------------------  */
     public function update(){
       $this->SendDebug('Update:', "hole Werte", 0);
-      $connection = @fsockopen("192.168.178.28", 8888,$errno, $errstr, 20);
+      $ip = $this->ReadPropertyString("IPAddress");
+      $connection = @fsockopen($ip, 8888,$errno, $errstr, 20);
       $services =  exec("sudo service symcon status"); 
 
       $this->SendDebug('ServiceListe', $services , 0);
@@ -319,7 +321,8 @@ class MyRaspberryPi extends IPSModule
     }
       if($this->ReadPropertyBoolean("IPS_Server")){
         //check if service is running
-        $connection = @fsockopen("192.168.178.28", 3777,$errno, $errstr, 20);
+        $ip = $this->ReadPropertyString("IPAddress");
+        $connection = @fsockopen($ip, 3777,$errno, $errstr, 20);
         if ($errno != 0) {
             //Service läuft nicht => Versuche Service zu starten  
             $this->SendDebug('IP Symcon Service:', $errstr , 0);
