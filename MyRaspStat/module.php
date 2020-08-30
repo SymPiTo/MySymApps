@@ -90,10 +90,7 @@ class MyRaspberryPi extends IPSModule
         IPS_SetInfo ($variablenID, "WSS"); 
         $variablenID =  $this->RegisterVariableString("ID_ssh", "Port Telnet/ssh");
         IPS_SetInfo ($variablenID, "WSS"); 
-        $variablenID =  $this->RegisterVariableString("ID_symcon", "Port symcon");
-        IPS_SetInfo ($variablenID, "WSS"); 
-        $variablenID =  $this->RegisterVariableString("ID_wss", "Port WebSocketServer");
-        IPS_SetInfo ($variablenID, "WSS"); 
+
         $variablenID =  $this->RegisterVariableString("ID_scal_Gov", "scaling govenor");
         IPS_SetInfo ($variablenID, "WSS"); 
         $variablenID =  $this->RegisterVariableString("ID_CPU_Temp", "CPU Temperature");
@@ -114,14 +111,14 @@ class MyRaspberryPi extends IPSModule
         IPS_SetInfo ($variablenID, "WSS"); 
 
         $variablenID =  $this->RegisterVariableBoolean("RPIServer", "RPI Monitor Server");
-        $variablenID =  $this->RegisterVariableBoolean("IpsServer", "Symcon Server");
+    
 
         // Aktiviert die Standardaktion der Statusvariable zur Bedienbarkeit im Webfront
         $this->EnableAction("RPIServer");
-        $this->EnableAction("IpsServer");
+       
         
         IPS_SetVariableCustomProfile($this->GetIDForIdent("RPIServer"), "FBX.InternetState");
-        IPS_SetVariableCustomProfile($this->GetIDForIdent("IpsServer"), "FBX.InternetState");
+        
 
         //anlegen eines Timers zur Variablen Aktualisierung
         $this->RegisterTimer("update_Timer", $this->ReadPropertyInteger("UpdateInterval"), 'MyRPI_update($_IPS["TARGET"]);');
@@ -149,10 +146,19 @@ class MyRaspberryPi extends IPSModule
 
 
       if($this->ReadPropertyBoolean("IPS_Server")){
+        $variablenID =  $this->RegisterVariableString("ID_symcon", "Port symcon");
+        IPS_SetInfo ($variablenID, "WSS"); 
+        $variablenID =  $this->RegisterVariableString("ID_wss", "Port WebSocketServer");
+        IPS_SetInfo ($variablenID, "WSS"); 
+        $variablenID =  $this->RegisterVariableBoolean("IpsServer", "Symcon Server");
+        IPS_SetVariableCustomProfile($this->GetIDForIdent("IpsServer"), "FBX.InternetState");
+
         $variablenID =  $this->RegisterVariableFloat("ID_IPS_Version", "IPS Version","", 0);
         IPS_SetInfo ($variablenID, "WSS"); 
         $variablenID =  $this->RegisterVariableString("ID_KernelStat", "IPS Kernel Status");
         IPS_SetInfo ($variablenID, "WSS"); 
+
+        $this->EnableAction("IpsServer");
       }
 
       if(!$this->ReadPropertyBoolean("Modul_Active")){
