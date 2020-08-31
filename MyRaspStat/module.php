@@ -54,6 +54,7 @@ class MyRaspberryPi extends IPSModule
         $this->RegisterPropertyBoolean("IPS_Server", false);
         
         
+
         //Float Variable anlegen
         $variablenID =  $this->RegisterVariableInteger("ID_cpuFreq", "CPU frequency","Hertz", 1);
         IPS_SetInfo ($variablenID, "WSS"); 
