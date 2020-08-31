@@ -101,11 +101,11 @@ class MyRaspberryPi extends IPSModule
         IPS_SetInfo ($variablenID, "WSS"); 
         $variablenID =  $this->RegisterVariableString("ID_UpTime", "Up-Time");
         IPS_SetInfo ($variablenID, "WSS"); 
-        $variablenID =  $this->RegisterVariableFloat("ID_CPU_load1", "CPU load 1 min");
+        $variablenID =  $this->RegisterVariableFloat("ID_CPU_load1", "CPU load 1 min", "Prozent");
         IPS_SetInfo ($variablenID, "WSS"); 
-        $variablenID =  $this->RegisterVariableFloat("ID_CPU_load5", "CPU load 5 min");
+        $variablenID =  $this->RegisterVariableFloat("ID_CPU_load5", "CPU load 5 min", "Prozent");
         IPS_SetInfo ($variablenID, "WSS"); 
-        $variablenID =  $this->RegisterVariableFloat("ID_CPU_load15", "CPU load 15 min");
+        $variablenID =  $this->RegisterVariableFloat("ID_CPU_load15", "CPU load 15 min", "Prozent");
         IPS_SetInfo ($variablenID, "WSS"); 
         $variablenID =  $this->RegisterVariableString("ID_packages", "update for packages");
         IPS_SetInfo ($variablenID, "WSS"); 
