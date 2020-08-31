@@ -82,7 +82,7 @@ class MyRaspberryPi extends IPSModule
         //String Variable anlegen
         //RegisterVariableString ($Ident,  $Name, $Profil, $Position )
         //Aufruf dieser Variable mit $this->GetIDForIdent("IDENTNAME")
-        $variablenID =  $this->RegisterVariableFloat("ID_CPU_Volt", "CPU Voltage");
+        $variablenID =  $this->RegisterVariableFloat("ID_CPU_Volt", "CPU Voltage", "~Volt",,2);
         IPS_SetInfo ($variablenID, "WSS"); 
         $variablenID =  $this->RegisterVariableString("ID_http", "Port http");
         IPS_SetInfo ($variablenID, "WSS"); 
@@ -101,11 +101,11 @@ class MyRaspberryPi extends IPSModule
         IPS_SetInfo ($variablenID, "WSS"); 
         $variablenID =  $this->RegisterVariableString("ID_UpTime", "Up-Time");
         IPS_SetInfo ($variablenID, "WSS"); 
-        $variablenID =  $this->RegisterVariableFloat("ID_CPU_load1", "CPU load 1 min", "Prozent");
+        $variablenID =  $this->RegisterVariableFloat("ID_CPU_load1", "CPU load 1 min", "Prozent",3);
         IPS_SetInfo ($variablenID, "WSS"); 
-        $variablenID =  $this->RegisterVariableFloat("ID_CPU_load5", "CPU load 5 min", "Prozent");
+        $variablenID =  $this->RegisterVariableFloat("ID_CPU_load5", "CPU load 5 min", "Prozent",4);
         IPS_SetInfo ($variablenID, "WSS"); 
-        $variablenID =  $this->RegisterVariableFloat("ID_CPU_load15", "CPU load 15 min", "Prozent");
+        $variablenID =  $this->RegisterVariableFloat("ID_CPU_load15", "CPU load 15 min", "Prozent",5);
         IPS_SetInfo ($variablenID, "WSS"); 
         $variablenID =  $this->RegisterVariableString("ID_packages", "update for packages");
         IPS_SetInfo ($variablenID, "WSS"); 
