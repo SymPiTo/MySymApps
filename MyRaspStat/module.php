@@ -58,13 +58,13 @@ class MyRaspberryPi extends IPSModule
         //Float Variable anlegen
         $variablenID =  $this->RegisterVariableFloat("ID_cpuFreq", "CPU frequency","~Hertz", 1);
         IPS_SetInfo ($variablenID, "WSS"); 
-        $variablenID =  $this->RegisterVariableFloat("ID_MemTotal", "Memory total","", 0);
+        $variablenID =  $this->RegisterVariableFloat("ID_MemTotal", "Memory total","megabyte.MB", 0);
         IPS_SetInfo ($variablenID, "WSS"); 
-        $variablenID =  $this->RegisterVariableFloat("ID_MemFree", "Memory free","", 0);
+        $variablenID =  $this->RegisterVariableFloat("ID_MemFree", "Memory free","megabyte.MB", 0);
         IPS_SetInfo ($variablenID, "WSS"); 
-        $variablenID =  $this->RegisterVariableFloat("ID_SD_boot_used", "SD Card Boot used","", 0);
+        $variablenID =  $this->RegisterVariableFloat("ID_SD_boot_used", "SD Card Boot used","megabyte.MB", 0);
         IPS_SetInfo ($variablenID, "WSS"); 
-        $variablenID =  $this->RegisterVariableFloat("ID_SD_root_used", "SD Card Root used","", 0);
+        $variablenID =  $this->RegisterVariableFloat("ID_SD_root_used", "SD Card Root used","megabyte.MB", 0);
         IPS_SetInfo ($variablenID, "WSS"); 
         $variablenID =  $this->RegisterVariableFloat("ID_Swap_used", "Swap used","", 0);
         IPS_SetInfo ($variablenID, "WSS"); 
