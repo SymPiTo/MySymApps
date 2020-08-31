@@ -93,7 +93,7 @@ class MyRaspberryPi extends IPSModule
 
         $variablenID =  $this->RegisterVariableString("ID_scal_Gov", "scaling govenor");
         IPS_SetInfo ($variablenID, "WSS"); 
-        $variablenID =  $this->RegisterVariableString("ID_CPU_Temp", "CPU Temperature");
+        $variablenID =  $this->RegisterVariableFloat("ID_CPU_Temp", "CPU Temperature");
         IPS_SetInfo ($variablenID, "WSS"); 
         $variablenID =  $this->RegisterVariableString("ID_upgrade", "Files upgradable");
         IPS_SetInfo ($variablenID, "WSS"); 
