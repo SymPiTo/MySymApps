@@ -1,0 +1,22 @@
+{
+    "elements": [{
+        "name": "Active",
+        "type": "CheckBox",
+        "caption": "active"
+    }, ],
+    "actions": [
+
+    ],
+
+    "status": [{
+            "code": 101,
+            "icon": "inactive",
+            "caption": "Creating instance."
+        },
+        {
+            "code": 102,
+            "icon": "active",
+            "caption": "Device created."
+        }
+    ]
+}

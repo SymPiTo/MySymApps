@@ -1,0 +1,12 @@
+{
+    "id": "{47B614CE-F969-4D9F-A13C-FBFC990CF3C2}",
+    "name": "NMap",
+    "type": 3,
+    "vendor": "PiTo",
+    "aliases": ["nmap"],
+    "parentRequirements": [],
+    "childRequirements": [],
+    "implemented": [],
+    "prefix": "NM",
+    "url": ""
+}

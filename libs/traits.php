@@ -332,7 +332,7 @@ trait TimerHelper
      * @param int    $hour   Start hour.
      * @param int    $minute Start minute.
      * @param int    $second Start second.
-     * @param int    $script Script ID.
+     * @param int    $script Script ID.                 _PREFIX__Scriptname($_IPS[\'TARGET\'])
      * @param bool   $active True to activate the timer, oterwise false.
      */
     protected function RegisterCyclicTimer($ident, $hour, $minute, $second, $script, $active)

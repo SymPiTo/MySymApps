@@ -1,0 +1,12 @@
+{
+    "id": "{4B3B7E6B-E02E-47D8-A33D-A9E8AF59A6CA}",
+    "name": "MyBrita",
+    "type": 3,
+    "vendor": "PiTo",
+    "aliases": ["BritaFilter"],
+    "parentRequirements": [],
+    "childRequirements": [],
+    "implemented": [],
+    "prefix": "B",
+    "url": ""
+}
