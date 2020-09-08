@@ -8,7 +8,7 @@
  * 
  * Version: _VERSION_
  *************************************************************************** */
-require_once __DIR__ . '/../libs/traits';
+require_once __DIR__ . '/../libs/traits.php';
  
 
 class MyBrita extends IPSModule {
