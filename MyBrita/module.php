@@ -45,11 +45,11 @@ ___________________________________________________________________________
         //$this->RegisterProfiles();
 
         //Register Variables
-        $variablenID = $this->RegisterVariableBoolean ("setNewFilter", "neuer Filter", '~switch', 0);
+        $variablenID = $this->RegisterVariableBoolean ("setNewFilter", "neuer Filter", '~Switch', 0);
         //IPS_SetInfo ($variablenID, "WSS");
         //IPS_SetHidden($variablenID, true); //Objekt verstecken
 
-        $variablenID = $this->RegisterVariableBoolean ("incFilUsage", "neue Füllung", '~switch', 1);
+        $variablenID = $this->RegisterVariableBoolean ("incFilUsage", "neue Füllung", '~Switch', 1);
 
         $variablenID = $this->RegisterVariableString ("DateNewFilter", "Datum Filter eingesetz");
         IPS_SetInfo ($variablenID, "WSS");
