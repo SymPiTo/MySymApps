@@ -77,7 +77,7 @@ ___________________________________________________________________________
         //Register Timer
         $this->RegisterTimer('Name', 0, '_PREFIX__Scriptname($_IPS[\'TARGET\']);');
 */
-        $this->RegisterCyclicTimer("updateTimer", 24, 0, 0, $this->module_data["prefix"].'_checkFilter($_IPS[\'TARGET\']);', false);
+        $this->RegisterCyclicTimer("updateTimer", 24, 0, 0, 'Brita_checkFilter($_IPS[\'TARGET\']);', false);
 
 
 
