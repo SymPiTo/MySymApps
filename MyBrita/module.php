@@ -210,7 +210,7 @@ ________________________________________________________________________________
             $Fill = $this->GetValue("Liter");
             if($Fill > 100){
                 //Filter ist aufgebraucht.
-                $this->GetValue("Meldung", "Bitte Filter wechseln");
+                $this->SetValue("Meldung", "Bitte Filter wechseln");
             }
         }
  
