@@ -250,6 +250,7 @@ ________________________________________________________________________________
     public function incFill(){
         $Menge = $this->GetValue("Liter");
         $this->SetValue("Liter", $Menge + 1.5) ;
+        $this->checkFilter();
      }  //incFill End
 /* 
 _______________________________________________________________________
