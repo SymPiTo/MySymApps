@@ -200,7 +200,8 @@ ________________________________________________________________________________
     ------------------------------------------------------------------------------  */
     public function setNewDate(){
        $this->SetValue("DateNewFilter", date("j, n, Y"));
-       
+       // Timer einschalten
+       IPS_SetEventActive($this->GetIDForIdent("updateTime", true));
     }  //setNewDate End
 /* 
 _______________________________________________________________________
