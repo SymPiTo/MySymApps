@@ -203,14 +203,14 @@ ________________________________________________________________________________
          
         if($Differenz > $maxTage){
             // Filterzeit ist abgelaufen
-
+            $this->GetValue("Meldung", "Bitte Filter wechseln");
         }
         else{
             //püfen ob mehr als 100 Liter gefiltert wurden
             $Fill = $this->GetValue("Liter");
             if($Fill > 100){
                 //Filter ist aufgebraucht.
-
+                $this->GetValue("Meldung", "Bitte Filter wechseln");
             }
         }
  
@@ -231,6 +231,8 @@ ________________________________________________________________________________
        $this->SetValue("DateNewFilter", date("j, n, Y"));
        // Timer einschalten
        IPS_SetEventActive($this->GetIDForIdent("FilterTimer"), true);
+       $this->SetValue("Meldung", "");
+       $this->SetValue("Liter"), 0;
     }  //setNewDate End
 
     //-----------------------------------------------------------------------------
