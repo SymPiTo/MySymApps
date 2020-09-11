@@ -232,7 +232,7 @@ ________________________________________________________________________________
        // Timer einschalten
        IPS_SetEventActive($this->GetIDForIdent("FilterTimer"), true);
        $this->SetValue("Meldung", "");
-       $this->SetValue("Liter"), 0;
+       $this->SetValue("Liter", 0);
     }  //setNewDate End
 
     //-----------------------------------------------------------------------------
