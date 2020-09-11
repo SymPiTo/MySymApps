@@ -233,6 +233,7 @@ ________________________________________________________________________________
        IPS_SetEventActive($this->GetIDForIdent("FilterTimer"), true);
        $this->SetValue("Meldung", "");
        $this->SetValue("Liter", 0);
+       $this->SetValue("setNewFilter", false);
     }  //setNewDate End
 
     //-----------------------------------------------------------------------------
