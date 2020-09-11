@@ -63,6 +63,9 @@ ___________________________________________________________________________
         $variablenID = $this->RegisterVariableInteger ("Liter", "Liter befüllt");
         IPS_SetInfo ($variablenID, "WSS");
 
+        $variablenID = $this->RegisterVariableString ("Meldung", "Wartungsmeldung");
+        IPS_SetInfo ($variablenID, "WSS");
+
 /*
         $variablenID = $this->RegisterVariableFloat ($Ident, $Name, $Profil, $Position);
         IPS_SetInfo ($variablenID, "WSS");
@@ -148,8 +151,10 @@ ___________________________________________________________________________
                 }
                 break;
                 case "incFilUsage":
+                    $this->SetValue($Ident, $Value);
                     if ($Value == true){ 
-    
+                        $this->incFill();
+                        $this->SetValue($Ident, false);
                     }
                     else {
     
@@ -184,7 +189,31 @@ ________________________________________________________________________________
         none
     ------------------------------------------------------------------------------  */
     public function checkFilter(){
-       
+       //Berechnen ob die maximale Filterzeit erreicht ist
+        $startDatum = getvalue(29377);
+        $timestamp = strtotime($startDatum);
+        $startDatum = date('Y-m-d', strtotime($startDatum));
+        $heute = date('Y-m-d');
+
+        $origin = new DateTime($startDatum);
+        $target = new DateTime($heute);
+        $interval = $origin->diff($target);
+        $Differenz = $interval->format('%a');
+        $maxTage = $this->ReadPropertyInteger("lifetime") * 7;
+         
+        if($Differenz > $maxTage){
+            // Filterzeit ist abgelaufen
+
+        }
+        else{
+            //püfen ob mehr als 100 Liter gefiltert wurden
+            $Fill = $this->GetValue("Liter");
+            if($Fill > 100){
+                //Filter ist aufgebraucht.
+
+            }
+        }
+ 
     }  //checkFilter End
 
     //-----------------------------------------------------------------------------
@@ -203,6 +232,22 @@ ________________________________________________________________________________
        // Timer einschalten
        IPS_SetEventActive($this->GetIDForIdent("FilterTimer"), true);
     }  //setNewDate End
+
+    //-----------------------------------------------------------------------------
+    /* Function: incFill
+    ...............................................................................
+    Beschreibung
+    ...............................................................................
+    Parameters: 
+        none
+    ...............................................................................
+    Returns:    
+        none
+    ------------------------------------------------------------------------------  */
+    public function incFill(){
+        $Menge = $this->GetValue("Liter");
+        $this->SetValue("Liter", $Menge + 1.5) 
+     }  //incFill End
 /* 
 _______________________________________________________________________
     Section: Private Funtions
