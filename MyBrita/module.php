@@ -39,8 +39,8 @@ ___________________________________________________________________________
 
         //$this->ReadPropertyFloat("NAME", 0.0);
 
-        $this->ReadPropertyInteger("liter");
-        $this->ReadPropertyInteger("lifetime");
+        $this->RegisterPropertyInteger("liter", 100);
+        $this->RegisterPropertyInteger("lifetime", 4);
         
         //$this->ReadPropertyString("NAME", "");
 
