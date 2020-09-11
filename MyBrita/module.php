@@ -141,7 +141,7 @@ ___________________________________________________________________________
             case "setNewFilter":
                 if ($Value == true){ 
                     $this->setNewDate();
-                    $this->SetValue($Ident, true);
+                    $this->SetValue($Ident, $Value);
                 }
                 else {
 
