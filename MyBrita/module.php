@@ -38,8 +38,9 @@ ___________________________________________________________________________
 
         //$this->ReadPropertyFloat("NAME", 0.0);
 
-        //$this->ReadPropertyInteger("NAME", 0);
-
+        $this->ReadPropertyInteger("liter", 100);
+        $this->ReadPropertyInteger("Wochen", 4);
+        
         //$this->ReadPropertyString("NAME", "");
 
         // Register Profiles
@@ -52,7 +53,7 @@ ___________________________________________________________________________
 
         $variablenID = $this->RegisterVariableBoolean ("incFilUsage", "neue Füllung", '~Switch', 1);
 
-        $variablenID = $this->RegisterVariableString ("DateNewFilter", "Datum Filter eingesetz");
+        $variablenID = $this->RegisterVariableString ("DateNewFilter", "Datum Filter eingesetzt");
         IPS_SetInfo ($variablenID, "WSS");
 
         $variablenID = $this->RegisterVariableString ("DateFilterEnd", "Datum Filter wechseln");
@@ -182,7 +183,7 @@ ________________________________________________________________________________
     ------------------------------------------------------------------------------  */
     public function checkFilter(){
        
-    }  //xxxx End
+    }  //checkFilter End
 
 /* 
 _______________________________________________________________________

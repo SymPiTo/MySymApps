@@ -1,9 +1,22 @@
 {
     "elements": [{
-        "name": "active",
-        "type": "CheckBox",
-        "caption": "Aktiv"
-    }],
+            "name": "active",
+            "type": "CheckBox",
+            "caption": "Aktiv"
+        },
+        {
+            "type": "NumberSpinner",
+            "name": "liter",
+            "caption": "max Liter je Filter:",
+            "suffix": "Liter"
+        },
+        {
+            "type": "NumberSpinner",
+            "name": "lifetime",
+            "caption": "max Lebenszeit Filter",
+            "suffix": "Wochen"
+        }
+    ],
     "status": [
 
     ],
