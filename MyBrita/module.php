@@ -13,7 +13,8 @@ require_once __DIR__ . '/../libs/traits.php';
 
 class MyBrita extends IPSModule {
 
-    use DebugHelper,
+    use 
+    DebugHelper,
     TimerHelper;
  
    
