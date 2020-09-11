@@ -229,6 +229,9 @@ ________________________________________________________________________________
     ------------------------------------------------------------------------------  */
     public function setNewDate(){
        $this->SetValue("DateNewFilter", date("j, n, Y"));
+       $date = new DateTime("+30 days");
+       $endDatum = $date->format("d-m-Y"); 
+       $this->SetValue("DateFilterEnd", $endDatum);
        // Timer einschalten
        IPS_SetEventActive($this->GetIDForIdent("FilterTimer"), true);
        $this->SetValue("Meldung", "");
