@@ -79,7 +79,7 @@ ___________________________________________________________________________
         //Register Timer
         $this->RegisterTimer('Name', 0, '_PREFIX__Scriptname($_IPS[\'TARGET\']);');
 */
-        $this->RegisterCyclicTimer("updateTimer", 23, 0, 0, 'Brita_checkFilter($_IPS[\'TARGET\']);', false);
+        $this->RegisterCyclicTimer("FilterTimer", 23, 0, 0, 'Brita_checkFilter($_IPS[\'TARGET\']);', false);
 
 
 
@@ -201,7 +201,7 @@ ________________________________________________________________________________
     public function setNewDate(){
        $this->SetValue("DateNewFilter", date("j, n, Y"));
        // Timer einschalten
-       IPS_SetEventActive($this->GetIDForIdent("updateTime"), true);
+       IPS_SetEventActive($this->GetIDForIdent("FilterTimer"), true);
     }  //setNewDate End
 /* 
 _______________________________________________________________________
