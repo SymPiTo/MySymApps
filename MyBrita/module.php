@@ -60,7 +60,7 @@ ___________________________________________________________________________
         $variablenID = $this->RegisterVariableString ("DateFilterEnd", "Datum Filter wechseln");
         IPS_SetInfo ($variablenID, "WSS");
 
-        $variablenID = $this->RegisterVariableInteger ("Liter", "Liter befüllt");
+        $variablenID = $this->RegisterVariableFloat ("Liter", "Liter befüllt");
         IPS_SetInfo ($variablenID, "WSS");
 
         $variablenID = $this->RegisterVariableString ("Meldung", "Wartungsmeldung");
