@@ -8,13 +8,15 @@
             "type": "NumberSpinner",
             "name": "liter",
             "caption": "max Liter je Filter:",
-            "suffix": "Liter"
+            "suffix": "Liter",
+            "value": "100"
         },
         {
             "type": "NumberSpinner",
             "name": "lifetime",
             "caption": "max Lebenszeit Filter",
-            "suffix": "Wochen"
+            "suffix": "Wochen",
+            "value": "4"
         }
     ],
     "status": [

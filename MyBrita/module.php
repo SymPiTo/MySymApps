@@ -38,8 +38,8 @@ ___________________________________________________________________________
 
         //$this->ReadPropertyFloat("NAME", 0.0);
 
-        $this->ReadPropertyInteger("liter", 100);
-        $this->ReadPropertyInteger("Wochen", 4);
+        $this->ReadPropertyInteger("liter");
+        $this->ReadPropertyInteger("Wochen");
         
         //$this->ReadPropertyString("NAME", "");
 
