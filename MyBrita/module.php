@@ -40,7 +40,7 @@ ___________________________________________________________________________
         //$this->ReadPropertyFloat("NAME", 0.0);
 
         $this->ReadPropertyInteger("liter");
-        $this->ReadPropertyInteger("Wochen");
+        $this->ReadPropertyInteger("lifetime");
         
         //$this->ReadPropertyString("NAME", "");
 
