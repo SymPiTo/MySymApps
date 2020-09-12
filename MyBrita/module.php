@@ -66,6 +66,8 @@ ___________________________________________________________________________
         $variablenID = $this->RegisterVariableString ("Meldung", "Wartungsmeldung");
         IPS_SetInfo ($variablenID, "WSS");
 
+        $variablenID = $this->RegisterVariableInteger ("Füllstand", "Verbrauchsanzeige");
+        IPS_SetInfo ($variablenID, "WSS");
 /*
         $variablenID = $this->RegisterVariableFloat ($Ident, $Name, $Profil, $Position);
         IPS_SetInfo ($variablenID, "WSS");
@@ -200,10 +202,25 @@ ________________________________________________________________________________
         $interval = $origin->diff($target);
         $Differenz = $interval->format('%a');
         $maxTage = $this->ReadPropertyInteger("lifetime") * 7;
-         
+        if ($Differenz<8) {
+            $this->SetValue("Füllstand", 100);
+        }
+        elseif($Differenz<15){
+            $this->SetValue("Füllstand", 75);
+        }
+        elseif($Differenz<22){
+            $this->SetValue("Füllstand", 50);
+        }
+        elseif($Differenz<29){
+            $this->SetValue("Füllstand", 25);
+        }
+        else{
+            $this->SetValue("Füllstand", 0);
+        }
         if($Differenz > $maxTage){
             // Filterzeit ist abgelaufen
             $this->GetValue("Meldung", "Bitte Filter wechseln");
+            $this->SetValue("Füllstand", 0);
         }
         else{
             //püfen ob mehr als 100 Liter gefiltert wurden
@@ -213,6 +230,7 @@ ________________________________________________________________________________
                 $this->SetValue("Meldung", "Bitte Filter wechseln");
             }
         }
+
  
     }  //checkFilter End
 
