@@ -311,6 +311,29 @@ class MyHumidityCalc extends IPSModule
             }
 
         }
+        else{
+            // kein Fensterkontakt vorhanden
+            $this->SetValue('WinOpen', false);
+            // Fenster ist zu . relative Luftfeuchtigkeit >60% und Differenz >50% und Lüften erlaubt
+            if($TPi >13 and $Hinweis){
+                $this->SetValue('Auswertung', 'Schimmel Alarm');
+            }    
+            elseif (($Humidity > 60) and ($Diff > 50) & $Hinweis){
+                $this->SetValue('Auswertung', 'lüften!');
+            }
+            elseif(($Humidity > 60) and ($Diff > 40) & $Hinweis){
+                $this->SetValue('Auswertung', 'gelegentlich lüften!'); 
+            }
+            elseif(($Tin *0.8)<$TPi and $Hinweis){
+                $this->SetValue('Auswertung', 'dringend lüften!');
+            }
+            else{
+                $this->SetValue('Auswertung', 'alles OK.');
+            } 
+            if(($Diff < 40)){
+                $this->SetValue('Auswertung', 'alles OK.');
+            }
+        }
 
     }
 
