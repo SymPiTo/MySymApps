@@ -262,15 +262,15 @@ class MyHumidityCalc extends IPSModule
     }
 
     private function warning(){
+        $Diff = $this->GetValue('Difference');
+        $Hinweis = $this->GetValue('Hint');  //Bool 
+        $Tin = $this->ReadPropertyInteger("TempIndoor");
+        $HumidtyID = $this->ReadPropertyInteger('HumyIndoor');
+        $TPi = $this->getvalue("DewPointIndoor");
+        $Humidity = getvalue($HumidtyID);
         if (IPS_VariableExists($this->ReadPropertyInteger('FensterKontakt'))){
             $windowId = $this->ReadPropertyInteger('FensterKontakt');
-            $HumidtyID = $this->ReadPropertyInteger('HumyIndoor');
-            $TPi = $this->getvalue("DewPointIndoor");
-            $Humidity = getvalue($HumidtyID);
             $window = getValue($windowId);
-            $Diff = $this->GetValue('Difference');
-            $Hinweis = $this->GetValue('Hint');  //Bool 
-            $Tin = $this->ReadPropertyInteger("TempIndoor");
             if($window){
                 //prüfen wie lange das Fenster geöffnet ist - zumachen
                 $t_open = IPS_GetVariable($windowId)['VariableChanged'];  // Wert in Unix time in Sekunden seit
@@ -313,7 +313,7 @@ class MyHumidityCalc extends IPSModule
         }
         else{
             // kein Fensterkontakt vorhanden
-            $this->SetValue('WinOpen', false);
+           
             // Fenster ist zu . relative Luftfeuchtigkeit >60% und Differenz >50% und Lüften erlaubt
             if($TPi >13 and $Hinweis){
                 $this->SetValue('Auswertung', 'Schimmel Alarm');
