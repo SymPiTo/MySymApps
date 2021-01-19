@@ -285,7 +285,7 @@ class MyRaspberryPi extends IPSModule
       if ($errno != 0) {
           @fclose($connection);  
           $this->SendDebug('SocketOpen', $errstr , 0);
-          exec("sudo /etc/init.d/rpimonitor start"); 
+          exec("sudo /etc/init.d/rpimonitord -b start"); 
       }
       else{
 
@@ -320,7 +320,7 @@ class MyRaspberryPi extends IPSModule
       SetValue($this->GetIDForIdent("ID_packages"), $data['packages']);
       SetValue($this->GetIDForIdent("ID_ip"),  $ip);
 if($this->ReadPropertyBoolean("IPS_Server")){
-  SetValue($this->GetIDForIdent("ID_symcon"), $data['symcon']);
+  //SetValue($this->GetIDForIdent("ID_symcon"), $data['symcon']);
   SetValue($this->GetIDForIdent("ID_wss"), $data['websocketserver']);
 }
 
