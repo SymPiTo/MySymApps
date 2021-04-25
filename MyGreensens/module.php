@@ -47,7 +47,7 @@ ___________________________________________________________________________
         //$this->RegisterProfiles();
 
         //Register Variables
-        for ($zaehler = 1; $zaehler <= $totalSensors; $zaehler++) {
+        for ($zaehler = 0; $zaehler <= $totalSensors-1; $zaehler++) {
             $variablenID = $this->RegisterVariableInteger ("sensorID".$zaehler, "Sensor ID", "" , $zaehler*6+1);
             IPS_SetInfo ($variablenID, "");
             $variablenID = $this->RegisterVariableString ("sensorName".$zaehler, "Pflanzen Name", "", $zaehler*6+2); 
@@ -324,7 +324,7 @@ ________________________________________________________________________________
             $plantdata = $data['data']['registeredHubs'][0]['plants'];
             //Daten in Variablen schreiben
             $totalSensors = 6;
-            for ($zaehler = 1; $zaehler <= $totalSensors; $zaehler++) {
+            for ($zaehler = 0; $zaehler <= $totalSensors-1; $zaehler++) {
                 
                 $this->SetValue("sensorID".$zaehler, $plantdata[$zaehler]['sensorID']);
                  
