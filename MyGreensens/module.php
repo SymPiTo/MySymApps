@@ -343,7 +343,7 @@ ________________________________________________________________________________
                 $this->SetValue("ID_Moisture".$zaehler, $plantdata[$zaehler]['moisture']);  
 
                 $this->SetValue("ID_State".$zaehler, $plantdata[$zaehler]['state']);  
-                
+
                 $this->SetValue("ID_Link".$zaehler, $plantdata[$zaehler]['link']);  
             }
 
