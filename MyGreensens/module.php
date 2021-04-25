@@ -8,15 +8,15 @@
  * 
  * Version: _VERSION_
  *************************************************************************** */
-require_once __DIR__ . '/../libs/_TRAIT_';
-require_once __DIR__ . '/../libs/_HELPERCLASS_';  // diverse Klassen
+//require_once __DIR__ . '/../libs/_TRAIT_';
+//require_once __DIR__ . '/../libs/_HELPERCLASS_';  // diverse Klassen
 
 class _CLASS_ extends IPSModule {
 
-    use DebugHelper,
-    InstanceStatus,
-    BufferHelper,
-    Semaphore;
+    //use DebugHelper,
+    //InstanceStatus,
+    //BufferHelper,
+    //Semaphore;
 /* 
 ___________________________________________________________________________ 
     Section: Internal Modul Funtions
