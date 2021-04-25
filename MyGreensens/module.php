@@ -60,6 +60,10 @@ ___________________________________________________________________________
             IPS_SetInfo ($variablenID, "WSS");
             $variablenID = $this->RegisterVariableFloat ("ID_Moisture".$zaehler, "Feuchte", "", $zaehler*6+6);
             IPS_SetInfo ($variablenID, "WSS");
+            $variablenID = $this->RegisterVariableInteger ("ID_State".$zaehler, "Zustand", "", $zaehler*6+7);
+            IPS_SetInfo ($variablenID, "WSS");
+            $variablenID = $this->RegisterVariableString ("ID_Link".$zaehler, "Image URL", "", $zaehler*6+8);
+            IPS_SetInfo ($variablenID, "WSS");
         }
  
  
@@ -337,6 +341,10 @@ ________________________________________________________________________________
                 $this->SetValue("ID_Illumination".$zaehler, $plantdata[$zaehler]['illumination']); 
 
                 $this->SetValue("ID_Moisture".$zaehler, $plantdata[$zaehler]['moisture']);  
+
+                $this->SetValue("ID_State".$zaehler, $plantdata[$zaehler]['state']);  
+                
+                $this->SetValue("ID_Link".$zaehler, $plantdata[$zaehler]['link']);  
             }
 
             return $plantdata;
