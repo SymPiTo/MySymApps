@@ -40,8 +40,8 @@ ___________________________________________________________________________
 
         //$totalSensors = $this->ReadPropertyInteger("ID_Sensors", 0);
         $totalSensors = 6;
-        $this->ReadPropertyString("ID_Login", "");
-        $this->ReadPropertyString("ID_Passwort", "");
+        $this->RegisterPropertyString("ID_Login", "");
+        $this->RegisterPropertyString("ID_Passwort", "");
 
         // Register Profiles
         //$this->RegisterProfiles();
