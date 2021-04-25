@@ -3,10 +3,10 @@
     "name": "MyGreensens",
     "type": 3,
     "vendor": "PiTo",
-    "aliases": [""],
+    "aliases": ["MyGreensens"],
     "parentRequirements": [],
     "childRequirements": [],
     "implemented": [],
-    "prefix": "",
+    "prefix": "GS",
     "url": ""
 }
