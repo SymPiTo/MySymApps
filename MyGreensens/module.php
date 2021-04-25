@@ -323,7 +323,7 @@ ________________________________________________________________________________
             $data = json_decode($resp, true);
             $plantdata = $data['data']['registeredHubs'][0]['plants'];
             //Daten in Variablen schreiben
-            $totalSensors = 6;
+            $totalSensors = 5;
             for ($zaehler = 0; $zaehler <= $totalSensors-1; $zaehler++) {
                 
                 $this->SetValue("sensorID".$zaehler, $plantdata[$zaehler]['sensorID']);
