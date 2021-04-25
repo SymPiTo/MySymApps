@@ -205,8 +205,8 @@ ________________________________________________________________________________
         $url = "https://api.greensens.de";   
         $auth_url ="/api/users/authenticate";
         $path =$url.$auth_url;
-        $login = getvalue($this->ReadPropertyString("ID_Login"));
-        $password = getvalue($this->ReadPropertyString("ID_Passwort"));
+        $login = $this->ReadPropertyString("ID_Login");
+        $password = $this->ReadPropertyString("ID_Passwort");
 
         $curl = curl_init($path);
         curl_setopt($curl, CURLOPT_URL, $path);
