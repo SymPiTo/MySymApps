@@ -38,8 +38,8 @@ ___________________________________________________________________________
 
         //$this->ReadPropertyFloat("NAME", 0.0);
 
-        $totalSensors = $this->ReadPropertyInteger("ID_Sensors", 0);
-
+        //$totalSensors = $this->ReadPropertyInteger("ID_Sensors", 0);
+        $totalSensors = 6;
         $this->ReadPropertyString("ID_Login", "");
         $this->ReadPropertyString("ID_Passwort", "");
 
