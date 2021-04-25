@@ -48,17 +48,17 @@ ___________________________________________________________________________
 
         //Register Variables
         for ($zaehler = 1; $zaehler <= $totalSensors; $zaehler++) {
-            $variablenID = $this->RegisterVariableInteger ("sensorID".$zaehler, "Sensor ID", "" , 0);
+            $variablenID = $this->RegisterVariableInteger ("sensorID".$zaehler, "Sensor ID", "" , $zaehler*6+1);
             IPS_SetInfo ($variablenID, "");
-            $variablenID = $this->RegisterVariableString ("sensorName".$zaehler, "Pflanzen Name", "", 0); 
+            $variablenID = $this->RegisterVariableString ("sensorName".$zaehler, "Pflanzen Name", "", $zaehler*6+2); 
             IPS_SetInfo ($variablenID, "");
-            $variablenID = $this->RegisterVariableBoolean ("sensorStatus".$zaehler, "Sensor Status", "", 0);
+            $variablenID = $this->RegisterVariableBoolean ("sensorStatus".$zaehler, "Sensor Status", "", $zaehler*6+3);
             IPS_SetInfo ($variablenID, "");
-            $variablenID = $this->RegisterVariableFloat ("ID_Temp".$zaehler, "Temperatur", "", 0);
+            $variablenID = $this->RegisterVariableFloat ("ID_Temp".$zaehler, "Temperatur", "", $zaehler*6+4;
             IPS_SetInfo ($variablenID, "WSS");
-            $variablenID = $this->RegisterVariableFloat ("ID_Illumination".$zaehler, "Helligkeit", "", 0);
+            $variablenID = $this->RegisterVariableFloat ("ID_Illumination".$zaehler, "Helligkeit", "", $zaehler*6+5);
             IPS_SetInfo ($variablenID, "WSS");
-            $variablenID = $this->RegisterVariableFloat ("ID_Moisture".$zaehler, "Feuchte", "", 0);
+            $variablenID = $this->RegisterVariableFloat ("ID_Moisture".$zaehler, "Feuchte", "", $zaehler*6+6);
             IPS_SetInfo ($variablenID, "WSS");
         }
  
