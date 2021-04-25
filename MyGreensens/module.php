@@ -294,7 +294,7 @@ ________________________________________________________________________________
         none
     ------------------------------------------------------------------------------  */
     public function GetPlantData(){
-        //prüfen ob tken noch aktuell
+        //prüfen ob t0ken noch aktuell ist
         $valid = $this->CheckValidToken();
         if($valid == false){
             $this->FetchToken();
@@ -320,7 +320,24 @@ ________________________________________________________________________________
             $resp = curl_exec($curl);
             curl_close($curl);
             //update data
-            $plantdata = json_decode($resp, true);
+            $data = json_decode($resp, true);
+            $plantdata = $data['data']['registeredHubs'][0]['plants'];
+            //Daten in Variablen schreiben
+            $totalSensor = 6;
+            for ($zaehler = 1; $zaehler <= $totalSensors; $zaehler++) {
+                
+                $this->SetValue("sensorID".$zaehler, $plantdata[$zaehler]['sensorID']);
+                 
+                $this->SetValue("sensorName".$zaehler, $plantdata[$zaehler]['plantNameDE']); 
+
+                $this->SetValue("sensorStatus".$zaehler, $plantdata[$zaehler]['status']); 
+
+                $this->SetValue("ID_Temp".$zaehler, $plantdata[$zaehler]['temperature']); 
+
+                $this->SetValue("ID_Illumination".$zaehler, $plantdata[$zaehler]['illumination']); 
+
+                $this->SetValue("ID_Moisture".$zaehler, $plantdata[$zaehler]['moisture']);  
+            }
 
             return $plantdata;
         }
