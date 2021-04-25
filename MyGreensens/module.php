@@ -11,7 +11,7 @@
 //require_once __DIR__ . '/../libs/_TRAIT_';
 //require_once __DIR__ . '/../libs/_HELPERCLASS_';  // diverse Klassen
 
-class _CLASS_ extends IPSModule {
+class MyGreensens extends IPSModule {
 
     //use DebugHelper,
     //InstanceStatus,
