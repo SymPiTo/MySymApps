@@ -54,7 +54,7 @@ ___________________________________________________________________________
             IPS_SetInfo ($variablenID, "");
             $variablenID = $this->RegisterVariableBoolean ("sensorStatus".$zaehler, "Sensor Status", "", $zaehler*6+3);
             IPS_SetInfo ($variablenID, "");
-            $variablenID = $this->RegisterVariableFloat ("ID_Temp".$zaehler, "Temperatur", "", $zaehler*6+4;
+            $variablenID = $this->RegisterVariableFloat ("ID_Temp".$zaehler, "Temperatur", "", $zaehler*6+4);
             IPS_SetInfo ($variablenID, "WSS");
             $variablenID = $this->RegisterVariableFloat ("ID_Illumination".$zaehler, "Helligkeit", "", $zaehler*6+5);
             IPS_SetInfo ($variablenID, "WSS");
