@@ -64,7 +64,7 @@ ___________________________________________________________________________
  
  
 
- 
+        
 		 
 
         //Register Timer
@@ -95,10 +95,11 @@ ___________________________________________________________________________
 
 
         if($this->ReadPropertyBoolean("ID_active")){
-            //Splitter oder IO verbinden
+            $this->SetBuffer("token", "");
+            $this->SetBuffer("timestamp", "");
+            $this->SetBuffer("valid", false);
 
-            //Filter setzen – ForwardData wird nur aufgerufen wenn Filter passt (string $ErforderlicheRegexRegel )$this->SetForwardDataFilter(".*");  
-            //Filter setzen – ReceiveData wird nur aufgerufen wenn Filter passt (string $ErforderlicheRegexRegel )$this->SetReceiveDataFilter(".*");  
+            $this->FetchToken();
         }
         else {
             //Timer ausschalten
@@ -236,8 +237,107 @@ ________________________________________________________________________________
         
         $token =  $obj->data->token;
         $timestamp = time();
-        return $token;
+        //Schreibt  in den Buffer "Databuffer"
+        $this->SetBuffer("token", $token);
+        $this->SetBuffer("timestamp", $timestamp);
+        if($token != ""){
+            $this->SetBuffer("valid", true);
+            return $token;
+        }
+        return false;
     }  //End
+
+
+
+
+
+    
+    //-----------------------------------------------------------------------------
+    /* Function: CheckValidToken
+    ...............................................................................
+    Beschreibung
+    ...............................................................................
+    Parameters: 
+        none
+    ...............................................................................
+    Returns:    
+        none
+    ------------------------------------------------------------------------------  */
+    public function CheckValidToken(){
+        $timestamp = $this->GetBuffer("timestamp");
+        $aktTime = time();
+        $time = $aktTime - $timestamp;
+        // 7 Tage = 7*24*60*60  =  604800 Sekunden
+
+        if(($aktTime - $timestamp) > 604800){
+            $this->SetBuffer("valid", false); 
+            $valid = false;
+        }
+        else{
+            $this->SetBuffer("valid", true);
+            $valid = true;
+        }
+
+        return $valid;
+    }  //End
+
+    
+    //-----------------------------------------------------------------------------
+    /* Function: GetPlantData
+    ...............................................................................
+    Beschreibung
+    ...............................................................................
+    Parameters: 
+        none
+    ...............................................................................
+    Returns:    
+        none
+    ------------------------------------------------------------------------------  */
+    public function GetPlantData(){
+        //prüfen ob tken noch aktuell
+        $valid = $this->CheckValidToken();
+        if(valid == false){
+            $this->FetchToken();
+            $valid = $this->CheckValidToken();
+        }
+        if($valid == true){
+            $token = $this->GetBuffer("token");
+            $url = "https://api.greensens.de/api/Plants";
+
+            $curl = curl_init($url);
+            curl_setopt($curl, CURLOPT_URL, $url);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            
+            $headers = array(
+            "Accept: application/json",
+            "Authorization: Bearer $token",
+            );
+            curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+            //for debug only!
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+            
+            $resp = curl_exec($curl);
+            curl_close($curl);
+            //update data
+            $plantdata = json_decode($resp, true);
+
+            return $plantdata;
+        }
+        else{
+            return false;
+        }
+    }  //End
+
+
+
+
+
+
+
+
+
+
 
 /* 
 _______________________________________________________________________
