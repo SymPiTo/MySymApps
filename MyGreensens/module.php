@@ -296,7 +296,7 @@ ________________________________________________________________________________
     public function GetPlantData(){
         //prüfen ob tken noch aktuell
         $valid = $this->CheckValidToken();
-        if(valid == false){
+        if($valid == false){
             $this->FetchToken();
             $valid = $this->CheckValidToken();
         }
