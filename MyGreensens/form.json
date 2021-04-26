@@ -18,6 +18,11 @@
             "name": "ID_Sensors",
             "type": "NumberSpinner",
             "caption": "Anzahl Sensoren"
+        },
+        {
+            "name": "ID_Interval",
+            "type": "NumberSpinner",
+            "caption": "Update Intervalzeit"
         }
     ]
 }

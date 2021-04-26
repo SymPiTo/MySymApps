@@ -43,6 +43,8 @@ ___________________________________________________________________________
         $this->RegisterPropertyString("ID_Login", "");
         $this->RegisterPropertyString("ID_Passwort", "");
 
+        $this->RegisterPropertyInteger("ID_Interval", 0);
+
         // Register Profiles
         //$this->RegisterProfiles();
 
@@ -72,9 +74,9 @@ ___________________________________________________________________________
 		 
 
         //Register Timer
-        //$this->RegisterTimer('Name', 0, '_PREFIX__Scriptname($_IPS[\'TARGET\']);');
+        $this->RegisterTimer('updatePlant', 0, 'GS__Update($_IPS[\'TARGET\']);');
 
-
+    
 
 
 
@@ -104,10 +106,12 @@ ___________________________________________________________________________
             $this->SetBuffer("valid", false);
 
             $this->FetchToken();
+            $updateTime = $this->ReadPropertyInteger("ID_Interval");
+            $this->SetTimerInterval("updatePlant", $updateTime);
         }
         else {
             //Timer ausschalten
-            //$this->SetTimerInterval("Name", 0);
+            $this->SetTimerInterval("updatePlant", 0);
         }                   
     } //Function: ApplyChanges  End
     /* 
@@ -356,9 +360,25 @@ ________________________________________________________________________________
 
 
 
-
-
-
+    //-----------------------------------------------------------------------------
+    /* Function: GetPlantData
+    ...............................................................................
+    Beschreibung
+     * This function will be available automatically after the module is imported with the module control.
+     * Using the custom prefix this function will be callable from PHP and JSON-RPC through:.
+     *
+     * THS_Update($id);
+    ...............................................................................
+    Parameters: 
+        none
+    ...............................................................................
+    Returns:    
+        none
+    ------------------------------------------------------------------------------  */
+    public function Update()
+    {
+        $this->GetPlantData();
+    }
 
 
 
