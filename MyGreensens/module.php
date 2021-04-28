@@ -74,7 +74,7 @@ ___________________________________________________________________________
 		 
 
         //Register Timer
-        $this->RegisterTimer("updatePlant", 0, 'GS_Update(\$_IPS[\'TARGET\']);');
+        $this->RegisterTimer("updatePlant", 0, 'GS_Update($_IPS[\'TARGET\']);');
 
       
        
