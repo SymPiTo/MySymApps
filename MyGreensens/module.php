@@ -50,21 +50,21 @@ ___________________________________________________________________________
 
         //Register Variables
         for ($zaehler = 0; $zaehler <= $totalSensors-1; $zaehler++) {
-            $variablenID = $this->RegisterVariableInteger ("sensorID".$zaehler, "Sensor ID", "" , $zaehler*6+1);
+            $variablenID = $this->RegisterVariableInteger ("sensorID".$zaehler, $zaehler."Sensor ID", "" , $zaehler*8+1);
             IPS_SetInfo ($variablenID, "");
-            $variablenID = $this->RegisterVariableString ("sensorName".$zaehler, "Pflanzen Name", "", $zaehler*6+2); 
+            $variablenID = $this->RegisterVariableString ("sensorName".$zaehler, $zaehler."Pflanzen Name", "", $zaehler*8+2); 
             IPS_SetInfo ($variablenID, "");
-            $variablenID = $this->RegisterVariableBoolean ("sensorStatus".$zaehler, "Sensor Status", "", $zaehler*6+3);
+            $variablenID = $this->RegisterVariableBoolean ("sensorStatus".$zaehler, $zaehler."Sensor Status", "", $zaehler*8+3);
             IPS_SetInfo ($variablenID, "");
-            $variablenID = $this->RegisterVariableFloat ("ID_Temp".$zaehler, "Temperatur", "", $zaehler*6+4);
+            $variablenID = $this->RegisterVariableFloat ("ID_Temp".$zaehler, $zaehler."Temperatur", "", $zaehler*8+4);
             IPS_SetInfo ($variablenID, "WSS");
-            $variablenID = $this->RegisterVariableFloat ("ID_Illumination".$zaehler, "Helligkeit", "", $zaehler*6+5);
+            $variablenID = $this->RegisterVariableFloat ("ID_Illumination".$zaehler, $zaehler."Helligkeit", "", $zaehler*8+5);
             IPS_SetInfo ($variablenID, "WSS");
-            $variablenID = $this->RegisterVariableFloat ("ID_Moisture".$zaehler, "Feuchte", "", $zaehler*6+6);
+            $variablenID = $this->RegisterVariableFloat ("ID_Moisture".$zaehler, $zaehler."Feuchte", "", $zaehler*8+6);
             IPS_SetInfo ($variablenID, "WSS");
-            $variablenID = $this->RegisterVariableInteger ("ID_State".$zaehler, "Zustand", "", $zaehler*6+7);
+            $variablenID = $this->RegisterVariableInteger ("ID_State".$zaehler, $zaehler."Zustand", "", $zaehler*8+7);
             IPS_SetInfo ($variablenID, "WSS");
-            $variablenID = $this->RegisterVariableString ("ID_Link".$zaehler, "Image URL", "", $zaehler*6+8);
+            $variablenID = $this->RegisterVariableString ("ID_Link".$zaehler, $zaehler."Image URL", "", $zaehler*8+8);
             IPS_SetInfo ($variablenID, "WSS");
         }
  
@@ -191,7 +191,7 @@ ___________________________________________________________________________
 
 
 _____________________________________________________________________________________________________________________
-    Section: Public Funtions
+    Section: Public Functions
     Die folgenden Funktionen stehen automatisch zur Verfügung, wenn das Modul über die "Module Control" eingefügt wurden.
     Die Funktionen werden, mit dem selbst eingerichteten Prefix, in PHP und JSON-RPC wie folgt zur Verfügung gestellt:
     
