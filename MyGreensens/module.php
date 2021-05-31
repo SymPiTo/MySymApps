@@ -329,7 +329,7 @@ ________________________________________________________________________________
             }
             else
             {
-                $this->SendDebug('Operation ohne Fehler vollständig ausgeführt','',0);
+                $this->SendDebug("Operation ohne Fehler vollständig ausgeführt","");
             }
 
 
