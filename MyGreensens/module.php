@@ -13,7 +13,7 @@ require_once __DIR__ . '/../libs/traits.php';
 
 class MyGreensens extends IPSModule {
 
-    use DebugHelper,
+    use DebugHelper;
     //InstanceStatus,
     //BufferHelper,
     //Semaphore;
