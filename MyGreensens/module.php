@@ -324,12 +324,12 @@ ________________________________________________________________________________
                    $errorno = curl_errno($curl);
                    $error_message = curl_strerror($errno);
 
-                    $this->SendDebug("cURL error ({$errno}):\n {$error_message}");
+                    $this->SendDebug("cURL error ({$errno}):\n {$error_message}","");
                 }
             }
             else
             {
-                $this->SendDebug('Operation ohne Fehler vollständig ausgeführt');
+                $this->SendDebug('Operation ohne Fehler vollständig ausgeführt','');
             }
 
 
