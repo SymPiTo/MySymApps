@@ -8,12 +8,12 @@
  * 
  * Version: _VERSION_
  *************************************************************************** */
-//require_once __DIR__ . '/../libs/_TRAIT_';
+require_once __DIR__ . '/../libs/traits.php';
 //require_once __DIR__ . '/../libs/_HELPERCLASS_';  // diverse Klassen
 
 class MyGreensens extends IPSModule {
 
-    //use DebugHelper,
+    use DebugHelper,
     //InstanceStatus,
     //BufferHelper,
     //Semaphore;
