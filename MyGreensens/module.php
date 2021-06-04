@@ -286,7 +286,7 @@ ________________________________________________________________________________
             //Daten in Variablen schreiben
             $totalSensors = count($plantdata);
             for ($zaehler = 0; $zaehler <= $totalSensors-1; $zaehler++) {
-                $this->SetValue("sensorID".$zaehler, $plantdata[$zaehler]['sensorID']);
+                $this->SetValue("sensorID0", $plantdata[$zaehler]['sensorID']);
                 $this->SetValue("sensorName".$zaehler, $plantdata[$zaehler]['plantNameDE']); 
                 $this->SetValue("sensorStatus".$zaehler, $plantdata[$zaehler]['status']); 
                 $this->SetValue("ID_Temp".$zaehler, $plantdata[$zaehler]['temperature']); 
