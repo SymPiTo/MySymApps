@@ -74,7 +74,7 @@ ___________________________________________________________________________
         parent::ApplyChanges();
 
         $totalSensors = $this->ReadPropertyInteger("ID_Sensors");
-        for ($zaehler = 5; $zaehler >= $totalSensors-1; $zaehler--) {
+        for ($zaehler = 6; $zaehler >= $totalSensors-1; $zaehler--) {
             $this->UnregisterVariable ("sensorID".$zaehler);
             $this->UnregisterVariable ("sensorName".$zaehler); 
             $this->UnregisterVariable ("sensorStatus".$zaehler);
