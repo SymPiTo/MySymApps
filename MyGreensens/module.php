@@ -52,41 +52,43 @@ ___________________________________________________________________________
         //Never delete this line!
         parent::ApplyChanges();
 
-
-        $totalSensors = $this->ReadPropertyInteger("ID_Sensor");
+        if (!IPS_HasChildren($this->InstanceID)){
+            $totalSensors = $this->ReadPropertyInteger("ID_Sensor");
       
-        //Register Variables
-        for ($zaehler = 0; $zaehler <= $totalSensors-1; $zaehler++) {
-            //Dummy Module = {485D0419-BE97-4548-AA9C-C083EB82E61E}
-            $ÜbergeordneteID = IPS_CreateInstance("{485D0419-BE97-4548-AA9C-C083EB82E61E}");
-            IPS_SetName($ÜbergeordneteID, "Sensor".$zaehler); // Instanz benennen
-            IPS_SetParent ($ÜbergeordneteID, $this->InstanceID);
-
-            $variablenID = $this->RegisterVariableInteger ("sensorID".$zaehler, $zaehler."Sensor ID", "" , $zaehler*8+1);
-            IPS_SetInfo ($variablenID, "");
-            IPS_SetParent ($variablenID, $ÜbergeordneteID);
-            $variablenID = $this->RegisterVariableString ("sensorName".$zaehler, $zaehler."Pflanzen Name", "", $zaehler*8+2); 
-            IPS_SetInfo ($variablenID, "");
-            IPS_SetParent ($variablenID, $ÜbergeordneteID);
-            $variablenID = $this->RegisterVariableBoolean ("sensorStatus".$zaehler, $zaehler."Sensor Status", "", $zaehler*8+3);
-            IPS_SetInfo ($variablenID, "");
-            IPS_SetParent ($variablenID, $ÜbergeordneteID);
-            $variablenID = $this->RegisterVariableFloat ("ID_Temp".$zaehler, $zaehler."Temperatur", "", $zaehler*8+4);
-            IPS_SetInfo ($variablenID, "WSS");
-            IPS_SetParent ($variablenID, $ÜbergeordneteID);
-            $variablenID = $this->RegisterVariableFloat ("ID_Illumination".$zaehler, $zaehler."Helligkeit", "", $zaehler*8+5);
-            IPS_SetInfo ($variablenID, "WSS");
-            IPS_SetParent ($variablenID, $ÜbergeordneteID);
-            $variablenID = $this->RegisterVariableFloat ("ID_Moisture".$zaehler, $zaehler."Feuchte", "", $zaehler*8+6);
-            IPS_SetInfo ($variablenID, "WSS");
-            IPS_SetParent ($variablenID, $ÜbergeordneteID);
-            $variablenID = $this->RegisterVariableInteger ("ID_State".$zaehler, $zaehler."Zustand", "", $zaehler*8+7);
-            IPS_SetInfo ($variablenID, "WSS");
-            IPS_SetParent ($variablenID, $ÜbergeordneteID);
-            $variablenID = $this->RegisterVariableString ("ID_Link".$zaehler, $zaehler."Image URL", "", $zaehler*8+8);
-            IPS_SetInfo ($variablenID, "WSS");
-            IPS_SetParent ($variablenID, $ÜbergeordneteID);
+            //Register Variables
+            for ($zaehler = 0; $zaehler <= $totalSensors-1; $zaehler++) {
+                //Dummy Module = {485D0419-BE97-4548-AA9C-C083EB82E61E}
+                $ÜbergeordneteID = IPS_CreateInstance("{485D0419-BE97-4548-AA9C-C083EB82E61E}");
+                IPS_SetName($ÜbergeordneteID, "Sensor".$zaehler); // Instanz benennen
+                IPS_SetParent ($ÜbergeordneteID, $this->InstanceID);
+    
+                $variablenID = $this->RegisterVariableInteger ("sensorID".$zaehler, $zaehler."Sensor ID", "" , $zaehler*8+1);
+                IPS_SetInfo ($variablenID, "");
+                IPS_SetParent ($variablenID, $ÜbergeordneteID);
+                $variablenID = $this->RegisterVariableString ("sensorName".$zaehler, $zaehler."Pflanzen Name", "", $zaehler*8+2); 
+                IPS_SetInfo ($variablenID, "");
+                IPS_SetParent ($variablenID, $ÜbergeordneteID);
+                $variablenID = $this->RegisterVariableBoolean ("sensorStatus".$zaehler, $zaehler."Sensor Status", "", $zaehler*8+3);
+                IPS_SetInfo ($variablenID, "");
+                IPS_SetParent ($variablenID, $ÜbergeordneteID);
+                $variablenID = $this->RegisterVariableFloat ("ID_Temp".$zaehler, $zaehler."Temperatur", "", $zaehler*8+4);
+                IPS_SetInfo ($variablenID, "WSS");
+                IPS_SetParent ($variablenID, $ÜbergeordneteID);
+                $variablenID = $this->RegisterVariableFloat ("ID_Illumination".$zaehler, $zaehler."Helligkeit", "", $zaehler*8+5);
+                IPS_SetInfo ($variablenID, "WSS");
+                IPS_SetParent ($variablenID, $ÜbergeordneteID);
+                $variablenID = $this->RegisterVariableFloat ("ID_Moisture".$zaehler, $zaehler."Feuchte", "", $zaehler*8+6);
+                IPS_SetInfo ($variablenID, "WSS");
+                IPS_SetParent ($variablenID, $ÜbergeordneteID);
+                $variablenID = $this->RegisterVariableInteger ("ID_State".$zaehler, $zaehler."Zustand", "", $zaehler*8+7);
+                IPS_SetInfo ($variablenID, "WSS");
+                IPS_SetParent ($variablenID, $ÜbergeordneteID);
+                $variablenID = $this->RegisterVariableString ("ID_Link".$zaehler, $zaehler."Image URL", "", $zaehler*8+8);
+                IPS_SetInfo ($variablenID, "WSS");
+                IPS_SetParent ($variablenID, $ÜbergeordneteID);
+            }
         }
+
 
         if($this->ReadPropertyBoolean("ID_active")){
             $this->SetBuffer("token", "");
