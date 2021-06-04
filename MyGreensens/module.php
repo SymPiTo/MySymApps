@@ -61,7 +61,9 @@ ___________________________________________________________________________
                 $ÜbergeordneteID = IPS_CreateInstance("{485D0419-BE97-4548-AA9C-C083EB82E61E}");
                 IPS_SetName($ÜbergeordneteID, "Sensor".$zaehler); // Instanz benennen
                 IPS_SetParent ($ÜbergeordneteID, $this->InstanceID);
-    
+                
+               
+
                 $variablenID = $this->RegisterVariableInteger ("sensorID".$zaehler, $zaehler."Sensor ID", "" , $zaehler*8+1);
                 IPS_SetInfo ($variablenID, "");
                 IPS_SetParent ($variablenID, $ÜbergeordneteID);
@@ -286,7 +288,11 @@ ________________________________________________________________________________
             //Daten in Variablen schreiben
             $totalSensors = count($plantdata);
             for ($zaehler = 0; $zaehler <= $totalSensors-1; $zaehler++) {
-                $this->SetValue("sensorID0", $plantdata[$zaehler]['sensorID']);
+                $SID = IPS_GetVariableIDByName("Sensor".$zaehler, 0);
+
+                $VarID = IPS_GetVariableIDByName("sensorID".$zaehler, $SID);
+
+                $this->SetValue($VarID, $plantdata[$zaehler]['sensorID']);
                 $this->SetValue("sensorName".$zaehler, $plantdata[$zaehler]['plantNameDE']); 
                 $this->SetValue("sensorStatus".$zaehler, $plantdata[$zaehler]['status']); 
                 $this->SetValue("ID_Temp".$zaehler, $plantdata[$zaehler]['temperature']); 
