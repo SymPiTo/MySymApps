@@ -38,25 +38,25 @@ ___________________________________________________________________________
         $this->RegisterPropertyInteger("ID_Interval", 0);
 
         $totalSensors = $this->ReadPropertyInteger("ID_Sensors");
-                    //Register Variables
-                    for ($zaehler = 0; $zaehler <= $totalSensors-1; $zaehler++) {
-                        $variablenID = $this->RegisterVariableInteger ("sensorID".$zaehler, "Sensor".$zaehler.":Sensor ID", "" , $zaehler*8+1);
-                        IPS_SetInfo ($variablenID, "");
-                        $variablenID = $this->RegisterVariableString ("sensorName".$zaehler, "Sensor".$zaehler.":Pflanzen Name", "", $zaehler*8+2); 
-                        IPS_SetInfo ($variablenID, "");
-                        $variablenID = $this->RegisterVariableBoolean ("sensorStatus".$zaehler, "Sensor".$zaehler.":Sensor Status", "", $zaehler*8+3);
-                        IPS_SetInfo ($variablenID, "");
-                        $variablenID = $this->RegisterVariableFloat ("ID_Temp".$zaehler, "Sensor".$zaehler.":Temperatur", "", $zaehler*8+4);
-                        IPS_SetInfo ($variablenID, "WSS");
-                        $variablenID = $this->RegisterVariableFloat ("ID_Illumination".$zaehler, "Sensor".$zaehler.":Helligkeit", "", $zaehler*8+5);
-                        IPS_SetInfo ($variablenID, "WSS");
-                        $variablenID = $this->RegisterVariableFloat ("ID_Moisture".$zaehler, "Sensor".$zaehler.":Feuchte", "", $zaehler*8+6);
-                        IPS_SetInfo ($variablenID, "WSS");
-                        $variablenID = $this->RegisterVariableInteger ("ID_State".$zaehler, "Sensor".$zaehler.":Zustand", "", $zaehler*8+7);
-                        IPS_SetInfo ($variablenID, "WSS");
-                        $variablenID = $this->RegisterVariableString ("ID_Link".$zaehler, "Sensor".$zaehler.":Image URL", "", $zaehler*8+8);
-                        IPS_SetInfo ($variablenID, "WSS");
-                    }
+        //Register Variables
+        for ($zaehler = 0; $zaehler <= $totalSensors-1; $zaehler++) {
+            $variablenID = $this->RegisterVariableInteger ("sensorID".$zaehler, "Sensor".$zaehler.":Sensor ID", "" , $zaehler*8+1);
+            IPS_SetInfo ($variablenID, "");
+            $variablenID = $this->RegisterVariableString ("sensorName".$zaehler, "Sensor".$zaehler.":Pflanzen Name", "", $zaehler*8+2); 
+            IPS_SetInfo ($variablenID, "");
+            $variablenID = $this->RegisterVariableBoolean ("sensorStatus".$zaehler, "Sensor".$zaehler.":Sensor Status", "", $zaehler*8+3);
+            IPS_SetInfo ($variablenID, "");
+            $variablenID = $this->RegisterVariableFloat ("ID_Temp".$zaehler, "Sensor".$zaehler.":Temperatur", "", $zaehler*8+4);
+            IPS_SetInfo ($variablenID, "WSS");
+            $variablenID = $this->RegisterVariableFloat ("ID_Illumination".$zaehler, "Sensor".$zaehler.":Helligkeit", "", $zaehler*8+5);
+            IPS_SetInfo ($variablenID, "WSS");
+            $variablenID = $this->RegisterVariableFloat ("ID_Moisture".$zaehler, "Sensor".$zaehler.":Feuchte", "", $zaehler*8+6);
+            IPS_SetInfo ($variablenID, "WSS");
+            $variablenID = $this->RegisterVariableInteger ("ID_State".$zaehler, "Sensor".$zaehler.":Zustand", "", $zaehler*8+7);
+            IPS_SetInfo ($variablenID, "WSS");
+            $variablenID = $this->RegisterVariableString ("ID_Link".$zaehler, "Sensor".$zaehler.":Image URL", "", $zaehler*8+8);
+            IPS_SetInfo ($variablenID, "WSS");
+        }
 
         //Register Timer
         $this->RegisterTimer("updatePlant", 0, 'GS_Update($_IPS[\'TARGET\']);');
@@ -72,6 +72,18 @@ ___________________________________________________________________________
     public function ApplyChanges(){
         //Never delete this line!
         parent::ApplyChanges();
+
+        $totalSensors = $this->ReadPropertyInteger("ID_Sensors");
+        for ($zaehler = 5; $zaehler >= $totalSensors-1; $zaehler--) {
+            $this->UnregisterVariable ("sensorID".$zaehler);
+            $this->UnregisterVariable ("sensorName".$zaehler); 
+            $this->UnregisterVariable ("sensorStatus".$zaehler);
+            $this->UnregisterVariable ("ID_Temp".$zaehler);
+            $this->UnregisterVariable ("ID_Illumination".$zaehler);
+            $this->UnregisterVariable ("ID_Moisture".$zaehler);
+            $this->UnregisterVariable ("ID_State".$zaehler);
+            $this->UnregisterVariable ("ID_Link".$zaehler);
+        }
 
         if($this->ReadPropertyBoolean("ID_active")){
             $this->SetBuffer("token", "");
