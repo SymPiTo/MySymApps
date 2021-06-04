@@ -281,6 +281,7 @@ ________________________________________________________________________________
             curl_close($curl);
             //update data
             $data = json_decode($resp, true);
+            $this->SendDebug("Sensordaten:", $data, 0);
             $plantdata = $data['data']['registeredHubs'][0]['plants'];
             //Daten in Variablen schreiben
             $totalSensors = count($plantdata);
