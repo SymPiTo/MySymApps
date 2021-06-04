@@ -34,7 +34,7 @@ ___________________________________________________________________________
         $this->RegisterPropertyBoolean("ID_active", false);
         $this->RegisterPropertyString("ID_Login", "");
         $this->RegisterPropertyString("ID_Passwort", "");
-        $this->RegisterPropertyInteger("ID_Sensor", 6);
+        $this->RegisterPropertyInteger("ID_Sensors", 6);
         $this->RegisterPropertyInteger("ID_Interval", 0);
 
         //Register Timer
@@ -53,7 +53,7 @@ ___________________________________________________________________________
         parent::ApplyChanges();
 
         if (!IPS_HasChildren($this->InstanceID)){
-            $totalSensors = $this->ReadPropertyInteger("ID_Sensor");
+            $totalSensors = $this->ReadPropertyInteger("ID_Sensors");
       
             //Register Variables
             for ($zaehler = 0; $zaehler <= $totalSensors-1; $zaehler++) {
