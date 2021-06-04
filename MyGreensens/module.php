@@ -60,6 +60,7 @@ ___________________________________________________________________________
             //Dummy Module = {485D0419-BE97-4548-AA9C-C083EB82E61E}
             $ÜbergeordneteID = IPS_CreateInstance("{485D0419-BE97-4548-AA9C-C083EB82E61E}");
             IPS_SetName($ÜbergeordneteID, "Sensor".$zaehler); // Instanz benennen
+            IPS_SetParent ($ÜbergeordneteID, $this->InstanceID);
 
             $variablenID = $this->RegisterVariableInteger ("sensorID".$zaehler, $zaehler."Sensor ID", "" , $zaehler*8+1);
             IPS_SetInfo ($variablenID, "");
