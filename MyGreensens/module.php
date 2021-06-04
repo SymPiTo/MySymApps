@@ -73,13 +73,6 @@ ___________________________________________________________________________
         //Never delete this line!
         parent::ApplyChanges();
 
-        if (!IPS_HasChildren($this->InstanceID)){
-           
-      
-
-        }
-
-
         if($this->ReadPropertyBoolean("ID_active")){
             $this->SetBuffer("token", "");
             $this->SetBuffer("timestamp", "");
