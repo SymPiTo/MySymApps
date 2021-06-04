@@ -41,14 +41,14 @@ ___________________________________________________________________________
                     //Register Variables
                     for ($zaehler = 0; $zaehler <= $totalSensors-1; $zaehler++) {
                         //Dummy Module = {485D0419-BE97-4548-AA9C-C083EB82E61E}
-                        $SensorID = IPS_CreateInstance("{485D0419-BE97-4548-AA9C-C083EB82E61E}");
-                        IPS_SetName($SensorID, "Sensor".$zaehler); // Instanz benennen
-                        IPS_SetParent ($SensorID, $this->InstanceID);
+                        //$SensorID = IPS_CreateInstance("{485D0419-BE97-4548-AA9C-C083EB82E61E}");
+                        //IPS_SetName($SensorID, "Sensor".$zaehler); // Instanz benennen
+                        //IPS_SetParent ($SensorID, $this->InstanceID);
                         
                        // Anlegen einer neuen Kategorie mit dem namen "Regenerfassung"
-                        //$CatID = IPS_CreateCategory();       // Kategorie anlegen
-                        //IPS_SetName($CatID, "Sensor".$zaehler); // Kategorie benennen
-                        //IPS_SetParent($CatID, $this->InstanceID); // Kategorie einsortieren unter dem Objekt mit der ID "$this->InstanceID"
+                        $SensorID = IPS_CreateCategory();       // Kategorie anlegen
+                        IPS_SetName($SensorID, "Sensor".$zaehler); // Kategorie benennen
+                        IPS_SetParent($SensorID, $this->InstanceID); // Kategorie einsortieren unter dem Objekt mit der ID "$this->InstanceID"
         
         
                         $variablenID = $this->RegisterVariableInteger ("sensorID".$zaehler, $zaehler."Sensor ID", "" , $zaehler*8+1);
