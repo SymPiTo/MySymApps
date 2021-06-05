@@ -12,14 +12,15 @@ require_once __DIR__ . '/../libs/traits.php';
 
 class MyGreensens extends IPSModule {
 
-    use DebugHelper;
+    use DebugHelper,
+        ProfileHelper;
 
 /* 
 ___________________________________________________________________________ 
     Section: Internal Modul Funtions
     Die folgenden Funktionen sind Standard Funktionen zur Modul Erstellung.
 ___________________________________________________________________________ 
-    */
+*/
     /* 
     ------------------------------------------------------------ 
         Function: Create  
@@ -37,26 +38,16 @@ ___________________________________________________________________________
         $this->RegisterPropertyInteger("ID_Sensors", 6);
         $this->RegisterPropertyInteger("ID_Interval", 0);
 
-        $totalSensors = $this->ReadPropertyInteger("ID_Sensors");
-        //Register Variables
-        for ($zaehler = 0; $zaehler <= $totalSensors-1; $zaehler++) {
-            $variablenID = $this->RegisterVariableInteger ("sensorID".$zaehler, "Sensor".$zaehler.":Sensor ID", "" , $zaehler*8+1);
-            IPS_SetInfo ($variablenID, "");
-            $variablenID = $this->RegisterVariableString ("sensorName".$zaehler, "Sensor".$zaehler.":Pflanzen Name", "", $zaehler*8+2); 
-            IPS_SetInfo ($variablenID, "");
-            $variablenID = $this->RegisterVariableBoolean ("sensorStatus".$zaehler, "Sensor".$zaehler.":Sensor Status", "", $zaehler*8+3);
-            IPS_SetInfo ($variablenID, "");
-            $variablenID = $this->RegisterVariableFloat ("ID_Temp".$zaehler, "Sensor".$zaehler.":Temperatur", "", $zaehler*8+4);
-            IPS_SetInfo ($variablenID, "WSS");
-            $variablenID = $this->RegisterVariableFloat ("ID_Illumination".$zaehler, "Sensor".$zaehler.":Helligkeit", "", $zaehler*8+5);
-            IPS_SetInfo ($variablenID, "WSS");
-            $variablenID = $this->RegisterVariableFloat ("ID_Moisture".$zaehler, "Sensor".$zaehler.":Feuchte", "", $zaehler*8+6);
-            IPS_SetInfo ($variablenID, "WSS");
-            $variablenID = $this->RegisterVariableInteger ("ID_State".$zaehler, "Sensor".$zaehler.":Zustand", "", $zaehler*8+7);
-            IPS_SetInfo ($variablenID, "WSS");
-            $variablenID = $this->RegisterVariableString ("ID_Link".$zaehler, "Sensor".$zaehler.":Image URL", "", $zaehler*8+8);
-            IPS_SetInfo ($variablenID, "WSS");
-        }
+        RegisterProfile(vtFloat, GS.Temperature, "Temperature", $prefix = '', $suffix = '°C', $minvalue = 0, $maxvalue = 100, $stepsize = 0.5, $digits = 1, $associations = null);
+        RegisterProfile(vtFloat, GS.Humidity, "Fog", $prefix = '', $suffix = '%', $minvalue = 0, $maxvalue = 100, $stepsize = 1, $digits = 0, $associations = null);
+        RegisterProfile(vtFloat, GS.Illumination, "Sun", $prefix = '', $suffix = 'lux', $minvalue = 0, $maxvalue = 10000, $stepsize = 1, $digits = 0, $associations = null);
+        $associations = [
+            [0, 'Wasser fehlt', '', 0xFF0000],
+            [1, 'Wasser nachfüllen', '', 0x00FF00],
+            [2, 'ausreichend Wasser', '', 0x00FF00],
+            [3, 'Genügend Wasser', '', 0x00FF00]
+        ];
+        RegisterProfile(vtInteger, GS.Status, "Sun", $prefix = '', $suffix = '', $minvalue = 0, $maxvalue = 3, $stepsize = 1, $digits = 0, $associations = null);
 
         //Register Timer
         $this->RegisterTimer("updatePlant", 0, 'GS_Update($_IPS[\'TARGET\']);');
@@ -145,13 +136,10 @@ ___________________________________________________________________________
         //Never delete this line!
         parent::Destroy();
     } //Function: Destroy End
-    /* 
 
 
-
-
-
-_____________________________________________________________________________________________________________________
+/* 
+________________________________________________________________________________________________
     Section: Public Functions
     Die folgenden Funktionen stehen automatisch zur Verfügung, wenn das Modul über die "Module Control" eingefügt wurden.
     Die Funktionen werden, mit dem selbst eingerichteten Prefix, in PHP und JSON-RPC wie folgt zur Verfügung gestellt:
@@ -159,97 +147,7 @@ ________________________________________________________________________________
     GS_XYFunktion($Instance_id, ... );
 ________________________________________________________________________________________________________________________ 
 */
-    //-----------------------------------------------------------------------------
-    /* Function: FetchToken
-    ...............................................................................
-    Beschreibung: holt ein Token von der API. 
-    Token ist nur 7 Tage gültig.
-    ...............................................................................
-    Parameters: 
-        none
-    ...............................................................................
-    Returns:    
-        $token
-    ------------------------------------------------------------------------------  */
-    public function FetchToken(){
-        $url = "https://api.greensens.de";   
-        $auth_url ="/api/users/authenticate";
-        $path =$url.$auth_url;
-        $login = $this->ReadPropertyString("ID_Login");
-        $password = $this->ReadPropertyString("ID_Passwort");
 
-        $curl = curl_init($path);
-        curl_setopt($curl, CURLOPT_URL, $path);
-        curl_setopt($curl, CURLOPT_POST, true);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        
-        $headers = array(
-           "Content-Type: application/json",
-        );
-        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-        
-        //$data = '{"login":$login,"password":$password}';
-        $data = array(
-            "login" => $login,
-            "password" => $password
-        );
-
-        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
-        
-        //for debug only!
-        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-        
-        $resp = curl_exec($curl);
-        curl_close($curl);
-        $obj= json_decode($resp);
-        
-        $token =  $obj->data->token;
-        $timestamp = time();
-        //Schreibt  in den Buffer "Databuffer"
-        $this->SetBuffer("token", $token);
-        $this->SetBuffer("timestamp", $timestamp);
-        if($token != ""){
-            $this->SetBuffer("valid", true);
-            $this->SendDebug("Token erhalten:", $token, 0);
-            return $token;
-        }
-        else{
-            $this->SendDebug("Error:", "Kein Token erhalten", 0);
-            return false;
-        }
-    }  //End
-
-    
-    //-----------------------------------------------------------------------------
-    /* Function: CheckValidToken
-    ...............................................................................
-    Beschreibung: Prüfen ob Token abgelaufen ist. Gültigkeit 7 Tage
-    ...............................................................................
-    Parameters: 
-        none
-    ...............................................................................
-    Returns:    
-        $valid => Token gültig "true/false"
-    ------------------------------------------------------------------------------  */
-    public function CheckValidToken(){
-        $timestamp = $this->GetBuffer("timestamp");
-        $aktTime = time();
-        $time = $aktTime - $timestamp;
-        // 7 Tage = 7*24*60*60  =  604800 Sekunden
-
-        if(($aktTime - $timestamp) > 604800){
-            $this->SetBuffer("valid", false); 
-            $valid = false;
-            $this->SendDebug("Warning:", "Gültigkeit des Token ist abgelaufen.", 0);
-        }
-        else{
-            $this->SetBuffer("valid", true);
-            $valid = true;
-            $this->SendDebug("Token:", "Ist gültig.", 0);
-        }
-        return $valid;
-    }  //End
 
     
     //-----------------------------------------------------------------------------
@@ -353,6 +251,104 @@ ________________________________________________________________________________
     }
 
 
+/* 
+_______________________________________________________________________
+    Section: Private Funtions
+    Die folgenden Funktionen sind nur zur internen Verwendung verfügbar
+    Hilfsfunktionen
+______________________________________________________________________
+*/ 
+    //-----------------------------------------------------------------------------
+    /* Function: FetchToken
+    ...............................................................................
+    Beschreibung: holt ein Token von der API. 
+    Token ist nur 7 Tage gültig.
+    ...............................................................................
+    Parameters: 
+        none
+    ...............................................................................
+    Returns:    
+        $token
+    ------------------------------------------------------------------------------  */
+    protected function FetchToken(){
+        $url = "https://api.greensens.de";   
+        $auth_url ="/api/users/authenticate";
+        $path =$url.$auth_url;
+        $login = $this->ReadPropertyString("ID_Login");
+        $password = $this->ReadPropertyString("ID_Passwort");
+
+        $curl = curl_init($path);
+        curl_setopt($curl, CURLOPT_URL, $path);
+        curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        
+        $headers = array(
+           "Content-Type: application/json",
+        );
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+        
+        //$data = '{"login":$login,"password":$password}';
+        $data = array(
+            "login" => $login,
+            "password" => $password
+        );
+
+        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
+        
+        //for debug only!
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        
+        $resp = curl_exec($curl);
+        curl_close($curl);
+        $obj= json_decode($resp);
+        
+        $token =  $obj->data->token;
+        $timestamp = time();
+        //Schreibt  in den Buffer "Databuffer"
+        $this->SetBuffer("token", $token);
+        $this->SetBuffer("timestamp", $timestamp);
+        if($token != ""){
+            $this->SetBuffer("valid", true);
+            $this->SendDebug("Token erhalten:", $token, 0);
+            return $token;
+        }
+        else{
+            $this->SendDebug("Error:", "Kein Token erhalten", 0);
+            return false;
+        }
+    }  //End
+
+    
+    //-----------------------------------------------------------------------------
+    /* Function: CheckValidToken
+    ...............................................................................
+    Beschreibung: Prüfen ob Token abgelaufen ist. Gültigkeit 7 Tage
+    ...............................................................................
+    Parameters: 
+        none
+    ...............................................................................
+    Returns:    
+        $valid => Token gültig "true/false"
+    ------------------------------------------------------------------------------  */
+    protected function CheckValidToken(){
+        $timestamp = $this->GetBuffer("timestamp");
+        $aktTime = time();
+        $time = $aktTime - $timestamp;
+        // 7 Tage = 7*24*60*60  =  604800 Sekunden
+
+        if(($aktTime - $timestamp) > 604800){
+            $this->SetBuffer("valid", false); 
+            $valid = false;
+            $this->SendDebug("Warning:", "Gültigkeit des Token ist abgelaufen.", 0);
+        }
+        else{
+            $this->SetBuffer("valid", true);
+            $valid = true;
+            $this->SendDebug("Token:", "Ist gültig.", 0);
+        }
+        return $valid;
+    }  //End
 
 
 } //end Class
