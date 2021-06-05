@@ -38,9 +38,9 @@ ___________________________________________________________________________
         $this->RegisterPropertyInteger("ID_Sensors", 6);
         $this->RegisterPropertyInteger("ID_Interval", 0);
 
-        $this->RegisterProfile(vtFloat, GS.Temperature, "Temperature", $prefix = '', $suffix = '°C', $minvalue = 0, $maxvalue = 100, $stepsize = 0.5, $digits = 1, $associations = null);
-        $this->RegisterProfile(vtFloat, GS.Humidity, "Fog", $prefix = '', $suffix = '%', $minvalue = 0, $maxvalue = 100, $stepsize = 1, $digits = 0, $associations = null);
-        $this->RegisterProfile(vtFloat, GS.Illumination, "Sun", $prefix = '', $suffix = 'lux', $minvalue = 0, $maxvalue = 10000, $stepsize = 1, $digits = 0, $associations = null);
+        $this->RegisterProfile(vtFloat, "GS.Temperature", "Temperature", $prefix = '', $suffix = '°C', $minvalue = 0, $maxvalue = 100, $stepsize = 0.5, $digits = 1, $associations = null);
+        $this->RegisterProfile(vtFloat, "GS.Humidity", "Fog", $prefix = '', $suffix = '%', $minvalue = 0, $maxvalue = 100, $stepsize = 1, $digits = 0, $associations = null);
+        $this->RegisterProfile(vtFloat, "GS.Illumination", "Sun", $prefix = '', $suffix = 'lux', $minvalue = 0, $maxvalue = 10000, $stepsize = 1, $digits = 0, $associations = null);
         $associations = [
             [0, 'Wasser fehlt', '', 0xFF0000],
             [1, 'Wasser nachfüllen', '', 0x00FF00],
