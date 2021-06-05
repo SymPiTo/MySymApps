@@ -17,7 +17,7 @@ class MyGreensens extends IPSModule {
 
 /* 
 ___________________________________________________________________________ 
-    Section: Internal Modul Funtions
+    Section: Internal Module Functions
     Die folgenden Funktionen sind Standard Funktionen zur Modul Erstellung.
 ___________________________________________________________________________ 
 */
@@ -63,7 +63,17 @@ ___________________________________________________________________________
     public function ApplyChanges(){
         //Never delete this line!
         parent::ApplyChanges();
-         
+    
+            $this->RegisterMessage(0, IPS_KERNELSTARTED);
+            $this->RegisterMessage(0, IPS_KERNELSHUTDOWN);
+
+            if (IPS_GetKernelRunlevel() != KR_READY) {
+                return;
+            }
+    
+ 
+
+
         $totalSensors = $this->ReadPropertyInteger("ID_Sensors");
         for ($zaehler = 6; $zaehler >= $totalSensors; $zaehler--) {
             $this->UnregisterVariable ("sensorID".$zaehler);
@@ -121,7 +131,7 @@ ___________________________________________________________________________
             $this->SetTimerInterval("updatePlant", $updateTime);
         }
         else {
-            //Timer ausschalten
+            //Timer off
             $this->SetTimerInterval("updatePlant", 0);
         }                   
     } //Function: ApplyChanges  End
@@ -136,8 +146,26 @@ ___________________________________________________________________________
         //Never delete this line!
         parent::Destroy();
     } //Function: Destroy End
+    /* 
+    ------------------------------------------------------------ 
+        Function: MessageSink  
+            MessageSink() wird aufgerufen wenn registrierte 
+            Meldung 
+    -------------------------------------------------------------
+    */    protected function MessageSink($TimeStamp, $SenderID, $Message, $Data)
+    {
+        switch ($Message) {
+            case IPS_KERNELSTARTED:
 
+                break;
+            case IPS_KERNELSHUTDOWN:
 
+                break;
+            case KR_READY:
+
+                 break;
+        }
+    }
 /* 
 ________________________________________________________________________________________________
     Section: Public Functions
