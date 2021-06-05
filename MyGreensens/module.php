@@ -90,19 +90,19 @@ ___________________________________________________________________________
                 IPS_SetInfo ($variablenID, "");
             }
             if (!IPS_VariableExists(@IPS_GetVariableIDByName("ID_Temp".$zaehler, $this->InstanceID))){
-                $variablenID = $this->RegisterVariableFloat ("ID_Temp".$zaehler, "Sensor".$zaehler.":Temperatur", "", $zaehler*8+4);
+                $variablenID = $this->RegisterVariableFloat ("ID_Temp".$zaehler, "Sensor".$zaehler.":Temperatur", "GS.Temperature", $zaehler*8+4);
                 IPS_SetInfo ($variablenID, "WSS");
             }
             if (!IPS_VariableExists(@IPS_GetVariableIDByName("ID_Illumination".$zaehler, $this->InstanceID))){
-                $variablenID = $this->RegisterVariableFloat ("ID_Illumination".$zaehler, "Sensor".$zaehler.":Helligkeit", "", $zaehler*8+5);
+                $variablenID = $this->RegisterVariableFloat ("ID_Illumination".$zaehler, "Sensor".$zaehler.":Helligkeit", "GS.Illumination", $zaehler*8+5);
                 IPS_SetInfo ($variablenID, "WSS");
             }
             if (!IPS_VariableExists(@IPS_GetVariableIDByName("ID_Moisture".$zaehler, $this->InstanceID))){
-                $variablenID = $this->RegisterVariableFloat ("ID_Moisture".$zaehler, "Sensor".$zaehler.":Feuchte", "", $zaehler*8+6);
+                $variablenID = $this->RegisterVariableFloat ("ID_Moisture".$zaehler, "Sensor".$zaehler.":Feuchte", "GS.Humidity", $zaehler*8+6);
                 IPS_SetInfo ($variablenID, "WSS");
             }
             if (!IPS_VariableExists(@IPS_GetVariableIDByName("ID_State".$zaehler, $this->InstanceID))){
-                $variablenID = $this->RegisterVariableInteger ("ID_State".$zaehler, "Sensor".$zaehler.":Zustand", "", $zaehler*8+7);
+                $variablenID = $this->RegisterVariableInteger ("ID_State".$zaehler, "Sensor".$zaehler.":Zustand", "GS.Status", $zaehler*8+7);
                 IPS_SetInfo ($variablenID, "WSS");
             }
             if (!IPS_VariableExists(@IPS_GetVariableIDByName("ID_Link".$zaehler, $this->InstanceID))){
