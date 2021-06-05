@@ -45,7 +45,7 @@ ___________________________________________________________________________
             [0, 'Wasser fehlt', '', 0xFF0000],
             [1, 'Wasser nachfüllen', '', 0x00FF00],
             [2, 'ausreichend Wasser', '', 0x00FF00],
-            [3, 'Genügend Wasser', '', 0x00FF00]
+            [3, 'Genügend Wasser', '', 0x00FF00],
         ];
         $this->RegisterProfile(vtInteger, "GS.Status", "Sun", $prefix = '', $suffix = '', $minvalue = 0, $maxvalue = 3, $stepsize = 1, $digits = 0, $associations = null);
 

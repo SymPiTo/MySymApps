@@ -184,7 +184,7 @@ trait ProfileHelper
      * @param int    $maxvalue     Maximum value.
      * @param int    $stepsize     Increment.
      * @param int    $digits       Decimal places.
-     * @param array  $associations Associations of the values.
+     * @param array  $associations Associations of the values.[key, value,icon,color]
      */
     protected function RegisterProfile($vartype, $name, $icon, $prefix = '', $suffix = '', $minvalue = 0, $maxvalue = 0, $stepsize = 0, $digits = 0, $associations = null)
     {
