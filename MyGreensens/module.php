@@ -47,7 +47,7 @@ ___________________________________________________________________________
             [2, 'ausreichend Wasser', '', 0x00FF00],
             [3, 'Genügend Wasser', '', 0x00FF00]
         ];
-        $this->RegisterProfile(vtInteger, GS.Status, "Sun", $prefix = '', $suffix = '', $minvalue = 0, $maxvalue = 3, $stepsize = 1, $digits = 0, $associations = null);
+        $this->RegisterProfile(vtInteger, "GS.Status", "Sun", $prefix = '', $suffix = '', $minvalue = 0, $maxvalue = 3, $stepsize = 1, $digits = 0, $associations = null);
 
         //Register Timer
         $this->RegisterTimer("updatePlant", 0, 'GS_Update($_IPS[\'TARGET\']);');
