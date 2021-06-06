@@ -214,7 +214,7 @@ ________________________________________________________________________________
                 }
             }
             else {
-                $this->SendDebug("Operation ohne Fehler vollständig ausgeführt","");
+                $this->SendDebug($this->Translate("Received data frm API without error."),"");
             }
             //Kopfdaten
             $headers = array(
@@ -230,7 +230,7 @@ ________________________________________________________________________________
             curl_close($curl);
             //update data
             $data = json_decode($resp, true);
-            //$this->SendDebug("Sensordaten:", $data, 0);
+             
             $plantdata = $data['data']['registeredHubs'][0]['plants'];
             //Daten in Variablen schreiben
             $totalSensors = count($plantdata);
@@ -244,11 +244,11 @@ ________________________________________________________________________________
                 $this->SetValue("ID_State".$zaehler, $plantdata[$zaehler]['state']);  
                 $this->SetValue("ID_Link".$zaehler, $plantdata[$zaehler]['link']);  
             }
-            $this->SendDebug("Sensordaten:", $plantdata,0);
+            $this->SendDebug($this->Translate("Sensor data:"), $plantdata,0);
             return $plantdata;
         }
         else {
-            $this->SendDebug("Error", "keine Sensordaten erhalten.", 0);
+            $this->SendDebug($this->Translate("Error"), $this->Translate("No sensor data received.", 0);
             return false;
         }
     }  //End
@@ -331,11 +331,11 @@ ______________________________________________________________________
         $this->SetBuffer("timestamp", $timestamp);
         if($token != ""){
             $this->SetBuffer("valid", true);
-            $this->SendDebug("Token erhalten:", $token, 0);
+            $this->SendDebug($this->Translate("received Token:"), $token, 0);
             return $token;
         }
         else{
-            $this->SendDebug("Error:", "Kein Token erhalten", 0);
+            $this->SendDebug($this->Translate("Error:"), $this->Translate("No Token received"), 0);
             return false;
         }
     }  //End
@@ -361,12 +361,12 @@ ______________________________________________________________________
         if(($aktTime - $timestamp) > 604800){
             $this->SetBuffer("valid", false); 
             $valid = false;
-            $this->SendDebug("Warning:", "Gültigkeit des Token ist abgelaufen.", 0);
+            $this->SendDebug("Warning:", $this->Translate("Token has expired."), 0);
         }
         else{
             $this->SetBuffer("valid", true);
             $valid = true;
-            $this->SendDebug("Token:", "Ist gültig.", 0);
+            $this->SendDebug("Token:", $this->Translate("is valid."), 0);
         }
         return $valid;
     }  //End
