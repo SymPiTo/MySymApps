@@ -61,15 +61,13 @@ ___________________________________________________________________________
     -------------------------------------------------------------
     */
     public function ApplyChanges(){
+        $this->RegisterMessage(0, IPS_KERNELSTARTED);
+
         //Never delete this line!
         parent::ApplyChanges();
     
-            $this->RegisterMessage(0, IPS_KERNELSTARTED);
-            $this->RegisterMessage(0, IPS_KERNELSHUTDOWN);
+            
 
-            if (IPS_GetKernelRunlevel() != KR_READY) {
-                return;
-            }
     
  
 
@@ -156,14 +154,9 @@ ___________________________________________________________________________
     {
         switch ($Message) {
             case IPS_KERNELSTARTED:
-
+                $this->KernelReady(); 
                 break;
-            case IPS_KERNELSHUTDOWN:
-
-                break;
-            case KR_READY:
-
-                 break;
+  
         }
     }
 /* 
@@ -377,6 +370,25 @@ ______________________________________________________________________
         }
         return $valid;
     }  //End
+
+
+    //-----------------------------------------------------------------------------
+    /* Function: KernelReady
+    ...............................................................................
+    Beschreibung: Wird ausgeführt wenn der Kernel hochgefahren wurde.
+    ...............................................................................
+    Parameters: 
+        none
+    ...............................................................................
+    Returns:    
+        none
+    ------------------------------------------------------------------------------  */
+v
+ 
+    protected function KernelReady()
+    {
+        $this->ApplyChanges();
+    }
 
 
 } //end Class

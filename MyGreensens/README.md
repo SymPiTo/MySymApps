@@ -1,8 +1,9 @@
-# Greensens
+#  IP-Symcon Modul // Greensens
+
+#  Dokumentation
 _Das Modul liest die Daten der Greensens Pflanzen Sensoren aus. 
 
-### Inhaltverzeichnis
-
+## Inhaltverzeichnis
 1. [Funktionsumfang](#1-funktionsumfang)
 2. [Anforderungen](#2-anforderungen)
 3. [Installation & Konfiguration](#3-installation--konfiguration)
@@ -11,7 +12,7 @@ _Das Modul liest die Daten der Greensens Pflanzen Sensoren aus.
 6. [Funktionen](#6-funktionen)
 6. [FAQ](#7-faq)
 
-### 1. Funktionsumfang
+## 1. Funktionsumfang
 Dieses Modul liest die Sensordaten aus einer API Schnittstelle von Greensens  
 Daten von bis zu 6 Sensoren können ausgelesen werden:
 Folgende Sensordaten werden von der API Schnittstelle ausgelesen:
@@ -25,30 +26,26 @@ Folgende Sensordaten werden von der API Schnittstelle ausgelesen:
             ['link']
  
 
-### 2. Anforderungen
-
- - IP-Symcon ab Version 5.o
+## 2. Anforderungen
+ - IP-Symcon ab Version 5.0
  - Greensens HUB und Sensoren (http://www.greensens.de/)
  - Greensens APP auf Smartphone installieren
  - Konto erstellen (Email & Passwort)
  - Sensoren wie im Handbuch beschrieben einrichten.
 
 
-### 3. Installation & Konfiguration
+## 3. Installation & Konfiguration
 
 ### Installation
 Über das Modul-Control folgende URL hinzufügen.  
 "git://github.com/tkugelberg/SymconSonos.git"  .  
 
  
-
 ### Konfiguration
- 
 -  Login (Email von Registrierten Greensens - Konto)
 -  Passwort (PW von Registrierten Greensens - Konto)
 -  Anzahl konfigurierter Sensoren.
 -  Intervall Zeit: (Update Zyklus) 
-
 
 
 ## 4. Variablen
@@ -66,14 +63,17 @@ SensorX:ImageUrl        | String    | Link zum Bild der Pflanze
 
 
 ## 6. Funktionen
-
 GS_GetPlantDate(integer $InstanceID)
-```
+
 Holt die Sensordaten von der API Schnittstelle.
 https://api.greensens.de/
 
 Die Funktion gibt alle Sensordaten als Array zurück. 
 
-### 7. FAQ
-#### 7.1. Wie viele Variablen werden für das Modul benötigt?  
+## 7. FAQ
+### 7.1. Wie viele Variablen werden für das Modul benötigt?  
 8 je Sensor
+
+
+
+
