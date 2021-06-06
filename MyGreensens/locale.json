@@ -1,0 +1,14 @@
+{
+    "translations": {
+        "de": {
+            "very dry": "sehr trocken",
+            "dry": "trocken",
+            "water plant": "Pflanze gießen",
+            "enough water": "ausreichend Wasser",
+            ":Sensor ID": "Sensor ID",
+            ":Plant name": "trocken",
+            ":Sensor Status": "Zustand Sensor",
+            ":Temperature": ":Temperatur"
+        }
+    }
+}

@@ -42,10 +42,10 @@ ___________________________________________________________________________
         $this->RegisterProfile(vtFloat, "GS.Humidity", "Fog", $prefix = '', $suffix = '%', $minvalue = 0, $maxvalue = 100, $stepsize = 1, $digits = 0, $associations = null);
         $this->RegisterProfile(vtFloat, "GS.Illumination", "Sun", $prefix = '', $suffix = 'lx', $minvalue = 0, $maxvalue = 10000, $stepsize = 1, $digits = 0, $associations = null);
         $associations = [
-            [0, 'Wasser fehlt', '', 0xFF0000],
-            [1, 'Wasser nachfüllen', '', 0x00FF00],
-            [2, 'ausreichend Wasser', '', 0x00FF00],
-            [3, 'Genügend Wasser', '', 0x00FF00],
+            [0, $this->Translate('very dry'), '', 0xFF0000],
+            [1, $this->Translate('dry'), '', 0x00FF00],
+            [2, $this->Translate('water plant'), '', 0x00FF00],
+            [3, $this->Translate('enough water'), '', 0x00FF00],
         ];
         $this->RegisterProfile(vtInteger, "GS.Status", "Sun", $prefix = '', $suffix = '', $minvalue = 0, $maxvalue = 3, $stepsize = 1, $digits = 0, $associations = null);
 
@@ -86,19 +86,19 @@ ___________________________________________________________________________
         //Register Variables
         for ($zaehler = 0; $zaehler <= $totalSensors-1; $zaehler++) {
             if (!IPS_VariableExists(@IPS_GetVariableIDByName("sensorID".$zaehler, $this->InstanceID))){
-                $variablenID = $this->RegisterVariableInteger ("sensorID".$zaehler, "Sensor".$zaehler.":Sensor ID", "" , $zaehler*8+1);
+                $variablenID = $this->RegisterVariableInteger ("sensorID".$zaehler, "Sensor".$zaehler.$this->Translate(":Sensor ID"), "" , $zaehler*8+1);
                 IPS_SetInfo ($variablenID, "");
             }
             if (!IPS_VariableExists(@IPS_GetVariableIDByName("sensorName".$zaehler, $this->InstanceID))){
-                $variablenID = $this->RegisterVariableString ("sensorName".$zaehler, "Sensor".$zaehler.":Pflanzen Name", "", $zaehler*8+2); 
+                $variablenID = $this->RegisterVariableString ("sensorName".$zaehler, "Sensor".$zaehler.$this->Translate(":Plant name"), "", $zaehler*8+2); 
                 IPS_SetInfo ($variablenID, "");
             }
             if (!IPS_VariableExists(@IPS_GetVariableIDByName("sensorStatus".$zaehler, $this->InstanceID))){
-                $variablenID = $this->RegisterVariableBoolean ("sensorStatus".$zaehler, "Sensor".$zaehler.":Sensor Status", "", $zaehler*8+3);
+                $variablenID = $this->RegisterVariableBoolean ("sensorStatus".$zaehler, "Sensor".$zaehler.$this->Translate(":Sensor Status"), "", $zaehler*8+3);
                 IPS_SetInfo ($variablenID, "");
             }
             if (!IPS_VariableExists(@IPS_GetVariableIDByName("ID_Temp".$zaehler, $this->InstanceID))){
-                $variablenID = $this->RegisterVariableFloat ("ID_Temp".$zaehler, "Sensor".$zaehler.":Temperatur", "GS.Temperature", $zaehler*8+4);
+                $variablenID = $this->RegisterVariableFloat ("ID_Temp".$zaehler, "Sensor".$zaehler.$this->Translate(":Temperature"), "GS.Temperature", $zaehler*8+4);
                 IPS_SetInfo ($variablenID, "WSS");
             }
             if (!IPS_VariableExists(@IPS_GetVariableIDByName("ID_Illumination".$zaehler, $this->InstanceID))){
@@ -383,8 +383,7 @@ ______________________________________________________________________
     Returns:    
         none
     ------------------------------------------------------------------------------  */
-v
- 
+
     protected function KernelReady()
     {
         $this->ApplyChanges();
