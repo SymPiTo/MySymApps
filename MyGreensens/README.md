@@ -42,8 +42,8 @@ Folgende Sensordaten werden von der API Schnittstelle ausgelesen:
 
  
 ### Konfiguration
--  Login (Email von Registrierten Greensens - Konto)
--  Passwort (PW von Registrierten Greensens - Konto)
+-  Login (Email von registrierten Greensens - Konto)
+-  Passwort (PW von registrierten Greensens - Konto)
 -  Anzahl konfigurierter Sensoren.
 -  Intervall Zeit: (Update Zyklus) 
 
