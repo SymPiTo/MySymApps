@@ -16,14 +16,14 @@ _Das Modul liest die Daten der Greensens Pflanzen Sensoren aus.
 Erfassen der Sensordaten mit Hilfe der API Schnittstelle von Greensens  
 Daten von bis zu 6 Sensoren können ausgelesen werden:
 Folgende Sensordaten werden von der API Schnittstelle ausgelesen:
-            ['sensorID']        => Sensor Identifikations Nr.
-            ['plantNameDE']     => Planzen Name
-            ['status']          => Zustand des Sensors
-            ['temperature']     => Temperatur in °C
-            ['illumination']    => Helligkein in Lux
-            ['moisture']        => Feuchtigkeit in %
-            ['state']           => Zustand der Pflanze
-            ['link']            => Image of plant
+        - ['sensorID']        => Sensor Identifikations Nr.
+        - ['plantNameDE']     => Planzen Name
+        - ['status']          => Zustand des Sensors
+        - ['temperature']     => Temperatur in °C
+        - ['illumination']    => Helligkein in Lux
+        - ['moisture']        => Feuchtigkeit in %
+        - ['state']           => Zustand der Pflanze
+        - ['link']            => Image of plant
  
 
 ## 2. Anforderungen
