@@ -248,7 +248,7 @@ ________________________________________________________________________________
             return $plantdata;
         }
         else {
-            $this->SendDebug($this->Translate("Error"), $this->Translate("No sensor data received.", 0);
+            $this->SendDebug($this->Translate("Error"), $this->Translate("No sensor data received.", 0));
             return false;
         }
     }  //End
