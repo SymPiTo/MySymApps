@@ -150,7 +150,8 @@ ___________________________________________________________________________
             MessageSink() wird aufgerufen wenn registrierte 
             Meldung 
     -------------------------------------------------------------
-    */    protected function MessageSink($TimeStamp, $SenderID, $Message, $Data)
+    */    
+    public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
     {
         switch ($Message) {
             case IPS_KERNELSTARTED:
@@ -248,7 +249,6 @@ ________________________________________________________________________________
             return $plantdata;
         }
         else {
-            //Fehlermeldung
             $this->SendDebug($this->Translate("Error"), $this->Translate("No sensor data received.", 0));
             return false;
         }
