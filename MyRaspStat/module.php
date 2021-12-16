@@ -306,7 +306,7 @@ class MyRaspberryPi extends IPSModule
       SetValue($this->GetIDForIdent("ID_SD_root_used"), $data['sdcard_root_used']);
       SetValue($this->GetIDForIdent("ID_Swap_used"), $data['swap_used']);
       SetValue($this->GetIDForIdent("ID_CPU_Volt"), $data['cpu_voltage']);
-      SetValue($this->GetIDForIdent("ID_http"), $data['http']);
+      //SetValue($this->GetIDForIdent("ID_http"), $data['http']);
       //SetValue($this->GetIDForIdent("ID_https"), $data['https']);
       SetValue($this->GetIDForIdent("ID_RPI_monitor"), $data['rpimonitor']);
       SetValue($this->GetIDForIdent("ID_ssh"), $data['ssh']);
