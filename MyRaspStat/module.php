@@ -298,6 +298,7 @@ class MyRaspberryPi extends IPSModule
 
           
       $data = json_decode($data, true); 
+      $this->SendDebug('Update:DATA: ', $data, 0);
       SetValue($this->GetIDForIdent("ID_cpuFreq"), $data['cpu_frequency']); 
       SetValue($this->GetIDForIdent("ID_MemTotal"), $data['memory_available']);
       SetValue($this->GetIDForIdent("ID_MemFree"), $data['memory_free']);
