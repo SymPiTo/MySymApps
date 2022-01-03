@@ -423,6 +423,7 @@ class MyAlarm extends IPSModule
              
             $this->SendDebug("Password hash", $hash, 0);
             if (password_verify($password, $hash)) {
+                $this->SendDebug("Password Eingabe", "erfolgreich.", 0);
                 $this->resetCode();
                 $this->setvalue("A_SecWarning","Code wurde akzeptiert."); 
                 
