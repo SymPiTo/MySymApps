@@ -113,7 +113,8 @@ class MyAlarm extends IPSModule
         IPS_SetInfo ($variablenID, "WSS");
         $variablenID = $this->RegisterVariableString("A_WOAlarm", "Waindow open Alarm");
         IPS_SetInfo ($variablenID, "WSS");
-
+        $variablenID = $this->RegisterVariableString("A_SecCode", "Security Code");
+        IPS_SetInfo ($variablenID, "WSS");
         $variablenID = $this->RegisterVariableString("A_SecWarning", "Security Meldung");  
         IPS_SetInfo ($variablenID, "WSS");    
         
@@ -129,7 +130,7 @@ class MyAlarm extends IPSModule
         // Aktiviert die Standardaktion der Statusvariable zur Bedienbarkeit im Webfront
         //$this->EnableAction("IDENTNAME");
         $this->EnableAction("A_SecActivate");
-     
+        $this->EnableAction("A_SecCode");
         $this->EnableAction("Alexa_SecActivate");
         
         //anlegen eines Timers
@@ -370,7 +371,38 @@ class MyAlarm extends IPSModule
         }  
 
 
+        //-----------------------------------------------------------------------------
+        /* Function: receiveCode
+        ...............................................................................
+        Beschreibung:
+         * empfängt zeichen und schribt sie in Variable 
+        ...............................................................................
+        Parameters: 
+             key = Zahlen Code
+        ...............................................................................
+        Returns:    
+            none
+        ------------------------------------------------------------------------------  */
+        public function receiveCode(string $key){
+            $code = $this->getvalue("A_SecCode");
+            $this->setvalue("A_SecCode", $code.$key);    
+        }  
 
+        //-----------------------------------------------------------------------------
+        /* Function: resetCode
+        ...............................................................................
+        Beschreibung
+            löscht den eingegebenen ZahlenCode.
+        ...............................................................................
+        Parameters: 
+            none
+        ...............................................................................
+        Returns:    
+            none
+        ------------------------------------------------------------------------------  */
+        public function resetCode(){
+            $this->setvalue("A_SecCode", "");    
+        }  
 
         //-----------------------------------------------------------------------------
         /* Function: checkCode
@@ -384,22 +416,25 @@ class MyAlarm extends IPSModule
         Returns:    
             none
         ------------------------------------------------------------------------------  */
-        public function checkCode($password){
-            //$password = $this->getvalue("A_SecCode");
+        public function checkCode($password=""){
+            if ($password== ""){
+                $password = $this->getvalue("A_SecCode");
+            }
             //Passwort verschlüsseln
             $hash = $this->cryptPW($this->ReadPropertyString("Password"));
              
             $this->SendDebug("Password hash", $hash, 0);
             if (password_verify($password, $hash)) {
-                $this->SendDebug("Password Eingabe", "erfolgreich.", 0);
-                $this->ResetAlarm();
+                $this->resetCode();
                 $this->setvalue("A_SecWarning","Code wurde akzeptiert."); 
-                $this->SetValueBoolean("A_SecActivate",false);
-                $this->SetValueBoolean("A_SecActive",false);
-
+                SetValueBoolean($this->GetIDForIdent("A_SecActivate"),false);
+                SetValueBoolean($this->GetIDForIdent("A_SecActive"),false);
+                
                 if($this->ReadPropertyBoolean("AlexaTTS")){
                     //Sprachausgabe
                     $text_to_speech = "Code wurde akzeptiert";
+
+                    
                     EchoRemote_TextToSpeech($this->ReadPropertyInteger("EchoID"), $text_to_speech);
                 }
             }  
@@ -434,8 +469,8 @@ class MyAlarm extends IPSModule
                 EchoRemote_TextToSpeech($this->ReadPropertyInteger("EchoID"), $text_to_speech);
             }
             sleep(30);
-            $this->SetValueBoolean("A_SecActive",true);
-            $this->SetValueBoolean("A_SecActivate",true);
+            SetValueBoolean($this->GetIDForIdent("A_SecActive"),true);
+            SetValueBoolean($this->GetIDForIdent("A_SecActivate"),true);
             $this->setvalue("A_SecWarning","Alarm Anlage is aktiv."); 
             //Sprachausgabe
             if($this->ReadPropertyBoolean("AlexaTTS")){
