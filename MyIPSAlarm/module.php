@@ -416,8 +416,8 @@ class MyAlarm extends IPSModule
         Returns:    
             none
         ------------------------------------------------------------------------------  */
-        public function checkCode(){
-            $password = $this->getvalue("A_SecCode");
+        public function checkCode($password){
+            //$password = $this->getvalue("A_SecCode");
             //Passwort verschlüsseln
             $hash = $this->cryptPW($this->ReadPropertyString("Password"));
              
