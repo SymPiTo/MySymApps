@@ -394,13 +394,12 @@ class MyAlarm extends IPSModule
                 $this->SendDebug("Password Eingabe", "erfolgreich.", 0);
                 $this->ResetAlarm();
                 $this->setvalue("A_SecWarning","Code wurde akzeptiert."); 
-                
+                $this->SetValueBoolean("A_SecActivate",false);
+                $this->SetValueBoolean("A_SecActive",false);
+
                 if($this->ReadPropertyBoolean("AlexaTTS")){
                     //Sprachausgabe
                     $text_to_speech = "Code wurde akzeptiert";
-                    SetValueBoolean($this->GetIDForIdent("A_SecActivate"),false);
-                    SetValueBoolean($this->GetIDForIdent("A_SecActive"),false);
-                    
                     EchoRemote_TextToSpeech($this->ReadPropertyInteger("EchoID"), $text_to_speech);
                 }
             }  
@@ -435,8 +434,8 @@ class MyAlarm extends IPSModule
                 EchoRemote_TextToSpeech($this->ReadPropertyInteger("EchoID"), $text_to_speech);
             }
             sleep(30);
-            SetValueBoolean($this->GetIDForIdent("A_SecActive"),true);
-            SetValueBoolean($this->GetIDForIdent("A_SecActivate"),true);
+            $this->SetValueBoolean("A_SecActive",true);
+            $this->SetValueBoolean("A_SecActivate",true);
             $this->setvalue("A_SecWarning","Alarm Anlage is aktiv."); 
             //Sprachausgabe
             if($this->ReadPropertyBoolean("AlexaTTS")){
