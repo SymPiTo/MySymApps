@@ -8,7 +8,7 @@
  * 
  * Version: 1.0
  *************************************************************************** */
-require_once __DIR__ . '/../libs/MyTrait1';
+//require_once __DIR__ . '/../libs/MyTrait1';
  
 
 class _CLASS_ extends IPSModule {
