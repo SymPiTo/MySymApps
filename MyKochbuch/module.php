@@ -237,7 +237,7 @@ class MyKochbuch extends IPSModule
             $this->setvalue('ID_Kochbuch',json_encode($KochbuchIndex));
             $this->setvalue('ID_Rezept', $Kochbuch[$No]['recipeInstructions']);
             $this->setvalue('ID_Bild', $Kochbuch[$No]['image']);
-            $this->setvalue('ID_Zutaten', $Kochbuch[$No]['recipeIngredient']) ;
+            $this->setvalue('ID_Zutaten', json_encode($Kochbuch[$No]['recipeIngredient'])) ;
             $this->setvalue('ID_Titel', $Kochbuch[$No]['name']);    
             $status = true;
         }
