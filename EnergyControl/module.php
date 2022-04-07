@@ -119,6 +119,9 @@ ___________________________________________________________________________
  //           $this->ConnectParent("{8AA55C67-B28A-C67B-5332-99CCE8190ACA}");
             //Filter setzen – ForwardData wird nur aufgerufen wenn Filter passt (string $ErforderlicheRegexRegel )$this->SetForwardDataFilter(".*");  
             //Filter setzen – ReceiveData wird nur aufgerufen wenn Filter passt (string $ErforderlicheRegexRegel )$this->SetReceiveDataFilter(".*");  
+            $arrString = $this->ReadPropertyString("PraesenzS");
+            $arr = json_decode($arrString);
+            $this->SetValue("StatRoom1", $arr[0]);
         }
         else {
             //Timer ausschalten

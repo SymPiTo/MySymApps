@@ -37,8 +37,7 @@
                     "width": "auto",
                     "add": 0,
                     "edit": {
-                        "type": "SelectVariable",
-                        "validVariableTypes": [1]
+                        "type": "SelectVariable" 
                     }
                 }
             ],
