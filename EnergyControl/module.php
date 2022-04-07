@@ -71,7 +71,7 @@ ___________________________________________________________________________
         IPS_SetInfo ($variablenID, "WSS");
 
    
-        $this->RegisterVariableString("ID_Test", "jkl")
+        $this->RegisterVariableString("ID_Test", "jkl");
        
 
         //IPS_SetInfo ($variablenID, "WSS");
