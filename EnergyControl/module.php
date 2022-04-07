@@ -72,7 +72,7 @@ ___________________________________________________________________________
         IPS_SetInfo ($variablenID, "WSS");
 
         $variablenID = $this->RegisterPropertyString ("ID_Test", "Test");
-        IPS_SetInfo ($variablenID, "WSS");
+        //IPS_SetInfo ($variablenID, "WSS");
  
 
         /*
