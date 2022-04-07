@@ -56,19 +56,22 @@ ___________________________________________________________________________
         $variablenID = $this->RegisterVariableBoolean ("StatRoom1", "Raum1 Person", '~Switch', 0);
         IPS_SetInfo ($variablenID, "WSS");
         
-        $variablenID = $this->RegisterVariableBoolean ("StatRoom2", "Raum2 Person", '~Switch', 0);
+        $variablenID = $this->RegisterVariableBoolean ("StatRoom2", "Raum2 Person", '~Switch', 1);
         IPS_SetInfo ($variablenID, "WSS");
 
-        $variablenID = $this->RegisterVariableBoolean ("StatRoom3", "Raum3 Person", '~Switch', 0);
+        $variablenID = $this->RegisterVariableBoolean ("StatRoom3", "Raum3 Person", '~Switch', 2);
         IPS_SetInfo ($variablenID, "WSS");
 
-        $variablenID = $this->RegisterVariableBoolean ("StatRoom4", "Raum4 Person", '~Switch', 0);
+        $variablenID = $this->RegisterVariableBoolean ("StatRoom4", "Raum4 Person", '~Switch', 3);
         IPS_SetInfo ($variablenID, "WSS");
 
-        $variablenID = $this->RegisterVariableBoolean ("StatRoom5", "Raum5 Person", '~Switch', 0);
+        $variablenID = $this->RegisterVariableBoolean ("StatRoom5", "Raum5 Person", '~Switch', 4);
         IPS_SetInfo ($variablenID, "WSS");
 
-        $variablenID = $this->RegisterVariableBoolean ("StatRoom6", "Raum6 Person", '~Switch', 0);
+        $variablenID = $this->RegisterVariableBoolean ("StatRoom6", "Raum6 Person", '~Switch', 5);
+        IPS_SetInfo ($variablenID, "WSS");
+
+        $variablenID = $this->RegisterPropertyString ("Test", "", "", 6);
         IPS_SetInfo ($variablenID, "WSS");
 
         /*
@@ -121,7 +124,7 @@ ___________________________________________________________________________
             //Filter setzen – ReceiveData wird nur aufgerufen wenn Filter passt (string $ErforderlicheRegexRegel )$this->SetReceiveDataFilter(".*");  
             $arrString = $this->ReadPropertyString("PraesenzS");
             $arr = json_decode($arrString);
-            $this->SetValue("StatRoom1", $arr[0]);
+            $this->SetValue("test", $arr[0]);
         }
         else {
             //Timer ausschalten
