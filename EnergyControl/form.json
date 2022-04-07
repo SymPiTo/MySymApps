@@ -22,22 +22,23 @@
             "columns": 
             [
                 {
-                    "name": "ID",
-                    "label": "ID",
-                    "width": "400px",
-                    "add": 0,
-                    "edit": {
-                        "type": "SelectVariable"
-                    }
-                },
-                {
                     "name": "Raum",
                     "label": "Raumbezeichnung",
-                    "width": "auto",
+                    "width": "300px",
                     "add": "",
                     "edit": 
                     {
                         "type": "ValidationTextBox"
+                    }
+                },
+                {
+                    "name": "ID",
+                    "label": "ID",
+                    "width": "auto",
+                    "add": 0,
+                    "edit": {
+                        "type": "SelectVariable",
+                        "validVariableTypes": [1]
                     }
                 }
             ],
