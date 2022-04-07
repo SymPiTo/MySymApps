@@ -206,6 +206,7 @@ ________________________________________________________________________________
     public function test(){
         $arrString = $this->ReadPropertyString("PraesenzS");
         $arr = json_decode($arrString);
+        $this->SetValue("ID_Test", arr[0]["Raum"]);
         return $arr;
     }  //xxxx End
 
