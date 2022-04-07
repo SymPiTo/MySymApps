@@ -206,7 +206,7 @@ ________________________________________________________________________________
     public function test(){
         $arrString = $this->ReadPropertyString("PraesenzS");
         $arr = json_decode($arrString);
-        return arr;
+        return $arr;
     }  //xxxx End
 
 /* 
