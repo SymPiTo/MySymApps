@@ -9,8 +9,8 @@
  * Version: _VERSION_
  *************************************************************************** */
 //require_once __DIR__ . '/../libs/_TRAIT_';
-require_once __DIR__ . '/../libs/NetworkTraits.php';  // diverse Klassen
-
+require_once __DIR__ . '/../libs/NetworkTraits1.php';  // diverse Klassen
+ 
 class MyEnergyControl extends IPSModule {
 
      use DebugHelper1;
