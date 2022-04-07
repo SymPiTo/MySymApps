@@ -71,8 +71,9 @@ ___________________________________________________________________________
         $variablenID = $this->RegisterVariableBoolean ("StatRoom6", "Raum6 Person", '~Switch', 5);
         IPS_SetInfo ($variablenID, "WSS");
 
-        $variablenID = $this->RegisterPropertyString ("Test", "Test");
+        $variablenID = $this->RegisterPropertyString ("ID_Test", "Test","", 7);
         IPS_SetInfo ($variablenID, "WSS");
+ 
 
         /*
         $variablenID = $this->RegisterVariableFloat ($Ident, $Name, $Profil, $Position);
@@ -124,7 +125,7 @@ ___________________________________________________________________________
             //Filter setzen – ReceiveData wird nur aufgerufen wenn Filter passt (string $ErforderlicheRegexRegel )$this->SetReceiveDataFilter(".*");  
             $arrString = $this->ReadPropertyString("PraesenzS");
             $arr = json_decode($arrString);
-            $this->SetValue("Test", $arr[0]);
+            $this->SetValue("ID_Test", $arr[0]);
         }
         else {
             //Timer ausschalten
