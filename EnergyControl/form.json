@@ -24,7 +24,7 @@
                 {
                     "name": "ID",
                     "label": "ID",
-                    "width": "auto",
+                    "width": "100px",
                     "add": 0,
                     "edit": {
                         "type": "SelectVariable"
