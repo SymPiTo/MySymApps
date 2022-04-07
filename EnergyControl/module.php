@@ -71,8 +71,8 @@ ___________________________________________________________________________
         IPS_SetInfo ($variablenID, "WSS");
 
    
-        $variablenID = $this->RegisterPropertyInteger ("ID_No", 999);
-        IPS_SetInfo ($variablenID, "WSS");
+        $this->RegisterVariableString("ID_Test", "jkl")
+       
 
         //IPS_SetInfo ($variablenID, "WSS");
         //$this->RegisterPropertyString("ID_Test", "MaxMustermann"); 
