@@ -48,22 +48,22 @@ ___________________________________________________________________________
 
 
         //Register Variables
-        $variablenID = $this->RegisterVariableBoolean ("StatWZ", "Wohnzimmer Person", '~Switch', 0);
+        $variablenID = $this->RegisterVariableBoolean ("StatRoom1", "Raum1 Person", '~Switch', 0);
         IPS_SetInfo ($variablenID, "WSS");
         
-        $variablenID = $this->RegisterVariableBoolean ("StatSZ", "Schlafzimmer Person", '~Switch', 0);
+        $variablenID = $this->RegisterVariableBoolean ("StatRoom2", "Raum2 Person", '~Switch', 0);
         IPS_SetInfo ($variablenID, "WSS");
 
-        $variablenID = $this->RegisterVariableBoolean ("StatWZ", "Kinderzimmer Person", '~Switch', 0);
+        $variablenID = $this->RegisterVariableBoolean ("StatRoom3", "Raum3 Person", '~Switch', 0);
         IPS_SetInfo ($variablenID, "WSS");
 
-        $variablenID = $this->RegisterVariableBoolean ("StatWZ", "Diele Person", '~Switch', 0);
+        $variablenID = $this->RegisterVariableBoolean ("StatRoom4", "Raum4 Person", '~Switch', 0);
         IPS_SetInfo ($variablenID, "WSS");
 
-        $variablenID = $this->RegisterVariableBoolean ("StatWZ", "Arbeitszimmer Person", '~Switch', 0);
+        $variablenID = $this->RegisterVariableBoolean ("StatRoom5", "Raum5 Person", '~Switch', 0);
         IPS_SetInfo ($variablenID, "WSS");
 
-        $variablenID = $this->RegisterVariableBoolean ("StatWZ", "Küche Person", '~Switch', 0);
+        $variablenID = $this->RegisterVariableBoolean ("StatRoom6", "Raum6 Person", '~Switch', 0);
         IPS_SetInfo ($variablenID, "WSS");
 
         /*
