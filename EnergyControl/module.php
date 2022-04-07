@@ -126,9 +126,7 @@ ___________________________________________________________________________
  //           $this->ConnectParent("{8AA55C67-B28A-C67B-5332-99CCE8190ACA}");
             //Filter setzen – ForwardData wird nur aufgerufen wenn Filter passt (string $ErforderlicheRegexRegel )$this->SetForwardDataFilter(".*");  
             //Filter setzen – ReceiveData wird nur aufgerufen wenn Filter passt (string $ErforderlicheRegexRegel )$this->SetReceiveDataFilter(".*");  
-            $arrString = $this->ReadPropertyString("PraesenzS");
-            $arr = json_decode($arrString);
-            $this->SetValue("ID_Test", $arr[0]);
+ 
         }
         else {
             //Timer ausschalten
@@ -208,7 +206,7 @@ ________________________________________________________________________________
     public function test(){
         $arrString = $this->ReadPropertyString("PraesenzS");
         $arr = json_decode($arrString);
-        
+        return arr;
     }  //xxxx End
 
 /* 
