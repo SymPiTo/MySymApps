@@ -24,15 +24,25 @@
                 {
                     "name": "ID",
                     "label": "ID",
-                    "width": "100px",
+                    "width": "400px",
                     "add": 0,
                     "edit": {
                         "type": "SelectVariable"
                     }
+                },
+                {
+                    "name": "Raum",
+                    "label": "Raumbezeichnung",
+                    "width": "auto",
+                    "add": "",
+                    "edit": 
+                    {
+                        "type": "ValidationTextBox"
+                    }
                 }
             ],
             "values": [{
-                "ID": 12345
+                "ID": 0
             }]
         }
     ],
