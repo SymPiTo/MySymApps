@@ -3,7 +3,7 @@
 	"name": "MyEnergyControl",
 	"type": 3,
 	"vendor": "PiTo",
-	"aliases": [""],
+	"aliases": ["MyEnergyControl"],
 	"parentRequirements": [],
 	"childRequirements": [],
 	"implemented": [],
