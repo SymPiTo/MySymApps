@@ -9,11 +9,11 @@
  * Version: _VERSION_
  *************************************************************************** */
 //require_once __DIR__ . '/../libs/_TRAIT_';
-//require_once __DIR__ . '/../libs/_HELPERCLASS_';  // diverse Klassen
+require_once __DIR__ . '/../libs/NetworkTraits.php';  // diverse Klassen
 
 class MyEnergyControl extends IPSModule {
 
-   // use DebugHelper,
+     use DebugHelper1;
    // InstanceStatus,
    // BufferHelper,
    // Semaphore;
@@ -205,8 +205,10 @@ ________________________________________________________________________________
     Returns:    
         none
     ------------------------------------------------------------------------------  */
-    public function xxxx(){
-       
+    public function test(){
+        $arrString = $this->ReadPropertyString("PraesenzS");
+        $arr = json_decode($arrString);
+        
     }  //xxxx End
 
 /* 
