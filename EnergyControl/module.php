@@ -71,7 +71,7 @@ ___________________________________________________________________________
         IPS_SetInfo ($variablenID, "WSS");
 
    
-        $variablenID = $this->RegisterPropertyInteger ("ID_No", 999, , 6);
+        $variablenID = $this->RegisterPropertyInteger ("ID_No", 999);
         IPS_SetInfo ($variablenID, "WSS");
 
         //IPS_SetInfo ($variablenID, "WSS");
