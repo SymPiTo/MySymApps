@@ -124,7 +124,7 @@ ___________________________________________________________________________
             //Filter setzen – ReceiveData wird nur aufgerufen wenn Filter passt (string $ErforderlicheRegexRegel )$this->SetReceiveDataFilter(".*");  
             $arrString = $this->ReadPropertyString("PraesenzS");
             $arr = json_decode($arrString);
-            $this->SetValue("test", $arr[0]);
+            $this->SetValue("Test", $arr[0]);
         }
         else {
             //Timer ausschalten
