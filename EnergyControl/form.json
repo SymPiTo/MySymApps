@@ -29,15 +29,6 @@
                     "edit": {
                         "type": "SelectVariable"
                     }
-                },
-                {   
-                    "name": "Raumbezeichnung",
-                    "label": "jj",
-                    "with": "auto",
-                    "add": "Raum",
-                    "edit": {
-                        "type": "ValidationTextBox"
-                    }
                 }
             ],
             "values": [{
