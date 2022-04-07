@@ -71,7 +71,7 @@ ___________________________________________________________________________
         $variablenID = $this->RegisterVariableBoolean ("StatRoom6", "Raum6 Person", '~Switch', 5);
         IPS_SetInfo ($variablenID, "WSS");
 
-        $variablenID = $this->RegisterPropertyString ("Test", "", "", 6);
+        $variablenID = $this->RegisterPropertyString ("Test", "Test");
         IPS_SetInfo ($variablenID, "WSS");
 
         /*
