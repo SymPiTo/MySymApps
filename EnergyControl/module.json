@@ -1,0 +1,11 @@
+{
+	"id": "{7DB8C7BB-97D1-0A06-9A1E-D1DF74BBB28F}",
+	"name": "MyEnergyControl",
+	"type": 3,
+	"vendor": "PiTo",
+	"aliases": [""],
+	"parentRequirements": [],
+	"childRequirements": [],
+	"implemented": [],
+	"prefix": "EC"
+}

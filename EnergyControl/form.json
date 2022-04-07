@@ -1,0 +1,55 @@
+{
+    "elements": [{
+            "name": "ModAlive",
+            "type": "CheckBox",
+            "caption": "Modul aktiv"
+        },
+        {
+            "type": "Label",
+            "label": "Add/Delete Präsenzsensor variables"
+        },
+        {
+            "type": "List",
+            "name": "PraesenzS",
+            "caption": "PräsenzSensoren",
+            "rowCount": 6,
+            "add": true,
+            "delete": true,
+            "sort": {
+              "column": "ID",
+              "direction": "ascending"
+            },
+            "columns": 
+            [
+                {
+                    "name": "ID",
+                    "label": "ID",
+                    "width": "auto",
+                    "add": 0,
+                    "edit": {
+                        "type": "SelectVariable"
+                    }
+                },
+                {   
+                    "name": "Raumbezeichnung",
+                    "label": "jj",
+                    "with": "auto",
+                    "add": "Raum",
+                    "edit": {
+                        "type": "ValidationTextBox"
+                    }
+                }
+            ],
+            "values": [{
+      
+            }]
+        }
+    ],
+    "status": [
+
+    ],
+    "actions": [
+
+
+    ]
+}
