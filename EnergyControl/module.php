@@ -50,7 +50,7 @@ ___________________________________________________________________________
 
         // Register Profiles
        // $this->RegisterProfiles();
-
+       $this->RegisterPropertyString("ID_Test", "MaxMustermann"); 
 
         //Register Variables
         $variablenID = $this->RegisterVariableBoolean ("StatRoom1", "Raum1 Person", '~Switch', 0);
@@ -73,7 +73,7 @@ ___________________________________________________________________________
 
    
         //IPS_SetInfo ($variablenID, "WSS");
-        $this->RegisterPropertyString("ID_Test", "MaxMustermann"); 
+       
 
         /*
         $variablenID = $this->RegisterVariableFloat ($Ident, $Name, $Profil, $Position);
