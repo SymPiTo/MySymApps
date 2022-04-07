@@ -36,6 +36,11 @@ ___________________________________________________________________________
         //Register Properties from form.json
         $this->RegisterPropertyBoolean("ModAlive", false);
 
+        //Listen Einträge als JSON regisrieren
+        // zum umwandeln in ein Array 
+        // $sensors = json_decode($this->ReadPropertyString("Battery"));
+        $this->RegisterPropertyString("PraesenzS", "[]");
+
        // $this->ReadPropertyFloat("NAME", 0.0);
 
        // $this->ReadPropertyInteger("NAME", 0);
