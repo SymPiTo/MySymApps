@@ -195,6 +195,7 @@ ___________________________________________________________________________
                 $arrString = $this->ReadPropertyString("PraesenzS");
                 $arr = json_decode($arrString);
                 foreach ($arr as $key => $value) {
+                    $this-SendDebug($value->ID," == ".$SenderID$id);
                     if($value->ID == $SenderID){
                         $setRoomStat($arr[$key]->Raum, $SenderID);
                     }
@@ -228,7 +229,7 @@ ________________________________________________________________________________
         none
     ------------------------------------------------------------------------------  */
     public function setRoomStat($room, $id){
-        $this-SendDebug("setRoomStat: ",$room." - ". $id);
+        $this-SendDebug("setRoomStat: ",$room." - ".$id);
         switch ($room) {
             case "Wohnzimmer":
                 # Person detektiert - Raum setzen/timer setzen
