@@ -73,6 +73,8 @@ ___________________________________________________________________________
         $variablenID = $this->RegisterVariableBoolean ("StatWohn", "Wohnung Person", '~Switch', 5);
         IPS_SetInfo ($variablenID, "WSS");
 
+        $variablenID = $this->RegisterVariableInteger ("NoPerson", "Anzahl Person");
+        IPS_SetInfo ($variablenID, "WSS");
         
 
         //Register Timer
@@ -293,7 +295,10 @@ ________________________________________________________________________________
                     $this->SetTimerInterval("T_AZ", 300000);
                 }
                 
-                break;                          
+                break;  
+            case "Eingangstür":
+                
+                break;                        
             default:
                 # code...
                 break;
