@@ -183,7 +183,7 @@ ___________________________________________________________________________
         NachrichtenIDs/SenderIDs-Kombinationen aufgerufen. 
     -------------------------------------------------------------*/
    public function MessageSink($TimeStamp, $SenderID, $Message, $Data) {
-        $this->SendDebug("MessageSink", "Message from SenderID ".$SenderID." with Message ".$Message."\r\n Data: ".print_r($Data, true));
+        $this->SendDebug("MessageSink", "Message from SenderID ".$SenderID." with Message ".$Message);
         switch ($Message) {
             case VM_UPDATE:
                 
