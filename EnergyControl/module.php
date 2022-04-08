@@ -237,6 +237,7 @@ ________________________________________________________________________________
                 # wenn Daten = false, Timer starten und bei Ablauf Raum auf 0 setzen
                 if(GetValue($id) == true){
                     $this->SetValue("StatWZ", true);
+                    $this->SetValue("StatWohn", true);
                 }
                 else{
                     #WZ Timer starten 5min = 5*60000 = 300 000
@@ -246,6 +247,7 @@ ________________________________________________________________________________
             case "Kinderzimmer":
                 if(GetValue($id) == true){
                     $this->SetValue("StatKZ", true);
+                    $this->SetValue("StatWohn", true);
                 }
                 else{
                     $this->SetTimerInterval("T_KZ", 300000);
@@ -255,6 +257,7 @@ ________________________________________________________________________________
             case "Schlafzimmer":
                 if(GetValue($id) == true){
                     $this->SetValue("StatSZ", true);
+                    $this->SetValue("StatWohn", true);
                 }
                 else{
                     $this->SetTimerInterval("T_SZ", 300000);
@@ -264,6 +267,7 @@ ________________________________________________________________________________
             case "Küche":
                 if(GetValue($id) == true){
                     $this->SetValue("StatK", true);
+                    $this->SetValue("StatWohn", true);
                 }
                 else{
                     $this->SetTimerInterval("T_K", 300000);
@@ -273,6 +277,7 @@ ________________________________________________________________________________
             case "Diele":
                 if(GetValue($id) == true){
                     $this->SetValue("StatD", true);
+                    $this->SetValue("StatWohn", true);
                 }
                 else{
                     $this->SetTimerInterval("T_D", 300000);
@@ -282,6 +287,7 @@ ________________________________________________________________________________
             case "Arbeitszimmer":
                 if(GetValue($id) == true){
                     $this->SetValue("StatAZ", true);
+                    $this->SetValue("StatWohn", true);
                 }
                 else{
                     $this->SetTimerInterval("T_AZ", 300000);
