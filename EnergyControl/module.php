@@ -195,7 +195,7 @@ ___________________________________________________________________________
                 $arrString = $this->ReadPropertyString("PraesenzS");
                 $arr = json_decode($arrString);
                 foreach ($arr as $key => $value) {
-                    $this-SendDebug($value->ID," == ".$SenderID$id);
+                    $this->SendDebug($value->ID," == ".$SenderID);
                     if($value->ID == $SenderID){
                         $setRoomStat($arr[$key]->Raum, $SenderID);
                     }
