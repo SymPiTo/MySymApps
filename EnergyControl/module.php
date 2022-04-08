@@ -194,34 +194,15 @@ ___________________________________________________________________________
                 
                 $arrString = $this->ReadPropertyString("PraesenzS");
                 $arr = json_decode($arrString);
-              
-                switch ($SenderID) {
-                    case $arr[0]->ID:
-                        # Person detektiert - Raum setzen/timer setzen
-                        # wenn Daten  = true, RaumVariable setzen
-                        # wenn Daten = false, Timer starten und bei Ablauf Raum auf 0 setzen
-                        $setRoomStat($arr[0]->Raum, $SenderID);
-                        break;
-                    case $arr[1]->ID:
-                        $setRoomStat($arr[1]->Raum, $SenderID);
-                        break;
-                    case $arr[2]->ID:
-                        $setRoomStat($arr[2]->Raum, $SenderID);
-                        break;
-                    case $arr[3]->ID:
-                        $setRoomStat($arr[3]->Raum, $SenderID);
-                        break;   
-                    case $arr[4]->ID:
-                        $setRoomStat($arr[4]->Raum, $SenderID);
-                        break;   
-                    case $arr[5]->ID:
-                        $setRoomStat($arr[5]->Raum, $SenderID);
-                        break;                          
-                    default:
-                        # code...
-                        break;
+                foreach ($arr as $key => $value) {
+                    if($value->ID == $SenderID){
+                        $setRoomStat($arr[$key]->Raum, $SenderID);
+                    }
                 }
-            break;
+                break;
+            default:
+                # code...
+                break;
         }
     } //Function: MessageSink End
     
