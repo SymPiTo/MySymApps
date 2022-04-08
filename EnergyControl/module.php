@@ -122,11 +122,15 @@ ___________________________________________________________________________
     public function ApplyChanges(){
         //Never delete this line!
         parent::ApplyChanges();
-
+        $arrString = $this->ReadPropertyString("PraesenzS");
+        $arr = json_decode($arrString);
         //Messages registrieren
- //       $this->RegisterMessage(0, IPS_KERNELSTARTED);
- //       $this->RegisterMessage($this->InstanceID, FM_CONNECT);
- //       $this->RegisterMessage($this->InstanceID, FM_DISCONNECT);
+        $this->RegisterMessage($arr[0]->ID, VM_UPDATE);
+        $this->RegisterMessage($arr[1]->ID, VM_UPDATE);
+        $this->RegisterMessage($arr[2]->ID, VM_UPDATE);
+        $this->RegisterMessage($arr[3]->ID, VM_UPDATE);
+        $this->RegisterMessage($arr[4]->ID, VM_UPDATE);
+        $this->RegisterMessage($arr[5]->ID, VM_UPDATE);
 
         if($this->ReadPropertyBoolean("ModAlive")){
             //Timer ausschalten
