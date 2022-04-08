@@ -28,7 +28,8 @@
                     "add": "",
                     "edit": 
                     {
-                        "type": "ValidationTextBox"
+                        "type": "ValidationTextBox",
+                        "validate": ["Wohnzimmer", "Schlafzimmer","Kinderzimmer"]
                     }
                 },
                 {

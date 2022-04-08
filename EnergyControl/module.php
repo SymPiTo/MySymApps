@@ -122,6 +122,10 @@ ___________________________________________________________________________
  //       $this->RegisterMessage($this->InstanceID, FM_DISCONNECT);
 
         if($this->ReadPropertyBoolean("ModAlive")){
+            $arrString = $this->ReadPropertyString("PraesenzS");
+            $arr = json_decode($arrString);
+            
+            $this->SetValue("ID_Test", $arr[0]->Raum);
             //Splitter oder IO verbinden
  //           $this->ConnectParent("{8AA55C67-B28A-C67B-5332-99CCE8190ACA}");
             //Filter setzen – ForwardData wird nur aufgerufen wenn Filter passt (string $ErforderlicheRegexRegel )$this->SetForwardDataFilter(".*");  
