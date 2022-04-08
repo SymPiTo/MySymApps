@@ -73,7 +73,7 @@ ___________________________________________________________________________
         $variablenID = $this->RegisterVariableBoolean ("StatWohn", "Wohnung Person", '~Switch', 5);
         IPS_SetInfo ($variablenID, "WSS");
 
-        $variablenID = $this->RegisterVariableInteger ("NoPerson", "Anzahl Person");
+        $variablenID = $this->RegisterVariableInteger ("NrPerson", "Anzahl Person");
         IPS_SetInfo ($variablenID, "WSS");
         
 
@@ -297,7 +297,18 @@ ________________________________________________________________________________
                 
                 break;  
             case "Eingangstür":
-                
+                if(GetValue($id) == true){
+                    #Eingangstür öffnet
+                    #nur prüfen ob Wohnung leer war, dann kommt einer rein
+                    if(!$this->GetValue("StatWohn")){
+                        $no = $this->GetValue("NrPerson");
+                        $this->SetValue("NrPerson", ++$no);
+
+                    }
+                }
+                else{
+
+                }
                 break;                        
             default:
                 # code...
