@@ -77,6 +77,7 @@ ___________________________________________________________________________
         IPS_SetInfo ($variablenID, "WSS");
         
 
+        
         //Register Timer
         $this->RegisterTimer('T_WZ', 0, 'EC_checkEvent($_IPS[\'TARGET\'], "WZ");');
         $this->RegisterTimer('T_SZ', 0, 'EC_checkEvent($_IPS[\'TARGET\'], "SZ");');
