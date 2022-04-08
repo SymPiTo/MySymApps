@@ -197,7 +197,7 @@ ___________________________________________________________________________
                 foreach ($arr as $key => $value) {
                     $this->SendDebug($value->ID," == ".$SenderID);
                     if($value->ID == $SenderID){
-                        $setRoomStat($arr[$key]->Raum, $SenderID);
+                        $this->setRoomStat($arr[$key]->Raum, $SenderID);
                     }
                 }
                 break;
