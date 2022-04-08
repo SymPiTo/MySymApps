@@ -155,7 +155,7 @@
                     "edit": 
                     {
                         "type": "ValidationTextBox",
-                        "validate": "Wohnzimmer|Schlafzimmer|Kinderzimmer|Diele|Arbeitszimmer|Küche|Toilette|Eingangstür"
+                        "validate": "Alarmanlage"
                     }
                 },
                 {
