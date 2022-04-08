@@ -52,28 +52,36 @@ ___________________________________________________________________________
        // $this->RegisterProfiles();
        
         //Register Variables
-        $variablenID = $this->RegisterVariableBoolean ("StatRoom1", "Raum1 Person", '~Switch', 0);
+        $variablenID = $this->RegisterVariableBoolean ("StatWZ", "Wohnzimmer Person", '~Switch', 0);
         IPS_SetInfo ($variablenID, "WSS");
         
-        $variablenID = $this->RegisterVariableBoolean ("StatRoom2", "Raum2 Person", '~Switch', 1);
+        $variablenID = $this->RegisterVariableBoolean ("StatSZ", "Schlafzimmer Person", '~Switch', 1);
         IPS_SetInfo ($variablenID, "WSS");
 
-        $variablenID = $this->RegisterVariableBoolean ("StatRoom3", "Raum3 Person", '~Switch', 2);
+        $variablenID = $this->RegisterVariableBoolean ("StatKZ", "Kinderzimmer Person", '~Switch', 2);
         IPS_SetInfo ($variablenID, "WSS");
 
-        $variablenID = $this->RegisterVariableBoolean ("StatRoom4", "Raum4 Person", '~Switch', 3);
+        $variablenID = $this->RegisterVariableBoolean ("StatD", "Diele Person", '~Switch', 3);
         IPS_SetInfo ($variablenID, "WSS");
 
-        $variablenID = $this->RegisterVariableBoolean ("StatRoom5", "Raum5 Person", '~Switch', 4);
+        $variablenID = $this->RegisterVariableBoolean ("StatAZ", "Arbeitszimmer Person", '~Switch', 4);
         IPS_SetInfo ($variablenID, "WSS");
 
-        $variablenID = $this->RegisterVariableBoolean ("StatRoom6", "Raum6 Person", '~Switch', 5);
+        $variablenID = $this->RegisterVariableBoolean ("StatK", "Küche Person", '~Switch', 5);
         IPS_SetInfo ($variablenID, "WSS");
 
-   
-        $this->RegisterVariableString("ID_Test", "jkl");
-       
+        $variablenID = $this->RegisterVariableBoolean ("StatWohn", "Wohnung Person", '~Switch', 5);
+        IPS_SetInfo ($variablenID, "WSS");
 
+        
+
+        //Register Timer
+        $this->RegisterTimer('T_WZ', 0, 'EC_checkEvent($_IPS[\'TARGET\'], "WZ");');
+        $this->RegisterTimer('T_SZ', 0, 'EC_checkEvent($_IPS[\'TARGET\'], "SZ");');
+        $this->RegisterTimer('T_KZ', 0, 'EC_checkEvent($_IPS[\'TARGET\'], "KZ");');
+        $this->RegisterTimer('T_D', 0, 'EC_checkEvent($_IPS[\'TARGET\'], "D");');
+        $this->RegisterTimer('T_AZ', 0, 'EC_checkEvent($_IPS[\'TARGET\'], "AZ");');
+        $this->RegisterTimer('T_K', 0, 'EC_checkEvent($_IPS[\'TARGET\'], "K");');
         //IPS_SetInfo ($variablenID, "WSS");
         //$this->RegisterPropertyString("ID_Test", "MaxMustermann"); 
 
@@ -91,8 +99,7 @@ ___________________________________________________________________________
         IPS_SetInfo ($variablenID, "WSS");
         IPS_SetHidden($variablenID, true); //Objekt verstecken
 
-        //Register Timer
-        $this->RegisterTimer('Name', 0, '_PREFIX__Scriptname($_IPS[\'TARGET\']);');
+
 
         // Verbinde mit neu erstellten Splitter, falls noch keine Verbindung besteht
         $this->RequireParent("{_GUID-SPLITTER_}");
@@ -122,15 +129,13 @@ ___________________________________________________________________________
  //       $this->RegisterMessage($this->InstanceID, FM_DISCONNECT);
 
         if($this->ReadPropertyBoolean("ModAlive")){
-            $arrString = $this->ReadPropertyString("PraesenzS");
-            $arr = json_decode($arrString);
-            
-            $this->SetValue("ID_Test", $arr[0]->Raum);
-            //Splitter oder IO verbinden
- //           $this->ConnectParent("{8AA55C67-B28A-C67B-5332-99CCE8190ACA}");
-            //Filter setzen – ForwardData wird nur aufgerufen wenn Filter passt (string $ErforderlicheRegexRegel )$this->SetForwardDataFilter(".*");  
-            //Filter setzen – ReceiveData wird nur aufgerufen wenn Filter passt (string $ErforderlicheRegexRegel )$this->SetReceiveDataFilter(".*");  
- 
+            //Timer ausschalten
+            $this->SetTimerInterval("T_WZ", 0);
+            $this->SetTimerInterval("T_SZ", 0);
+            $this->SetTimerInterval("T_KZ", 0);
+            $this->SetTimerInterval("T_AZ", 0);
+            $this->SetTimerInterval("T_D", 0);
+            $this->SetTimerInterval("T_K", 0);
         }
         else {
             //Timer ausschalten
@@ -180,8 +185,37 @@ ___________________________________________________________________________
    public function MessageSink($TimeStamp, $SenderID, $Message, $Data) {
         //IPS_LogMessage("MessageSink", "Message from SenderID ".$SenderID." with Message ".$Message."\r\n Data: ".print_r($Data, true));
         switch ($Message) {
-            case IPS_KERNELSTARTED:
-      //          $this->KernelReady();
+            case VM_UPDATE:
+                
+                $arrString = $this->ReadPropertyString("PraesenzS");
+                $arr = json_decode($arrString);
+              
+                switch ($SenderID) {
+                    case $arr[0]->ID:
+                        # Person detektiert - Raum setzen/timer setzen
+                        # wenn Daten  = true, RaumVariable setzen
+                        # wenn Daten = false, Timer starten und bei Ablauf Raum auf 0 setzen
+                        $setRoomStat($arr[0]->Raum, $SenderID);
+                        break;
+                    case $arr[1]->ID:
+                        $setRoomStat($arr[1]->Raum, $SenderID);
+                        break;
+                    case $arr[2]->ID:
+                        $setRoomStat($arr[2]->Raum, $SenderID);
+                        break;
+                    case $arr[3]->ID:
+                        $setRoomStat($arr[3]->Raum, $SenderID);
+                        break;   
+                    case $arr[4]->ID:
+                        $setRoomStat($arr[4]->Raum, $SenderID);
+                        break;   
+                    case $arr[5]->ID:
+                        $setRoomStat($arr[5]->Raum, $SenderID);
+                        break;                          
+                    default:
+                        # code...
+                        break;
+                }
             break;
         }
     } //Function: MessageSink End
@@ -207,12 +241,127 @@ ________________________________________________________________________________
     Returns:    
         none
     ------------------------------------------------------------------------------  */
-    public function test(){
-        $arrString = $this->ReadPropertyString("PraesenzS");
-        $arr = json_decode($arrString);
-        $this->SetValue("ID_Test", $arr[0]->Raum);
-        return $arr;
+    public function setRoomStat($room, $id){
+        switch ($room) {
+            case "Wohnzimmer":
+                # Person detektiert - Raum setzen/timer setzen
+                # wenn Daten  = true, RaumVariable setzen
+                # wenn Daten = false, Timer starten und bei Ablauf Raum auf 0 setzen
+                if($this->GetValue($id) == true){
+                    $this->SetValue("StatWZ", true);
+                }
+                else{
+                    #WZ Timer starten 5min = 5*60000 = 300 000
+                    $this->SetTimerInterval("T_WZ", 300000);
+                } 
+                break;
+            case "Kinderzimmer":
+                if($this->GetValue($id) == true){
+                    $this->SetValue("StatKZ", true);
+                }
+                else{
+                    $this->SetTimerInterval("T_KZ", 300000);
+                }
+                
+                break;
+            case "Schlafzimmer":
+                if($this->GetValue($id) == true){
+                    $this->SetValue("StatSZ", true);
+                }
+                else{
+                    $this->SetTimerInterval("T_SZ", 300000);
+                }
+                
+                break;
+            case "Küche":
+                if($this->GetValue($id) == true){
+                    $this->SetValue("StatK", true);
+                }
+                else{
+                    $this->SetTimerInterval("T_K", 300000);
+                }
+                
+                break;   
+            case "Diele":
+                if($this->GetValue($id) == true){
+                    $this->SetValue("StatD", true);
+                }
+                else{
+                    $this->SetTimerInterval("T_D", 300000);
+                }
+                
+                break;   
+            case "Arbeitszimmer":
+                if($this->GetValue($id) == true){
+                    $this->SetValue("StatAZ", true);
+                }
+                else{
+                    $this->SetTimerInterval("T_AZ", 300000);
+                }
+                
+                break;                          
+            default:
+                # code...
+                break;
+        }
     }  //xxxx End
+
+    //-----------------------------------------------------------------------------
+    /* Function: xxxx
+    ...............................................................................
+    Beschreibung
+    ...............................................................................
+    Parameters: 
+        none
+    ...............................................................................
+    Returns:    
+        none
+    ------------------------------------------------------------------------------  */
+    public function checkEvent($room){
+        #Timer ist abgelaufen RaumStatus auf false setzen - keine Person im Raum seit 5 Minuten
+        switch ($room) {
+            case "WZ":
+                $this->SetValue("StatWZ", false);
+                $this->SetTimerInterval("T_WZ", 0);
+                break;
+            case "KZ":
+                $this->SetValue("StatKZ", false);
+                $this->SetTimerInterval("T_KZ", 0);
+                break;
+            case "SZ":
+                $this->SetValue("StatSZ", false);
+                $this->SetTimerInterval("T_SZ", 0);
+                break;
+            case "K":
+                $this->SetValue("StatK", false);
+                $this->SetTimerInterval("T_K", 0);
+                break;   
+            case "D":
+                $this->SetValue("StatD", false);
+                $this->SetTimerInterval("T_D", 0);
+                break;   
+            case "AZ":
+                $this->SetValue("StatAZ", false);
+                $this->SetTimerInterval("T_AZ", 0);
+                break;                          
+            default:
+                # code...
+                break;
+        }
+
+        #prüfen ob Wohnung leer
+        if(!$this->GetValue("StatWZ") AND !$this->GetValue("StatKZ") AND !$this->GetValue("StatSZ") AND !$this->GetValue("StatAZ") AND !$this->GetValue("StatK") AND !$this->GetValue("StatD") ){
+            #Wohnung ist leer nun können Licht ausgeschalten
+            #Temperatur runtergeregelt
+            #Alarmanlage aktiviert
+            #werden
+
+
+        }
+
+    }
+
+
 
 /* 
 _______________________________________________________________________
