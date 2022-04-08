@@ -228,14 +228,14 @@ ________________________________________________________________________________
     Returns:    
         none
     ------------------------------------------------------------------------------  */
-    public function setRoomStat($room, $id){
+    public function setRoomStat(string $room, int $id){
         $this->SendDebug("setRoomStat: ",$room." - ".$id);
         switch ($room) {
             case "Wohnzimmer":
                 # Person detektiert - Raum setzen/timer setzen
                 # wenn Daten  = true, RaumVariable setzen
                 # wenn Daten = false, Timer starten und bei Ablauf Raum auf 0 setzen
-                if($this->GetValue($id) == true){
+                if(GetValue($id) == true){
                     $this->SetValue("StatWZ", true);
                 }
                 else{
@@ -244,7 +244,7 @@ ________________________________________________________________________________
                 } 
                 break;
             case "Kinderzimmer":
-                if($this->GetValue($id) == true){
+                if(GetValue($id) == true){
                     $this->SetValue("StatKZ", true);
                 }
                 else{
@@ -253,7 +253,7 @@ ________________________________________________________________________________
                 
                 break;
             case "Schlafzimmer":
-                if($this->GetValue($id) == true){
+                if(GetValue($id) == true){
                     $this->SetValue("StatSZ", true);
                 }
                 else{
@@ -262,7 +262,7 @@ ________________________________________________________________________________
                 
                 break;
             case "Küche":
-                if($this->GetValue($id) == true){
+                if(GetValue($id) == true){
                     $this->SetValue("StatK", true);
                 }
                 else{
@@ -271,7 +271,7 @@ ________________________________________________________________________________
                 
                 break;   
             case "Diele":
-                if($this->GetValue($id) == true){
+                if(GetValue($id) == true){
                     $this->SetValue("StatD", true);
                 }
                 else{
@@ -280,7 +280,7 @@ ________________________________________________________________________________
                 
                 break;   
             case "Arbeitszimmer":
-                if($this->GetValue($id) == true){
+                if(GetValue($id) == true){
                     $this->SetValue("StatAZ", true);
                 }
                 else{
