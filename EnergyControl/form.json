@@ -45,7 +45,133 @@
             "values": [{
                 "ID": 0
             }]
-        }
+        },
+        {
+            "type": "Label",
+            "label": "Add/Delete Heizung variables"
+        },
+        {
+            "type": "List",
+            "name": "Heizung",
+            "caption": "HeizungRegler",
+            "rowCount": 6,
+            "add": true,
+            "delete": true,
+            "sort": {
+              "column": "ID",
+              "direction": "ascending"
+            },
+            "columns": 
+            [
+                {
+                    "name": "Raum",
+                    "label": "Raumbezeichnung",
+                    "width": "300px",
+                    "add": "",
+                    "edit": 
+                    {
+                        "type": "ValidationTextBox",
+                        "validate": "Wohnzimmer|Schlafzimmer|Kinderzimmer|Diele|Arbeitszimmer|Küche|Toilette|Eingangstür"
+                    }
+                },
+                {
+                    "name": "ID",
+                    "label": "ID",
+                    "width": "auto",
+                    "add": 0,
+                    "edit": {
+                        "type": "SelectVariable" 
+                    }
+                }
+            ],
+            "values": [{
+                "ID": 0
+            }]
+        },
+        {
+            "type": "Label",
+            "label": "Add/Delete Licht variables"
+        },
+        {
+            "type": "List",
+            "name": "Licht",
+            "caption": "Licht",
+            "rowCount": 6,
+            "add": true,
+            "delete": true,
+            "sort": {
+              "column": "ID",
+              "direction": "ascending"
+            },
+            "columns": 
+            [
+                {
+                    "name": "Raum",
+                    "label": "Raumbezeichnung",
+                    "width": "300px",
+                    "add": "",
+                    "edit": 
+                    {
+                        "type": "ValidationTextBox",
+                        "validate": "Wohnzimmer|Schlafzimmer|Kinderzimmer|Diele|Arbeitszimmer|Küche|Toilette|Eingangstür"
+                    }
+                },
+                {
+                    "name": "ID",
+                    "label": "ID",
+                    "width": "auto",
+                    "add": 0,
+                    "edit": {
+                        "type": "SelectVariable" 
+                    }
+                }
+            ],
+            "values": [{
+                "ID": 0
+            }]
+        },
+        {
+            "type": "Label",
+            "label": "Add/Delete Alarmanlage variables"
+        },
+        {
+            "type": "List",
+            "name": "Alarm",
+            "caption": "Alarmanlage",
+            "rowCount": 6,
+            "add": true,
+            "delete": true,
+            "sort": {
+              "column": "ID",
+              "direction": "ascending"
+            },
+            "columns": 
+            [
+                {
+                    "name": "Raum",
+                    "label": "Raumbezeichnung",
+                    "width": "300px",
+                    "add": "",
+                    "edit": 
+                    {
+                        "type": "ValidationTextBox",
+                        "validate": "Wohnzimmer|Schlafzimmer|Kinderzimmer|Diele|Arbeitszimmer|Küche|Toilette|Eingangstür"
+                    }
+                },
+                {
+                    "name": "ID",
+                    "label": "ID",
+                    "width": "auto",
+                    "add": 0,
+                    "edit": {
+                        "type": "SelectVariable" 
+                    }
+                }
+            ],
+            "values": [{
+                "ID": 0
+            }]
+        }     
     ],
     "status": [
 

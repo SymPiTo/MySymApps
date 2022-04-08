@@ -77,7 +77,7 @@ ___________________________________________________________________________
         IPS_SetInfo ($variablenID, "WSS");
         
 
-        
+
         //Register Timer
         $this->RegisterTimer('T_WZ', 0, 'EC_checkEvent($_IPS[\'TARGET\'], "WZ");');
         $this->RegisterTimer('T_SZ', 0, 'EC_checkEvent($_IPS[\'TARGET\'], "SZ");');
@@ -301,11 +301,12 @@ ________________________________________________________________________________
                 if(GetValue($id) == true){
                     #Eingangstür öffnet
                     #nur prüfen ob Wohnung leer war, dann kommt einer rein
-                    if(!$this->GetValue("StatWohn")){
+                    if($this->GetValue("StatWohn") == false){
                         $no = $this->GetValue("NrPerson");
-                        $this->SetValue("NrPerson", ++$no);
+                        $this->SetValue("NrPerson", 1);
 
                     }
+              
                 }
                 else{
 
@@ -362,6 +363,8 @@ ________________________________________________________________________________
 
         #prüfen ob Wohnung leer
         if(!$this->GetValue("StatWZ") AND !$this->GetValue("StatKZ") AND !$this->GetValue("StatSZ") AND !$this->GetValue("StatAZ") AND !$this->GetValue("StatK") AND !$this->GetValue("StatD") ){
+            $this->setValue("StatWohn", false);
+            $this->SetValue("NrPerson", 0);
             #Wohnung ist leer nun können Licht ausgeschalten
             #Temperatur runtergeregelt
             #Alarmanlage aktiviert
