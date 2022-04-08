@@ -229,7 +229,7 @@ ________________________________________________________________________________
         none
     ------------------------------------------------------------------------------  */
     public function setRoomStat($room, $id){
-        $this-SendDebug("setRoomStat: ",$room." - ".$id);
+        $this->SendDebug("setRoomStat: ",$room." - ".$id);
         switch ($room) {
             case "Wohnzimmer":
                 # Person detektiert - Raum setzen/timer setzen
