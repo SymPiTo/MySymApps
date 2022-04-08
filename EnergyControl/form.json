@@ -113,7 +113,7 @@
                     "edit": 
                     {
                         "type": "ValidationTextBox",
-                        "validate": "Wohnzimmer|Schlafzimmer|Kinderzimmer|Diele|Arbeitszimmer|Küche|Toilette|Eingangstür"
+                        "validate": "WohnzimmerF|WohnzimmerM|WohnzimmerT|Schlafzimmer|Kinderzimmer|Diele|Arbeitszimmer|Küche|Toilette|Eingangstür"
                     }
                 },
                 {
@@ -169,6 +169,7 @@
                 }
             ],
             "values": [{
+                "Raum": "Alarmanlage",
                 "ID": 0
             }]
         }     
