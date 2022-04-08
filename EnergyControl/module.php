@@ -40,7 +40,10 @@ ___________________________________________________________________________
         // zum umwandeln in ein Array 
         // $sensors = json_decode($this->ReadPropertyString("Battery"));
         $this->RegisterPropertyString("PraesenzS", "[]");
-
+        $this->RegisterPropertyString("Heizung", "[]");
+        $this->RegisterPropertyString("Licht", "[]");
+        $this->RegisterPropertyString("Alarm", "[]");
+        
        // $this->ReadPropertyFloat("NAME", 0.0);
 
        // $this->ReadPropertyInteger("NAME", 0);
