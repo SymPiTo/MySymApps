@@ -95,6 +95,7 @@ ___________________________________________________________________________
         //IPS_SetInfo ($variablenID, "WSS");
         //$this->RegisterPropertyString("ID_Test", "MaxMustermann"); 
 
+        
 
         /*
         $variablenID = $this->RegisterVariableFloat ($Ident, $Name, $Profil, $Position);
