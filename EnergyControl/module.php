@@ -79,7 +79,7 @@ ___________________________________________________________________________
         $variablenID = $this->RegisterVariableInteger ("NrPerson", "Anzahl Person");
         IPS_SetInfo ($variablenID, "WSS");
         
-        $variablenID = $this->RegisterVariableBoolean ("StatTür", "Eingangstür", '~Switch', 5);
+        $variablenID = $this->RegisterVariableBoolean ("StatDoor", "Eingangstür", '~Switch', 6);
         IPS_SetInfo ($variablenID, "WSS");
 
         //Register Timer
@@ -308,8 +308,8 @@ ________________________________________________________________________________
                 if(GetValue($id) == true){
                     #Eingangstür öffnet
                     #nur prüfen ob Wohnung leer war, dann kommt einer rein
-                    if($this->GetValue("StatTür") == false){
-                        $this->SetValue("StatTür", true);
+                    if($this->GetValue("StatDoor") == false){
+                        $this->SetValue("StatDoor", true);
 
                        
 
@@ -318,7 +318,7 @@ ________________________________________________________________________________
                 }
                 else{
                     #Tür war auf und geht wieder zu
-                    if($this->GetValue("StatTür") == true){
+                    if($this->GetValue("StatDoor") == true){
                         #prüfen ob in Diele Bewegung erkannt wird
                         $this->SetTimerInterval("T_Door", 10000);
                     }
