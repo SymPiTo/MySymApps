@@ -79,7 +79,8 @@ ___________________________________________________________________________
         $variablenID = $this->RegisterVariableInteger ("NrPerson", "Anzahl Person");
         IPS_SetInfo ($variablenID, "WSS");
         
-
+        $variablenID = $this->RegisterVariableBoolean ("StatTür", "Eingangstür", '~Switch', 5);
+        IPS_SetInfo ($variablenID, "WSS");
 
         //Register Timer
         $this->RegisterTimer('T_WZ', 0, 'EC_checkEvent($_IPS[\'TARGET\'], "WZ");');
@@ -88,6 +89,9 @@ ___________________________________________________________________________
         $this->RegisterTimer('T_D', 0, 'EC_checkEvent($_IPS[\'TARGET\'], "D");');
         $this->RegisterTimer('T_AZ', 0, 'EC_checkEvent($_IPS[\'TARGET\'], "AZ");');
         $this->RegisterTimer('T_K', 0, 'EC_checkEvent($_IPS[\'TARGET\'], "K");');
+
+        $this->RegisterTimer('T_Door', 0, 'EC_checkMovement($_IPS[\'TARGET\']);');
+
         //IPS_SetInfo ($variablenID, "WSS");
         //$this->RegisterPropertyString("ID_Test", "MaxMustermann"); 
 
@@ -128,7 +132,7 @@ ___________________________________________________________________________
     public function ApplyChanges(){
         //Never delete this line!
         parent::ApplyChanges();
-
+        $this->SetBuffer("buffer_cM", 0);
 
         if($this->ReadPropertyBoolean("ModAlive")){
             $arrString = $this->ReadPropertyString("PraesenzS");
@@ -304,15 +308,20 @@ ________________________________________________________________________________
                 if(GetValue($id) == true){
                     #Eingangstür öffnet
                     #nur prüfen ob Wohnung leer war, dann kommt einer rein
-                    if($this->GetValue("StatWohn") == false){
-                        $no = $this->GetValue("NrPerson");
-                        $this->SetValue("NrPerson", 1);
+                    if($this->GetValue("StatTür") == false){
+                        $this->SetValue("StatTür", true);
+
+                       
 
                     }
-              
+                
                 }
                 else{
-
+                    #Tür war auf und geht wieder zu
+                    if($this->GetValue("StatTür") == true){
+                        #prüfen ob in Diele Bewegung erkannt wird
+                        $this->SetTimerInterval("T_Door", 10000);
+                    }
                 }
                 break;                        
             default:
@@ -320,6 +329,40 @@ ________________________________________________________________________________
                 break;
         }
     }  //xxxx End
+
+    public function checkMovement(){
+        if($this->GetBuffer("buffer_cM")>120){
+
+        
+            if($StatD){
+
+                $this->SetValue("NrPerson", $no);
+                SetBuffer("buffer_PersIn");
+            }
+            SetBuffer("buffer_cM",GetBuffer("buffer_cM")+1);
+        }
+        else{
+            #timer ausschalten und auswerten
+            $this->SetTimerInterval("T_Door", 0);
+            if(GetBuffer("buffer_PersIn")){
+                #Person kam rein
+                $no = $this->GetValue("NrPerson");
+                $no = $No + 1;
+                if($no<0){
+                    $no = 0;
+                }
+            }
+            else{
+                #Person ging raus
+                $no = $this->GetValue("NrPerson");
+                $no = $No - 1;
+                if($no<0){
+                    $no = 0;
+                }
+            }
+
+        }
+    }
 
     //-----------------------------------------------------------------------------
     /* Function: xxxx
