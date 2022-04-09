@@ -332,8 +332,6 @@ ________________________________________________________________________________
 
     public function checkMovement(){
         if($this->GetBuffer("buffer_cM")>120){
-
-        
             if($StatD){
 
                 $this->SetValue("NrPerson", $no);
