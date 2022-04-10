@@ -95,7 +95,7 @@ ___________________________________________________________________________
         //IPS_SetInfo ($variablenID, "WSS");
         //$this->RegisterPropertyString("ID_Test", "MaxMustermann"); 
 
-        
+
 
         /*
         $variablenID = $this->RegisterVariableFloat ($Ident, $Name, $Profil, $Position);
@@ -143,7 +143,14 @@ ___________________________________________________________________________
                 $this->RegisterMessage($value->ID, VM_UPDATE);
             }
             
-         
+            #Variablen zurücksetzen
+            $this->SetValue("StatWZ", false);
+            $this->SetValue("StatSZ", false);
+            $this->SetValue("StatKZ", false);
+            $this->SetValue("StatK", false);
+            $this->SetValue("StatD", false);
+            $this->SetValue("StatAZ", false);
+            $this->SetValue("StatWohn", false);
 
             //Timer ausschalten
             $this->SetTimerInterval("T_WZ", 0);
