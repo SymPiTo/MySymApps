@@ -321,7 +321,7 @@ class MyRaspberryPi extends IPSModule
       SetValue($this->GetIDForIdent("ID_packages"), $data['packages']);
       SetValue($this->GetIDForIdent("ID_ip"),  $ip);
 if($this->ReadPropertyBoolean("IPS_Server")){
-  //SetValue($this->GetIDForIdent("ID_symcon"), $data['symcon']);
+  $this->SetValue("ID_symcon", $data['symcon']);
   SetValue($this->GetIDForIdent("ID_wss"), $data['websocketserver']);
 }
 
