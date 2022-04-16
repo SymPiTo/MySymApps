@@ -212,7 +212,7 @@ class MyRaspberryPi extends IPSModule
     public function RequestAction($Ident, $Value) {
          switch($Ident) {
             case "RPIServer":
-                SetValue($this->GetIDForIdent($Ident), $Value);
+              $this->SetValue($Ident, $Value);
                 if($this->getvalue($Ident)){
                   //RPI Monitor Service starten
                   exec("sudo /etc/init.d/rpimonitor start"); 
@@ -223,7 +223,7 @@ class MyRaspberryPi extends IPSModule
                 }
                 break;
             case "IpsServer":
-              SetValue($this->GetIDForIdent($Ident), $Value);
+              $this->SetValue($Ident, $Value);
               if($this->getvalue($Ident)){
                 //Symcon Service starten
                 exec("sudo /etc/init.d/symcon start"); 
@@ -299,30 +299,30 @@ class MyRaspberryPi extends IPSModule
           
       $data = json_decode($data, true); 
       $this->SendDebug('Update:DATA: ', $data, 0);
-      SetValue($this->GetIDForIdent("ID_cpuFreq"), $data['cpu_frequency']); 
-      SetValue($this->GetIDForIdent("ID_MemTotal"), $data['memory_available']);
-      SetValue($this->GetIDForIdent("ID_MemFree"), $data['memory_free']);
-      SetValue($this->GetIDForIdent("ID_SD_boot_used"), $data['sdcard_boot_used']);
-      SetValue($this->GetIDForIdent("ID_SD_root_used"), $data['sdcard_root_used']);
-      SetValue($this->GetIDForIdent("ID_Swap_used"), $data['swap_used']);
-      SetValue($this->GetIDForIdent("ID_CPU_Volt"), $data['cpu_voltage']);
+      $this->SetValue("ID_cpuFreq", $data['cpu_frequency']); 
+      $this->SetValue("ID_MemTotal", $data['memory_available']);
+      $this->SetValue("ID_MemFree", $data['memory_free']);
+      $this->SetValue("ID_SD_boot_used", $data['sdcard_boot_used']);
+      $this->SetValue("ID_SD_root_used", $data['sdcard_root_used']);
+      $this->SetValue("ID_Swap_used", $data['swap_used']);
+      $this->SetValue("ID_CPU_Volt", $data['cpu_voltage']);
       //SetValue($this->GetIDForIdent("ID_http"), $data['http']);
       //SetValue($this->GetIDForIdent("ID_https"), $data['https']);
-      SetValue($this->GetIDForIdent("ID_RPI_monitor"), $data['rpimonitor']);
-      SetValue($this->GetIDForIdent("ID_ssh"), $data['ssh']);
+      $this->SetValue("ID_RPI_monitor", $data['rpimonitor']);
+      $this->SetValue("ID_ssh", $data['ssh']);
 
-      SetValue($this->GetIDForIdent("ID_scal_Gov"), $data['scaling_governor']);
-      SetValue($this->GetIDForIdent("ID_CPU_Temp"), $data['soc_temp']);
-      SetValue($this->GetIDForIdent("ID_upgrade"), $data['upgrade']);
-      SetValue($this->GetIDForIdent("ID_UpTime"), json_encode($this->calc_uptime($data['uptime'])));
-      SetValue($this->GetIDForIdent("ID_CPU_load1"), $data['load1']);
-      SetValue($this->GetIDForIdent("ID_CPU_load5"), $data['load5']);
-      SetValue($this->GetIDForIdent("ID_CPU_load15"), $data['load15']);
-      SetValue($this->GetIDForIdent("ID_packages"), $data['packages']);
-      SetValue($this->GetIDForIdent("ID_ip"),  $ip);
+      $this->SetValue("ID_scal_Gov", $data['scaling_governor']);
+      $this->SetValue("ID_CPU_Temp", $data['soc_temp']);
+      $this->SetValue("ID_upgrade", $data['upgrade']);
+      $this->SetValue("ID_UpTime", json_encode($this->calc_uptime($data['uptime'])));
+      $this->SetValue("ID_CPU_load1", $data['load1']);
+      $this->SetValue("ID_CPU_load5", $data['load5']);
+      $this->SetValue("ID_CPU_load15", $data['load15']);
+      $this->SetValue("ID_packages", $data['packages']);
+      $this->SetValue("ID_ip",  $ip);
 if($this->ReadPropertyBoolean("IPS_Server")){
   $this->SetValue("ID_symcon", $data['symcon']);
-  SetValue($this->GetIDForIdent("ID_wss"), $data['websocketserver']);
+  $this->SetValue("ID_wss", $data['websocketserver']);
 }
 
     }
@@ -341,7 +341,7 @@ if($this->ReadPropertyBoolean("IPS_Server")){
         //IP Symcon Service läuft  
         @fclose($connection);
         $this->SetValue('IpsServer', true);  
-        SetValue($this->GetIDForIdent("ID_IPS_Version"),  IPS_GetKernelVersion());
+        $this->SetValue("ID_IPS_Version",  IPS_GetKernelVersion());
         $kernelStat = IPS_GetKernelRunlevel();
         switch ($kernelStat) {
           case KR_CREATE:
@@ -364,7 +364,7 @@ if($this->ReadPropertyBoolean("IPS_Server")){
             break;
         }
       
-        SetValue($this->GetIDForIdent("ID_KernelStat"),  $ks);
+        $this->SetValue("ID_KernelStat",  $ks);
       }
         
     }  
