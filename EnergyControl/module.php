@@ -356,12 +356,12 @@ ________________________________________________________________________________
                 $this->SetValue("NrPerson", $no);
                 SetBuffer("buffer_PersIn");
             }
-            SetBuffer("buffer_cM",GetBuffer("buffer_cM")+1);
+            SetBuffer("buffer_cM",$this->GetBuffer("buffer_cM")+1);
         }
         else{
             #timer ausschalten und auswerten
             $this->SetTimerInterval("T_Door", 0);
-            if(GetBuffer("buffer_PersIn")){
+            if($this->GetBuffer("buffer_PersIn")){
                 #Person kam rein
                 $no = $this->GetValue("NrPerson");
                 $no = $No + 1;
