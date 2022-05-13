@@ -2,11 +2,11 @@
 /***************************************************************************
  * Title: EnergyControl
  *
- * Author: _AUTOR_
+ * Author: PiTo
  * 
  * GITHUB: <https://github.com/SymPiTo/MySymApps/tree/master/EnergyControl>
  * 
- * Version: _VERSION_
+ * Version: 0.1
  *************************************************************************** */
 //require_once __DIR__ . '/../libs/_TRAIT_';
 require_once __DIR__ . '/../libs/traits.php';  // diverse Klassen
