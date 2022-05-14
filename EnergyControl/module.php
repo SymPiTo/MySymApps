@@ -443,7 +443,11 @@ ________________________________________________________________________________
 
 /* 
 _______________________________________________________________________
+<<<<<<< Updated upstream
     Section: Private Funtions
+=======
+    Section: Private Functions
+>>>>>>> Stashed changes
     Die folgenden Funktionen sind nur zur internen Verwendung verfügbar
     Hilfsfunktionen
 ______________________________________________________________________
