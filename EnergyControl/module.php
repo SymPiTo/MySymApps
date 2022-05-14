@@ -92,6 +92,8 @@ ___________________________________________________________________________
 
         $this->RegisterTimer('T_Door', 0, 'EC_checkMovement($_IPS[\'TARGET\']);');
 
+        $this->RegisterTimer('T_Appartment', 0, 'EC_emptyAppartment($_IPS[\'TARGET\']);');
+
         //IPS_SetInfo ($variablenID, "WSS");
         //$this->RegisterPropertyString("ID_Test", "MaxMustermann"); 
 
@@ -159,6 +161,7 @@ ___________________________________________________________________________
             $this->SetTimerInterval("T_AZ", 0);
             $this->SetTimerInterval("T_D", 0);
             $this->SetTimerInterval("T_K", 0);
+            $this->SetTimerInterval("T_Appartment, 0");
         }
         else {
             //Timer ausschalten
@@ -427,8 +430,9 @@ ________________________________________________________________________________
 
         #prüfen ob Wohnung leer
         if(!$this->GetValue("StatWZ") AND !$this->GetValue("StatKZ") AND !$this->GetValue("StatSZ") AND !$this->GetValue("StatAZ") AND !$this->GetValue("StatK") AND !$this->GetValue("StatD") ){
-            $this->setValue("StatWohn", false);
-            $this->SetValue("NrPerson", 0);
+            $this->setTimerInterval('T_Appartment', 30000); //Timer auf 5 Minuten setzen
+
+            
             #Wohnung ist leer nun können Licht ausgeschalten
             #Temperatur runtergeregelt
             #Alarmanlage aktiviert
@@ -438,7 +442,21 @@ ________________________________________________________________________________
         }
 
     }
-
+    //-----------------------------------------------------------------------------
+    /* Function: xxxx
+    ...............................................................................
+    Beschreibung
+    ...............................................................................
+    Parameters: 
+        none
+    ...............................................................................
+    Returns:    
+        none
+    ------------------------------------------------------------------------------  */
+    public function emptyAppartment(){
+        $this->setValue("StatWohn", false);
+        $this->SetValue("NrPerson", 0);
+    }
 
 
 /* 
