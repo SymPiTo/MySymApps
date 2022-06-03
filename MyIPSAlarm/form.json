@@ -11,12 +11,12 @@
     },
     {
       "name": "FTPServer",
-      "type": "ValidationTextBox",
+      "type": "PasswordTextBox",
       "caption": "FTP_Server"
       },
     {
       "name": "FTPUser",
-      "type": "ValidationTextBox",
+      "type": "PasswordTextBox",
       "caption": "FTP_User"
       },
     {
