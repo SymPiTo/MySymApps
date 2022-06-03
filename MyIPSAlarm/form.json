@@ -33,12 +33,16 @@
       "name": "AlexaTTS",
       "type": "CheckBox",
       "caption": "Alexa TTS"
-
     },
     {
       "type": "SelectInstance",
       "name": "EchoID",
       "caption": "Alexa Echo Gerät"
+    },
+    {
+      "name": "FKBCamShot",
+      "type": "CheckBox",
+      "caption": "CamShot"
     },
     {
       "type": "Label",
@@ -98,7 +102,7 @@
     },
     {
       "type": "Label",
-      "label": "Add/Delete Window Open variables, which activate the alarm"
+      "label": "Add/Delete Window Open variables, which trigger the alarm"
     },
     {
       "type": "List",

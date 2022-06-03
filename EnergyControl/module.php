@@ -161,7 +161,7 @@ ___________________________________________________________________________
             $this->SetTimerInterval("T_AZ", 0);
             $this->SetTimerInterval("T_D", 0);
             $this->SetTimerInterval("T_K", 0);
-            $this->SetTimerInterval("T_Appartment, 0");
+            $this->SetTimerInterval("T_Appartment", 0);
         }
         else {
             //Timer ausschalten
@@ -430,7 +430,7 @@ ________________________________________________________________________________
 
         #prüfen ob Wohnung leer
         if(!$this->GetValue("StatWZ") AND !$this->GetValue("StatKZ") AND !$this->GetValue("StatSZ") AND !$this->GetValue("StatAZ") AND !$this->GetValue("StatK") AND !$this->GetValue("StatD") ){
-            $this->setTimerInterval('T_Appartment', 30000); //Timer auf 5 Minuten setzen
+            $this->setTimerInterval('T_Appartment', 1800000); //Timer auf 30 Minuten setzen
 
             
             #Wohnung ist leer nun können Licht ausgeschalten

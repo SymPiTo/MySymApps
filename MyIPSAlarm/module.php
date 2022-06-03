@@ -117,7 +117,8 @@ class MyAlarm extends IPSModule
         IPS_SetInfo ($variablenID, "WSS");
         $variablenID = $this->RegisterVariableString("A_SecWarning", "Security Meldung");  
         IPS_SetInfo ($variablenID, "WSS");    
-        
+        $this->RegisterVariableInteger("A_No", "BildNummer");
+
             //HTML Box anlegen
              $this->RegisterVariableString("A_SecKeyboard", "Security Keyboard"); 
                    
@@ -427,8 +428,9 @@ class MyAlarm extends IPSModule
             if (password_verify($password, $hash)) {
                 $this->resetCode();
                 $this->setvalue("A_SecWarning","Code wurde akzeptiert."); 
-                SetValueBoolean($this->GetIDForIdent("A_SecActivate"),false);
-                SetValueBoolean($this->GetIDForIdent("A_SecActive"),false);
+                $this->setvalue("A_SecActivate", false);
+                $this->setvalue("A_SecActive",false);
+                $this->setvalue("A_AlarmCode", 0);
                 
                 if($this->ReadPropertyBoolean("AlexaTTS")){
                     //Sprachausgabe
@@ -676,7 +678,34 @@ class MyAlarm extends IPSModule
                     $ltv = getvalue($lastTriggerVarID);
                     //AlarmCode auf 2 setzen = Einbruch
                     $this->setvalue("A_AlarmCode", 2);
-                    
+                    /* -------------- Cam-Bild erstellen und auf Webseite hochladen ------------- */
+                    if($this->ReadPropertyBoolean("FKBCamShot")){
+                        
+                        $url = "http://192.168.178.6:2323/?cmd=getCamshot&password=sumatra";
+                        $image = file("$url");
+                        file_put_contents('flower.jpg', $image);
+                        $ftp_server="www.tovipi-beck.de";
+                        $ftp_user_name="2006-963";
+                        $ftp_user_pass="Charlybrown_0812";
+                        $no = $this->getvalue("A_No");
+                        $remote_file = 'test'.$no.'.jpg';
+                        // Verbindung aufbauen
+                        $ftp = ftp_connect($ftp_server);
+                        // Login mit Benutzername und Passwort
+                        $login_result = ftp_login($ftp, $ftp_user_name, $ftp_user_pass);
+                        // Schalte passiven Modus ein
+                        ftp_pasv($ftp, true);
+                        // Lade eine Datei hoch
+                        if (ftp_put($ftp, $remote_file, "flower.jpg", FTP_BINARY)) {
+                            //echo " erfolgreich hochgeladen\n";
+                            $this->SetValue("A_No", $no+1);
+                        } else {
+                            //echo "Ein Fehler trat beim Hochladen von  auf\n";
+                        }
+                        // Verbindung schließen
+                        ftp_close($ftp);
+                    }
+
                     //Meldung in Log File schreiben.
                     $text = "Unbefugter Zugang zur Wohnung. ";
                     $array = "wurde erkannt.";
@@ -702,7 +731,7 @@ class MyAlarm extends IPSModule
             }
         }     
 
-        /* --------------------------cryp password
+        /* --------------------------crypt password
         ...............................................................................
         verschlüsselt ein eingebenes Passort und generiert Code
         ...............................................................................
