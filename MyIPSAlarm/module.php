@@ -3,7 +3,7 @@
 require_once(__DIR__ . "/../libs/NetworkTraits1.php");
 require_once(__DIR__ . "/../libs/MyTraits1.php");
 
-/** ============================================================================
+/* ============================================================================
  * Title: Alarm for MyIPS
  * author PiTo
  * 
