@@ -687,9 +687,9 @@ class MyAlarm extends IPSModule
                         $url = "http://192.168.178.6:2323/?cmd=getCamshot&password=sumatra";
                         $image = file("$url");
                         file_put_contents('flower.jpg', $image);
-                        $ftp_server= ;
-                        $ftp_user_name= ;
-                        $ftp_user_pass= ;
+                        $ftp_server= $this->ReadPropertyInteger("FTPServer") ;
+                        $ftp_user_name= $this->ReadPropertyInteger("FTPUser");
+                        $ftp_user_pass= $this->ReadPropertyInteger("FTPPasswort");
                         $no = $this->getvalue("A_No");
                         $remote_file = 'test'.$no.'.jpg';
                         // Verbindung aufbauen
