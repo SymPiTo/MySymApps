@@ -78,6 +78,9 @@ class MyAlarm extends IPSModule
             $this->RegisterPropertyString("Password", "");
             $this->RegisterPropertyString("WinOpen", "[]");
             
+            $this->RegisterPropertyString("FTPServer", "");
+            $this->RegisterPropertyString("FTPUser", "");
+            $this->RegisterPropertyString("Password", "");
           
         //Integer Variable anlegen
         //integer RegisterVariableInteger ( string §Ident, string §Name, string §Profil, integer §Position )
@@ -684,9 +687,9 @@ class MyAlarm extends IPSModule
                         $url = "http://192.168.178.6:2323/?cmd=getCamshot&password=sumatra";
                         $image = file("$url");
                         file_put_contents('flower.jpg', $image);
-                        $ftp_server="www.tovipi-beck.de";
-                        $ftp_user_name="2006-963";
-                        $ftp_user_pass="Charlybrown_0812";
+                        $ftp_server= ;
+                        $ftp_user_name= ;
+                        $ftp_user_pass= ;
                         $no = $this->getvalue("A_No");
                         $remote_file = 'test'.$no.'.jpg';
                         // Verbindung aufbauen

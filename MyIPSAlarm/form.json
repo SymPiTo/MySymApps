@@ -45,6 +45,21 @@
       "caption": "CamShot"
     },
     {
+      "name": "FTPServer",
+      "type": "PasswordTextBox",
+      "caption": "FTP_Server"
+      },
+    {
+      "name": "FTPUser",
+      "type": "PasswordTextBox",
+      "caption": "FTP_User"
+      },
+    {
+    "name": "FTPPassword",
+    "type": "PasswordTextBox",
+    "caption": "FTP_Password"
+    },
+    {
       "type": "Label",
       "label": "Add/Delete Water sensor variables, which activate the alarm"
     },
