@@ -79,7 +79,7 @@ class MyAlarm extends IPSModule
             $this->RegisterPropertyString("WinOpen", "[]");
 
   
-            $this->RegisterPropertyString("Password", "");
+            $this->RegisterPropertyString("FTPPassword", "");
           
         //Integer Variable anlegen
         //integer RegisterVariableInteger ( string §Ident, string §Name, string §Profil, integer §Position )
