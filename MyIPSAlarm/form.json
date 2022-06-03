@@ -5,6 +5,26 @@
       "caption": "Password"
     },
     {
+      "name": "FKBCamShot",
+      "type": "CheckBox",
+      "caption": "CamShot"
+    },
+    {
+      "name": "FTPServer",
+      "type": "ValidationTextBox",
+      "caption": "FTP_Server"
+      },
+    {
+      "name": "FTPUser",
+      "type": "ValidationTextBox",
+      "caption": "FTP_User"
+      },
+    {
+    "name": "FTPPassword",
+    "type": "PasswordTextBox",
+    "caption": "FTP_Password"
+    },
+    {
       "type": "Label",
       "label": "Modul Telegram verwenden."
     },

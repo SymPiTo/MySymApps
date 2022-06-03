@@ -77,7 +77,10 @@ class MyAlarm extends IPSModule
             $this->RegisterPropertyString("WaterSensors", "[]");
             $this->RegisterPropertyString("Password", "");
             $this->RegisterPropertyString("WinOpen", "[]");
-            
+
+            $this->RegisterPropertyString("FTPServer", "");
+            $this->RegisterPropertyString("FTPUser", "");
+            $this->RegisterPropertyString("Password", "");
           
         //Integer Variable anlegen
         //integer RegisterVariableInteger ( string §Ident, string §Name, string §Profil, integer §Position )
@@ -676,6 +679,33 @@ class MyAlarm extends IPSModule
                     $ltv = getvalue($lastTriggerVarID);
                     //AlarmCode auf 2 setzen = Einbruch
                     $this->setvalue("A_AlarmCode", 2);
+                    /* -------------- Cam-Bild erstellen und auf Webseite hochladen ------------- */
+                    if($this->ReadPropertyBoolean("FKBCamShot")){
+                        
+                        $url = "http://192.168.178.6:2323/?cmd=getCamshot&password=sumatra";
+                        $image = file("$url");
+                        file_put_contents('flower.jpg', $image);
+                        $ftp_server= $this->ReadPropertyInteger("FTPServer") ;
+                        $ftp_user_name= $this->ReadPropertyInteger("FTPUser");
+                        $ftp_user_pass= $this->ReadPropertyInteger("FTPPasswort");
+                        $no = $this->getvalue("A_No");
+                        $remote_file = 'test'.$no.'.jpg';
+                        // Verbindung aufbauen
+                        $ftp = ftp_connect($ftp_server);
+                        // Login mit Benutzername und Passwort
+                        $login_result = ftp_login($ftp, $ftp_user_name, $ftp_user_pass);
+                        // Schalte passiven Modus ein
+                        ftp_pasv($ftp, true);
+                        // Lade eine Datei hoch
+                        if (ftp_put($ftp, $remote_file, "flower.jpg", FTP_BINARY)) {
+                            //echo " erfolgreich hochgeladen\n";
+                            $this->SetValue("A_No", $no+1);
+                        } else {
+                            //echo "Ein Fehler trat beim Hochladen von  auf\n";
+                        }
+                        // Verbindung schließen
+                        ftp_close($ftp);
+                    }
                     
                     //Meldung in Log File schreiben.
                     $text = "Unbefugter Zugang zur Wohnung. ";
