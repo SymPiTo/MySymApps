@@ -10,16 +10,6 @@
       "caption": "CamShot"
     },
     {
-      "name": "FTPServer",
-      "type": "PasswordTextBox",
-      "caption": "FTP_Server"
-      },
-    {
-      "name": "FTPUser",
-      "type": "PasswordTextBox",
-      "caption": "FTP_User"
-      },
-    {
     "name": "FTPPassword",
     "type": "PasswordTextBox",
     "caption": "FTP_Password"
