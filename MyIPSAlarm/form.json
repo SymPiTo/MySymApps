@@ -46,13 +46,23 @@
 
     },
     {
+      "type": "Label",
+      "label": "Webfront anlegen."
+    },
+    {
+      "name": "A_Webfront",
+      "type": "CheckBox",
+      "caption": "Webfront"
+
+    },
+    {
       "type": "SelectInstance",
       "name": "EchoID",
       "caption": "Alexa Echo Gerät"
     },
     {
       "type": "Label",
-      "label": "Add/Delete Water sensor variables, which activate the alarm"
+      "label": "Add/Delete Water sensor variables, which trigger the alarm"
     },
     {
       "type": "List",
@@ -80,7 +90,7 @@
     },
     {
       "type": "Label",
-      "label": "Add/Delete Battery sensor variables, which activate the alarm"
+      "label": "Add/Delete Battery sensor variables, which trigger the alarm"
     },
     {
       "type": "List",
@@ -108,7 +118,7 @@
     },
     {
       "type": "Label",
-      "label": "Add/Delete Window Open variables, which activate the alarm"
+      "label": "Add/Delete Window Open variables, which trigger the alarm"
     },
     {
       "type": "List",
@@ -136,7 +146,7 @@
     },
     {
       "type": "Label",
-      "label": "Add/Delete target variables, which react on the alarm"
+      "label": "Add/Delete target variables, which trigger the alarm"
     },
     {
       "type": "List",
