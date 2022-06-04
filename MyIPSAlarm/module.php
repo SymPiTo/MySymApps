@@ -4,23 +4,50 @@ require_once(__DIR__ . "/../libs/NetworkTraits1.php");
 require_once(__DIR__ . "/../libs/MyTraits1.php");
 
 /* ============================================================================
- * Title: Alarm for MyIPS
- * author PiTo
+ * Title:  Alarm for MyIPS
+ * Author: PiTo
  * 
  * GITHUB = <https://github.com/SymPiTo/MySymCodes/tree/master/MyIPSAlarm>
  * 
- * Version:1.0.2019.02.02
+ * Version: 1.0.2022.06.04
+ * 
  =============================================================================== */
-//Class: MyAlarm
+ /*
+ Section: Beschreibung
+   Das Modul dient zum Erzeugen von Sammel-Alarmen für Security, Batterie, Wasser.
+   Trigger Sensoren können diesen zugeordnet werden.
+
+   Es beinhaltet folgende Einheiten: 
+
+       - *Alarmanlage*
+       Wird deaktiviert mit Zahlenfeld (Code)
+       Trigger können über Auswahlliste eingebunden werden.
+       erkannter Alarm wird als: 
+            * TTS (Text to Speach)
+            * Telegram message
+            * Camshot (1000 Bilder auf Raspi gespeichert)
+    
+       - *Batterie Alarm*
+       Trigger können über Auswahlliste eingebunden werden
+       
+       - *Wasser Alarm*   
+       Trigger können über Auswahlliste eingebunden werden.
+*/
+/* Class: Class MyAlarm
+    *TRAIT*
+
+     - NetworkTraits1.php 
+     - MyTraits1.php
+*/     
 class MyAlarm extends IPSModule
 {
-   //externe Klasse einbinden - ueberlagern mit TRAIT.
+   
     use MyDebugHelper1,
         MyLogger1;
     
     /* 
     _______________________________________________________________________ 
-     Section: Internal Modul Funtions
+     Section: Internal Modul Functions
      Die folgenden Funktionen sind Standard Funktionen zur Modul Erstellung.
     _______________________________________________________________________ 
      */
@@ -51,7 +78,7 @@ class MyAlarm extends IPSModule
     
     IPS Variable:
      * A_SecActive          -   Status Alarmanlage aktiv (Bool) Alarmanlage hat ausgelöst
-     *  
+     * A_No                 -   Cam Bild Nummer 
     IPS Action Variable:
      * A_AlarmCode          -   Alarm.Code (integer)
      * A_SecActivate        -   Action Variable activate Alarmanlage (Bool)
@@ -98,6 +125,8 @@ class MyAlarm extends IPSModule
         IPS_SetInfo ($variablenID, "WSS");   
         //Alexa Sprachbefehl Trigger
         $this->RegisterVariableBoolean("Alexa_SecActivate", "Alexa Alarmanlage aktivieren");
+                //CanShot aktivieren
+                $this->RegisterPropertyBoolean("FKBCamShot", false);
         //TTS Trigger
         $this->RegisterPropertyBoolean("AlexaTTS", false);
         //Telegram Messenger
@@ -105,6 +134,7 @@ class MyAlarm extends IPSModule
         //Webfront anlegen
         $this->RegisterPropertyBoolean("A_Webfront", true);
         
+        $this->RegisterVariableInteger("A_No", "Bildnummer", "");
         
         //String Variable anlegen
         //RegisterVariableString (  §Ident,  §Name, §Profil, §Position )
@@ -349,7 +379,7 @@ class MyAlarm extends IPSModule
     }
     
     /* ======================================================================================================================
-     Section: Public Funtions
+     Section: Public Functions
      Die folgenden Funktionen stehen automatisch zur Verfügung, wenn das Modul über die "Module Control" eingefügt wurden.
      Die Funktionen werden, mit dem selbst eingerichteten Prefix, in PHP und JSON-RPC wie folgt zur Verfügung gestellt:
     
@@ -377,13 +407,13 @@ class MyAlarm extends IPSModule
         /* Function: receiveCode
         ...............................................................................
         Beschreibung:
-         * empfängt zeichen und schribt sie in Variable 
+         * empfängt Zeichen und schreibt sie in Variable "A_SecCode"
         ...............................................................................
         Parameters: 
-             key = Zahlen Code
+             $key  Zahlen Code
         ...............................................................................
         Returns:    
-            none
+            
         ------------------------------------------------------------------------------  */
         public function receiveCode(string $key){
             $code = $this->getvalue("A_SecCode");
@@ -393,7 +423,7 @@ class MyAlarm extends IPSModule
         //-----------------------------------------------------------------------------
         /* Function: resetCode
         ...............................................................................
-        Beschreibung
+        Beschreibung:
             löscht den eingegebenen ZahlenCode.
         ...............................................................................
         Parameters: 
@@ -409,7 +439,7 @@ class MyAlarm extends IPSModule
         //-----------------------------------------------------------------------------
         /* Function: checkCode
         ...............................................................................
-        Beschreibung
+        Beschreibung:
             überprüft den hash Code des eingegeben Codes mit dem Passwort
         ...............................................................................
         Parameters: 
@@ -418,7 +448,7 @@ class MyAlarm extends IPSModule
         Returns:    
             none
         ------------------------------------------------------------------------------  */
-        public function checkCode($password=""){
+        public function checkCode(string $password = ""){
             if ($password== ""){
                 $password = $this->getvalue("A_SecCode");
             }
@@ -429,9 +459,10 @@ class MyAlarm extends IPSModule
             if (password_verify($password, $hash)) {
                 $this->resetCode();
                 $this->setvalue("A_SecWarning","Code wurde akzeptiert."); 
-                SetValueBoolean($this->GetIDForIdent("A_SecActivate"),false);
-                SetValueBoolean($this->GetIDForIdent("A_SecActive"),false);
-                
+                $this->SetValue("A_SecActivate",false);
+                $this->SetValue("A_SecActive",false);
+                $this->SetValue("A_AlarmCode",0);
+
                 if($this->ReadPropertyBoolean("AlexaTTS")){
                     //Sprachausgabe
                     $text_to_speech = "Code wurde akzeptiert";
@@ -455,7 +486,7 @@ class MyAlarm extends IPSModule
         //-----------------------------------------------------------------------------
         /* Function: activateSecAlarm
         ...............................................................................
-        Beschreibung
+        Beschreibung:
             aktiviert die Alarmanlage
         ...............................................................................
         Parameters: 
@@ -485,7 +516,8 @@ class MyAlarm extends IPSModule
         /* ----------------------------------------------------------------------------
          Function: WaterAlarm
         ...............................................................................
-        Erzeugt einen Alarm bei Wasser oder Feuchte
+        Beschreibung:
+            Erzeugt einen Alarm bei Wasser oder Feuchte
         ...............................................................................
         Parameters: 
             none.
@@ -543,7 +575,8 @@ class MyAlarm extends IPSModule
         /* ----------------------------------------------------------------------------
          Function: BatAlarm
         ...............................................................................
-        Erzeugt einen Alarm bei zu schwacher Batterie
+        Beschreibung:
+            Erzeugt einen Alarm bei zu schwacher Batterie
         ...............................................................................
         Parameters: 
             none.
@@ -596,7 +629,8 @@ class MyAlarm extends IPSModule
         /* ----------------------------------------------------------------------------
          Function: WinOpenAlarm
         ...............................................................................
-        Erzeugt einen Alarm wenn Fenster zu lange auf ist
+        Beschreibung:
+            Erzeugt einen Alarm wenn Fenster zu lange auf ist
         ...............................................................................
         Parameters: 
             none.
@@ -649,7 +683,8 @@ class MyAlarm extends IPSModule
         /* ----------------------------------------------------------------------------
          Function: SecurityAlarm
         ...............................................................................
-        Erzeugt einen Alarm bei ansprechen von Alarm Sensoren
+        Beschreibung:
+            Erzeugt einen Alarm bei ansprechen von Alarm Sensoren
         ...............................................................................
         Parameters: 
             none.
@@ -681,11 +716,23 @@ class MyAlarm extends IPSModule
                     /* -------------- Cam-Bild erstellen und auf Webseite hochladen ------------- */
                     if($this->ReadPropertyBoolean("FKBCamShot")){
                         
+                        $no = $this->GetValue("A_No"); 
+                        if ($no > 1000){
+                            $no = 0;
+                            $this->SetValue("A_No", 0);
+                        }
+                        else{
+                            $this->SetValue("A_No", $no +1);
+                        }
+                         
                         $url = "http://192.168.178.6:2323/?cmd=getCamshot&password=sumatra";
                         $image = file("$url");
-                        file_put_contents('flower.jpg', $image);
+                        file_put_contents('/home/pi/pi-share/Einbrecher'.$no.'.jpg', $image);
+                        
+                        //FTP funktioniert nur als script
+                        /*
                         $ftp_server= "www.tovipi-beck.de" ;
-                        $ftp_user_name= "2006-926";
+                        $ftp_user_name= "2006-963";
                         $ftp_user_pass= $this->ReadPropertyInteger("FTPPasswort");
                         $no = $this->getvalue("A_No");
                         $remote_file = 'test'.$no.'.jpg';
@@ -696,16 +743,22 @@ class MyAlarm extends IPSModule
                         // Schalte passiven Modus ein
                         ftp_pasv($ftp, true);
                         // Lade eine Datei hoch
-                        if (ftp_put($ftp, $remote_file, "flower.jpg", FTP_BINARY)) {
+                        if (ftp_put($ftp, $remote_file, "/var/lib/symcon/scripts/flower.jpg", FTP_BINARY)) {
                             //echo " erfolgreich hochgeladen\n";
+                            if ($no > 100){
+                                $no = 0;
+                            }
                             $this->SetValue("A_No", $no+1);
+                            
                         } else {
                             //echo "Ein Fehler trat beim Hochladen von  auf\n";
                         }
                         // Verbindung schließen
                         ftp_close($ftp);
+                         */
                     }
-                    
+                   
+
                     //Meldung in Log File schreiben.
                     $text = "Unbefugter Zugang zur Wohnung. ";
                     $array = "wurde erkannt.";
@@ -731,12 +784,15 @@ class MyAlarm extends IPSModule
             }
         }     
 
-        /* --------------------------crypt password
+     
+        /* ----------------------------------------------------------------------------
+         Function: cryptPW
         ...............................................................................
-        verschlüsselt ein eingebenes Passort und generiert Code
+        Beschreibung:
+            verschlüsselt ein eingebenes Passwort und generiert Code
         ...............................................................................
         Parameters: 
-            Password as  String 
+            Password - Eingabecode
         ..............................................................................
         Returns:   
              none
@@ -758,7 +814,8 @@ class MyAlarm extends IPSModule
         /* ----------------------------------------------------------------------------
          Function: RegisterProfile
         ...............................................................................
-        Erstellt ein neues Profil und ordnet es einer Variablen zu.
+        Beschreibung:
+            Erstellt ein neues Profil und ordnet es einer Variablen zu.
         ...............................................................................
         Parameters: 
             $Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize, $Digits, $Vartype, $VarIdent, $Assoc
@@ -794,7 +851,8 @@ class MyAlarm extends IPSModule
         /* ----------------------------------------------------------------------------
          Function: GetIPSVersion
         ...............................................................................
-        gibt die instalierte IPS Version zurück
+        Beschreibung:
+            gibt die instalierte IPS Version zurück
         ...............................................................................
         Parameters: 
             none
@@ -832,7 +890,8 @@ class MyAlarm extends IPSModule
     /* --------------------------------------------------------------------------- 
     Function: RegisterEvent
     ...............................................................................
-    legt einen Event an wenn nicht schon vorhanden
+    Beschreibung:
+        legt einen Event an wenn nicht schon vorhanden
       Beispiel:
       ("Wochenplan", "SwitchTimeEvent".$this->InstanceID, 2, $this->InstanceID, 20);  
       ...............................................................................
@@ -892,12 +951,11 @@ class MyAlarm extends IPSModule
     /* ----------------------------------------------------------------------------------------------------- 
     Function: RegisterCategory
     ...............................................................................
-     *  Legt ein Unterverzeichnis an
-     * Beispiel:
-     *  
+    Beschreibung:
+
     ...............................................................................
     Parameters: 
- 
+    
     .......................................................................................................
     Returns:    
         none
@@ -928,17 +986,16 @@ class MyAlarm extends IPSModule
     /* ----------------------------------------------------------------------------------------------------- 
     Function: UnregisterProfile
     ...............................................................................
-     *  Legt ein Unterverzeichnis an
-     * Beispiel:
-     *  
+    Beschreibung:
+
     ...............................................................................
     Parameters: 
- 
+        Name - Profilname
     .......................................................................................................
     Returns:    
         none
     -------------------------------------------------------------------------------------------------------- */
-    protected function UnregisterProfile(string $Name){
+    protected function UnregisterProfile($Name){
         if (IPS_VariableProfileExists($Name)) {
            IPS_DeleteVariableProfile($Name);
         }   
@@ -947,17 +1004,17 @@ class MyAlarm extends IPSModule
     /* ----------------------------------------------------------------------------------------------------- 
     Function: Create Link
     ...............................................................................
-     *  Legt ein Link zu einem Object an
-     * Beispiel:
-     *  
+    Beschreibung:
     ...............................................................................
     Parameters: 
- 
+        Name - Name des Links
+        ParentID - ID des übergeordneten Verzeichnisses
+        LinkedVariableID - ID der Variable
     .......................................................................................................
     Returns:    
         none
     -------------------------------------------------------------------------------------------------------- */
-    protected function CreateLink(string $Name,  $ParentID,  $LinkedVariableID){
+    protected function CreateLink($Name,  $ParentID, $LinkedVariableID){
         $LinkID = @IPS_GetLinkIDByName($Name, $ParentID);
         if ($LinkID === false){
             // Anlegen eines neuen Links mit dem Namen "Regenerfassung"
