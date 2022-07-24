@@ -8,8 +8,7 @@
             "link": "",
             "onChange": "",
             "value": "false",
-            "visible": "",
-            "width": ""
+            "visible": "true"
         },
         {
             "type" : "NumberSpinner",
@@ -23,8 +22,7 @@
             "moreDigits": "",
             "suffix": "",
             "value": "",
-            "visible": "",
-            "width": ""
+            "visible": "true"
         },
         {
             "type" : "SelectVariable",
@@ -37,8 +35,7 @@
             "requiredLogging": "",
             "validVariableTypes": "",
             "value ": "",
-            "visible": "",
-            "width": ""
+            "visible": "true"
         }
     ] 
 }
