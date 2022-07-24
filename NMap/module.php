@@ -8,7 +8,7 @@
  * 
  * Version: 1.0
  *************************************************************************** */
-//require_once __DIR__ . '/../libs/MyTrait1';
+require_once __DIR__.'/../libs/MyHelper.php';  // Allgemeine Funktionen
  
 
 class _CLASS_ extends IPSModule {

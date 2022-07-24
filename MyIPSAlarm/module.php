@@ -1,7 +1,5 @@
 <?php
-// require_once(__DIR__ . "/../libs/SymconLib.php");
-require_once(__DIR__ . "/../libs/NetworkTraits1.php");
-require_once(__DIR__ . "/../libs/MyTraits1.php");
+require_once(__DIR__ . "/../libs/MyHelper.php");
 
 /* ============================================================================
  * Title:  Alarm for MyIPS
@@ -42,8 +40,8 @@ require_once(__DIR__ . "/../libs/MyTraits1.php");
 class MyAlarm extends IPSModule
 {
    
-    use MyDebugHelper1,
-        MyLogger1;
+    use DebugHelper;
+         
     
     /* 
     _______________________________________________________________________ 

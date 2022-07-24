@@ -1,0 +1,44 @@
+{
+    "elements": [
+        {
+            "type" : "CheckBox",
+            "name": "Open",
+            "caption": "Module_Open",
+            "enabled": "",
+            "link": "",
+            "onChange": "",
+            "value": "false",
+            "visible": "",
+            "width": ""
+        },
+        {
+            "type" : "NumberSpinner",
+            "name": "StromPreis",
+            "caption": "Strom Preis",
+            "digits": "2",
+            "enabled": "",
+            "hex": "",
+            "minimum": "",
+            "maximum": "",
+            "moreDigits": "",
+            "suffix": "",
+            "value": "",
+            "visible": "",
+            "width": ""
+        },
+        {
+            "type" : "SelectVariable",
+            "name": "StromSensor",
+            "caption": "StromMessSensor",
+            "enabled": "",
+            "link": "",
+            "onChange": "",
+            "requiredAction": "",
+            "requiredLogging": "",
+            "validVariableTypes": "",
+            "value ": "",
+            "visible": "",
+            "width": ""
+        }
+    ] 
+}
