@@ -1,6 +1,6 @@
 <?
 class MyEnergyManager extends IPSModule {
-/*
+/* TEST
 ______________________________________________________________________________________________________________________________________________
            Section: Internal Module Functions                                                                                                 
            Die folgenden Funktionen sind Standard Funktionen zur Modul Erstellung                                                             
