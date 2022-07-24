@@ -8,7 +8,8 @@
             "link": "",
             "onChange": "",
             "value": "false",
-            "visible": "true"
+            "visible": "true",
+            "width": ""
         },
         {
             "type" : "NumberSpinner",
@@ -22,20 +23,36 @@
             "moreDigits": "",
             "suffix": "",
             "value": "",
-            "visible": "true"
+            "visible": "true",
+            "width": ""
         },
         {
-            "type" : "SelectVariable",
+            "type": "Label",
+            "label": "Add/Delete Energy sensor variables"
+        },
+        {
+            "type": "List",
             "name": "StromSensor",
             "caption": "StromMessSensor",
-            "enabled": "",
-            "link": "",
-            "onChange": "",
-            "requiredAction": "",
-            "requiredLogging": "",
-            "validVariableTypes": "",
-            "value ": "",
-            "visible": "true"
+            "rowCount": 5,
+            "add": true,
+            "delete": true,
+            "sort": {
+            "column": "ID",
+            "direction": "ascending"
+            },
+                    "columns": [{
+                    "name": "ID",
+                    "label": "ID",
+                    "width": "auto",
+                    "add": 0,
+                    "edit": {
+                        "type": "SelectVariable"
+                    }
+                }],
+            "values": [{
+
+            }]
         }
-    ] 
+    ]
 }
