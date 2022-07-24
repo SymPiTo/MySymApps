@@ -1,5 +1,5 @@
 <?
-class MyEnergyManager extends IPSModule{
+class MyEnergyManager extends IPSModule {
 /*
 ______________________________________________________________________________________________________________________________________________
            Section: Internal Module Functions                                                                                                 
