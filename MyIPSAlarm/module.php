@@ -98,6 +98,8 @@ class MyAlarm extends IPSModule
         IPS_SetInfo ($variablenID, "WSS");   
         //Alexa Sprachbefehl Trigger
         $this->RegisterVariableBoolean("Alexa_SecActivate", "Alexa Alarmanlage aktivieren");
+                //CanShot aktivieren
+                $this->RegisterPropertyBoolean("FKBCamShot", false);
         //TTS Trigger
         $this->RegisterPropertyBoolean("AlexaTTS", false);
         //Telegram Messenger
@@ -105,6 +107,7 @@ class MyAlarm extends IPSModule
         //Webfront anlegen
         $this->RegisterPropertyBoolean("A_Webfront", true);
         
+        $this->RegisterVariableInteger("A_No", "Bildnummer", "");
         
         //String Variable anlegen
         //RegisterVariableString (  §Ident,  §Name, §Profil, §Position )
@@ -429,9 +432,10 @@ class MyAlarm extends IPSModule
             if (password_verify($password, $hash)) {
                 $this->resetCode();
                 $this->setvalue("A_SecWarning","Code wurde akzeptiert."); 
-                SetValueBoolean($this->GetIDForIdent("A_SecActivate"),false);
-                SetValueBoolean($this->GetIDForIdent("A_SecActive"),false);
-                
+                $this->SetValue("A_SecActivate",false);
+                $this->SetValue("A_SecActive",false);
+                $this->SetValue("A_AlarmCode",0);
+
                 if($this->ReadPropertyBoolean("AlexaTTS")){
                     //Sprachausgabe
                     $text_to_speech = "Code wurde akzeptiert";
@@ -681,11 +685,23 @@ class MyAlarm extends IPSModule
                     /* -------------- Cam-Bild erstellen und auf Webseite hochladen ------------- */
                     if($this->ReadPropertyBoolean("FKBCamShot")){
                         
+                        $no = $this->GetValue("A_No"); 
+                        if ($no > 100){
+                            $no = 0;
+                            $this->SetValue("A_No", 0);
+                        }
+                        else{
+                            $this->SetValue("A_No", $no +1);
+                        }
+                         
                         $url = "http://192.168.178.6:2323/?cmd=getCamshot&password=sumatra";
                         $image = file("$url");
-                        file_put_contents('flower.jpg', $image);
+                        file_put_contents('/home/pi/pi-share/Einbrecher'.$no.'.jpg', $image);
+                        
+                        //FTP funktioniert nur als script
+                        /*
                         $ftp_server= "www.tovipi-beck.de" ;
-                        $ftp_user_name= "2006-926";
+                        $ftp_user_name= "2006-963";
                         $ftp_user_pass= $this->ReadPropertyInteger("FTPPasswort");
                         $no = $this->getvalue("A_No");
                         $remote_file = 'test'.$no.'.jpg';
@@ -696,16 +712,22 @@ class MyAlarm extends IPSModule
                         // Schalte passiven Modus ein
                         ftp_pasv($ftp, true);
                         // Lade eine Datei hoch
-                        if (ftp_put($ftp, $remote_file, "flower.jpg", FTP_BINARY)) {
+                        if (ftp_put($ftp, $remote_file, "/var/lib/symcon/scripts/flower.jpg", FTP_BINARY)) {
                             //echo " erfolgreich hochgeladen\n";
+                            if ($no > 100){
+                                $no = 0;
+                            }
                             $this->SetValue("A_No", $no+1);
+                            
                         } else {
                             //echo "Ein Fehler trat beim Hochladen von  auf\n";
                         }
                         // Verbindung schließen
                         ftp_close($ftp);
+                         */
                     }
-                    
+                   
+
                     //Meldung in Log File schreiben.
                     $text = "Unbefugter Zugang zur Wohnung. ";
                     $array = "wurde erkannt.";
