@@ -46,6 +46,16 @@
 
     },
     {
+      "type": "Label",
+      "label": "Webfront anlegen."
+    },
+    {
+      "name": "A_Webfront",
+      "type": "CheckBox",
+      "caption": "Webfront"
+
+    },
+    {
       "type": "SelectInstance",
       "name": "EchoID",
       "caption": "Alexa Echo Gerät"

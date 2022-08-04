@@ -8,12 +8,12 @@
  * 
  * Version: 1.0
  *************************************************************************** */
-//require_once __DIR__ . '/../libs/MyTrait1';
+ 
  
 
-class _CLASS_ extends IPSModule {
+class NMap extends IPSModule {
 
-    use DebugHelper;
+   
 /* 
 ___________________________________________________________________________ 
     Section: Internal Modul Funtions
@@ -33,34 +33,9 @@ ___________________________________________________________________________
         //Register Properties from form.json
         $this->RegisterPropertyBoolean("Active", false);
 
-        //$this->ReadPropertyFloat("NAME", 0.0);
+   
 
-        //$this->ReadPropertyInteger("NAME", 0);
-
-        //$this->ReadPropertyString("NAME", "");
-
-        // Register Profiles
-        //$this->RegisterProfiles();
-
-        //Register Variables
-        $variablenID = $this->RegisterVariableBoolean ($Ident, $Name, $Profil, $Position);
-        IPS_SetInfo ($variablenID, "WSS");
-        IPS_SetHidden($variablenID, true); //Objekt verstecken
-
-        $variablenID = $this->RegisterVariableFloat ($Ident, $Name, $Profil, $Position);
-        IPS_SetInfo ($variablenID, "WSS");
-        IPS_SetHidden($variablenID, true); //Objekt verstecken
-
-        $variablenID = $this->RegisterPropertyInteger ($Name, $Standardwert);
-        IPS_SetInfo ($variablenID, "WSS");
-        IPS_SetHidden($variablenID, true); //Objekt verstecken
-
-        $variablenID = $this->RegisterPropertyString ($Name, $Standardwert);
-        IPS_SetInfo ($variablenID, "WSS");
-        IPS_SetHidden($variablenID, true); //Objekt verstecken
-
-        //Register Timer
-        $this->RegisterTimer('Name', 0, '_PREFIX__Scriptname($_IPS[\'TARGET\']);');
+    
 
 
 
@@ -94,7 +69,7 @@ ___________________________________________________________________________
         }
         else {
             //Timer ausschalten
-            $this->SetTimerInterval("Name", 0);
+          
         }                   
     } //Function: ApplyChanges  End
     /* 

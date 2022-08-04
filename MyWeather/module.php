@@ -186,7 +186,7 @@ class MyWeather extends IPSModule
     Returns:    
         $wetterNowData - aktuelle Wetter Daten als Array
     ------------------------------------------------------------------------------  */
-    Public function Weather_Now($array_json)  
+    Public function Weather_Now(string $array_json)  
     { 
         $weather_now = $array_json['currently'];
         $html = '<head> 

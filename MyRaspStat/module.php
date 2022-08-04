@@ -13,12 +13,12 @@
  */
 //Class: MyRaspberryPi
 
-require_once(__DIR__ . "/../libs/NetworkTraits1.php");
+require_once(__DIR__ . "/../libs/MyHelper.php");
 
 class MyRaspberryPi extends IPSModule
 {
     //Traits verbinden
-    use MyDebugHelper1;
+    use DebugHelper;
      
 /*_______________________________________________________________________ 
      Section: Internal Modul Funtions
