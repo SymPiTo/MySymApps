@@ -9,6 +9,12 @@
  * Version:1.0.2019.4.5
  */
 //Class: MyWeather
+
+
+require_once __DIR__.'/../libs/MyHelper.php';  // diverse Klassen
+
+
+
 class MyWeather extends IPSModule
 {
     /* 

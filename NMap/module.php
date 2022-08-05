@@ -9,11 +9,11 @@
  * Version: 1.0
  *************************************************************************** */
 //require_once __DIR__ . '/../libs/MyTrait1';
- 
+require_once __DIR__.'/../libs/MyHelper.php';  // diverse Klassen
 
-class _CLASS_ extends IPSModule {
+class NMap extends IPSModule {
 
-    use DebugHelper;
+   // use DebugHelper;
 /* 
 ___________________________________________________________________________ 
     Section: Internal Modul Funtions

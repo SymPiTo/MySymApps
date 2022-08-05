@@ -1,5 +1,8 @@
 <?php
-require_once __DIR__.'/../libs/traits.php';  // Allgemeine Funktionen
+//require_once __DIR__.'/../libs/traits.php';  // Allgemeine Funktionen
+require_once __DIR__.'/../libs/MyHelper.php';  // diverse Klassen
+
+
 // CLASS HumitidySensor
 class MyHumidityCalc extends IPSModule
 {
@@ -39,12 +42,12 @@ class MyHumidityCalc extends IPSModule
             [0, 'Nicht Lüften!', 'Window-100', 0xFF0000],
             [1, 'Lüften möglich!', 'Window-0', 0x00FF00],
         ];
-        $this->RegisterProfile(vtBoolean, 'THS.AirOrNot', 'Window', '', '', 0, 0, 0, 0, $association);
+        $this->RegisterProfile(VARIABLETYPE_BOOLEAN, 'THS.AirOrNot', 'Window', '', '', 0, 0, 0, 0, $association);
         // Profile "THS.WaterContent"
         $association = [
             [0, '%0.2f', '', 0x808080],
         ];
-        $this->RegisterProfile(vtFloat, 'THS.WaterContent', 'Drops', '', ' g/m³', 0, 0, 0, 0, $association);
+        $this->RegisterProfile(VARIABLETYPE_FLOAT, 'THS.WaterContent', 'Drops', '', ' g/m³', 0, 0, 0, 0, $association);
         // Profile "THS.Difference"
         $association = [
             [-500, '%0.2f %%', 'Window-100', 32768],
@@ -52,34 +55,34 @@ class MyHumidityCalc extends IPSModule
             [0.01, '+%0.2f %%', 'Window-100', 16744448],
             [10, '+%0.2f %%', 'Window-0', 16711680],
         ];
-        $this->RegisterProfile(vtFloat, 'THS.Difference', 'Window', '', '', 0, 0, 0, 2, $association);
+        $this->RegisterProfile(VARIABLETYPE_FLOAT, 'THS.Difference', 'Window', '', '', 0, 0, 0, 2, $association);
         // Warnmeldung Fenster offen
-        $this->MaintainVariable('WinOpen', 'WindowOpen', vtBoolean, '~Alert', 10, true);
+        $this->MaintainVariable('WinOpen', 'WindowOpen', VARIABLETYPE_BOOLEAN, '~Alert', 10, true);
         IPS_SetInfo ($this->GetIDForIdent("WinOpen"), "WSS");
         // Ergebnis & Hinweis & Differenz
-        $this->MaintainVariable('Hint', 'Hinweis', vtBoolean, 'THS.AirOrNot', 1, true);
+        $this->MaintainVariable('Hint', 'Hinweis', VARIABLETYPE_BOOLEAN, 'THS.AirOrNot', 1, true);
         IPS_SetInfo ($this->GetIDForIdent("Hint"), "WSS");   
-        $this->MaintainVariable('Result', 'Ergebnis', vtString, '', 2, true);
+        $this->MaintainVariable('Result', 'Ergebnis', VARIABLETYPE_STRING, '', 2, true);
         IPS_SetInfo ($this->GetIDForIdent("Result"), "WSS");  
-        $this->MaintainVariable('Difference', 'Differenz', vtFloat, 'THS.Difference', 3, true);
+        $this->MaintainVariable('Difference', 'Differenz', VARIABLETYPE_FLOAT, 'THS.Difference', 3, true);
         IPS_SetInfo ($this->GetIDForIdent("Difference"), "WSS");  
         // Taupunkt
         $create = $this->ReadPropertyBoolean('CreateDewPoint');
-        $this->MaintainVariable('DewPointOutdoor', 'Taupunkt Aussen', vtFloat, '~Temperature', 4, $create);
+        $this->MaintainVariable('DewPointOutdoor', 'Taupunkt Aussen', VARIABLETYPE_FLOAT, '~Temperature', 4, $create);
         IPS_SetInfo ($this->GetIDForIdent("DewPointOutdoor"), "WSS");  
-        $this->MaintainVariable('DewPointIndoor', 'Taupunkt Innen', vtFloat, '~Temperature', 5, $create);
+        $this->MaintainVariable('DewPointIndoor', 'Taupunkt Innen', VARIABLETYPE_FLOAT, '~Temperature', 5, $create);
         IPS_SetInfo ($this->GetIDForIdent("DewPointIndoor"), "WSS");  
         // Wassergehalt (WaterContent)
         $create = $this->ReadPropertyBoolean('CreateWaterContent');
-        $this->MaintainVariable('WaterContentOutdoor', 'Wassergehalt Aussen', vtFloat, 'THS.WaterContent', 6, $create);
+        $this->MaintainVariable('WaterContentOutdoor', 'Wassergehalt Aussen', VARIABLETYPE_FLOAT, 'THS.WaterContent', 6, $create);
         IPS_SetInfo ($this->GetIDForIdent("WaterContentOutdoor"), "WSS");  
-        $this->MaintainVariable('WaterContentIndoor', 'Wassergehalt Innen', vtFloat, 'THS.WaterContent', 7, $create);
+        $this->MaintainVariable('WaterContentIndoor', 'Wassergehalt Innen', VARIABLETYPE_FLOAT, 'THS.WaterContent', 7, $create);
         IPS_SetInfo ($this->GetIDForIdent("WaterContentIndoor"), "WSS");  
 
-        $this->MaintainVariable('Auswertung', "Auswertung", vtString, "", 9, true);
+        $this->MaintainVariable('Auswertung', "Auswertung", VARIABLETYPE_STRING, "", 9, true);
         IPS_SetInfo ($this->GetIDForIdent("Auswertung"), "WSS");  
-        $this->MaintainVariable('KlimaAussen', 'gefühltes Klima Aussen', vtString, "", 8, $create);
-        $this->MaintainVariable('KlimaInnen', 'Klima Innen', vtString, "", 8, $create);
+        $this->MaintainVariable('KlimaAussen', 'gefühltes Klima Aussen', VARIABLETYPE_STRING, "", 8, $create);
+        $this->MaintainVariable('KlimaInnen', 'Klima Innen', VARIABLETYPE_STRING, "", 8, $create);
         IPS_SetInfo ($this->GetIDForIdent("KlimaInnen"), "WSS");  
     }
     /**

@@ -8,7 +8,8 @@
  * 
  * Version: 1.0
  *************************************************************************** */
-require_once __DIR__ . '/../libs/traits.php';
+//require_once __DIR__ . '/../libs/traits.php';
+require_once __DIR__ . '/../libs/MyHelper.php';  // diverse Klassen
 
 class MyGreensens extends IPSModule {
 
@@ -38,16 +39,16 @@ ___________________________________________________________________________
         $this->RegisterPropertyInteger("ID_Sensors", 6);
         $this->RegisterPropertyInteger("ID_Interval", 0);
 
-        $this->RegisterProfile(vtFloat, "GS.Temperature", "Temperature", $prefix = '', $suffix = '°C', $minvalue = 0, $maxvalue = 100, $stepsize = 0.5, $digits = 1, $associations = null);
-        $this->RegisterProfile(vtFloat, "GS.Humidity", "Fog", $prefix = '', $suffix = '%', $minvalue = 0, $maxvalue = 100, $stepsize = 1, $digits = 0, $associations = null);
-        $this->RegisterProfile(vtFloat, "GS.Illumination", "Sun", $prefix = '', $suffix = 'lx', $minvalue = 0, $maxvalue = 10000, $stepsize = 1, $digits = 0, $associations = null);
+        $this->RegisterProfile(VARIABLETYPE_FLOAT, "GS.Temperature", "Temperature", $prefix = '', $suffix = '°C', $minvalue = 0, $maxvalue = 100, $stepsize = 0.5, $digits = 1, $associations = null);
+        $this->RegisterProfile(VARIABLETYPE_FLOAT, "GS.Humidity", "Fog", $prefix = '', $suffix = '%', $minvalue = 0, $maxvalue = 100, $stepsize = 1, $digits = 0, $associations = null);
+        $this->RegisterProfile(VARIABLETYPE_FLOAT, "GS.Illumination", "Sun", $prefix = '', $suffix = 'lx', $minvalue = 0, $maxvalue = 10000, $stepsize = 1, $digits = 0, $associations = null);
         $associations = [
             [0, $this->Translate('very dry'), '', 0xFF0000],
             [1, $this->Translate('dry'), '', 0x00FF00],
             [2, $this->Translate('water plant'), '', 0x00FF00],
             [3, $this->Translate('enough water'), '', 0x00FF00],
         ];
-        $this->RegisterProfile(vtInteger, "GS.Status", "Sun", $prefix = '', $suffix = '', $minvalue = 0, $maxvalue = 3, $stepsize = 1, $digits = 0, $associations = null);
+        $this->RegisterProfile(VARIABLETYPE_INTEGER, "GS.Status", "Sun", $prefix = '', $suffix = '', $minvalue = 0, $maxvalue = 3, $stepsize = 1, $digits = 0, $associations = null);
 
         //Register Timer
         $this->RegisterTimer("updatePlant", 0, 'GS_Update($_IPS[\'TARGET\']);');
@@ -66,11 +67,6 @@ ___________________________________________________________________________
         //Never delete this line!
         parent::ApplyChanges();
     
-            
-
-    
- 
-
 
         $totalSensors = $this->ReadPropertyInteger("ID_Sensors");
         for ($zaehler = 6; $zaehler >= $totalSensors; $zaehler--) {
@@ -209,7 +205,7 @@ ________________________________________________________________________________
                 //echo 'Curl-Fehler: ' . curl_error($curl);
                 if(curl_errno($curl)){
                    // echo 'cURL-Fehler: ' . curl_error($ch);
-                   $errorno = curl_errno($curl);
+                   $errno = curl_errno($curl);
                    $error_message = curl_strerror($errno);
                    $this->SendDebug("cURL error ({$errno}):\n {$error_message}","");
                 }
