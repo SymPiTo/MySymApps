@@ -12,35 +12,35 @@
  * Version:1.0.2019.08.22
  */
 //Class: MyRaspberryPi
-
-require_once(__DIR__ . "/../libs/MyHelper.php");
+/***************************************************************************
+ * Title: Status Werte eines Raspberry Pi auslesen
+ *
+ * Author: PiTo
+ * 
+ * GITHUB: <https://github.com/SymPiTo/MySymApps/tree/master/MyRaspStat>
+ * 
+ * Version: 1.0
+ *************************************************************************** */
+ 
+require_once __DIR__.'/../libs/MyHelper.php';  // diverse Klassen
 
 class MyRaspberryPi extends IPSModule
 {
     //Traits verbinden
-    use DebugHelper;
+    use DebugHelper,
+        NMapHelper,
+        ModuleHelper;
      
-/*_______________________________________________________________________ 
-     Section: Internal Modul Funtions
-     Die folgenden Funktionen sind Standard Funktionen zur Modul Erstellung.
-  _______________________________________________________________________ */
- 
-            
-    /* ------------------------------------------------------------ 
-    Function: Create  
-    Create() wird einmalig beim Erstellen einer neuen Instanz und 
-    neu laden der Modulesausgeführt. Vorhandene Variable werden nicht veändert, auch nicht 
-    eingetragene Werte (Properties).
-    Variable können hier nicht verwendet werden nur statische Werte.
-    Überschreibt die interne IPS_Create(§id)  Funktion
-   
-     CONFIG-VARIABLE:
-      FS20RSU_ID   -   ID des FS20RSU Modules (selektierbar).
-     
-    STANDARD-AKTIONEN:
-      FSSC_Position    -   Position (integer)
+# ___________________________________________________________________________ 
+#    Section: Internal Modul Functions
+#    Die folgenden Funktionen sind Standard Funktionen zur Modul Erstellung.
+# ___________________________________________________________________________ 
 
-    ------------------------------------------------------------- */
+  
+    #-----------------------------------------------------------# 
+    #    Function: Create                                       #
+    #    Create() Wird ausgeführt, beim Anlegen der Instanz.    #
+    #-----------------------------------------------------------#    
     public function Create()
     {
 	    //Never delete this line!
@@ -69,19 +69,6 @@ class MyRaspberryPi extends IPSModule
         $variablenID =  $this->RegisterVariableFloat("ID_Swap_used", "Swap used","", 10);
         IPS_SetInfo ($variablenID, "WSS"); 
         
-         //Integer Variable anlegen
-        //integer RegisterVariableInteger ( string $Ident, string $Name, string $Profil, integer $Position )
-        //Aufruf dieser Variable mit $this->GetIDForIdent("IDENTNAME")
-        //$this->RegisterVariableInteger("FSSC_Position", "Position", "Rollo.Position");
-      
-        //Boolean Variable anlegen
-        //integer RegisterVariableBoolean ( string $Ident, string $Name, string $Profil, integer $Position )
-        // Aufruf dieser Variable mit $this->GetIDForIdent("IDENTNAME")
-        //$this->RegisterVariableBoolean("FSSC_Mode", "Mode");
-        
-        //String Variable anlegen
-        //RegisterVariableString ($Ident,  $Name, $Profil, $Position )
-        //Aufruf dieser Variable mit $this->GetIDForIdent("IDENTNAME")
         $variablenID =  $this->RegisterVariableFloat("ID_CPU_Volt", "CPU Voltage", "~Volt",2);
         IPS_SetInfo ($variablenID, "WSS"); 
         $variablenID =  $this->RegisterVariableString("ID_http", "Port http");
@@ -125,26 +112,20 @@ class MyRaspberryPi extends IPSModule
         //anlegen eines Timers zur Variablen Aktualisierung
         $this->RegisterTimer("update_Timer", $this->ReadPropertyInteger("UpdateInterval"), 'MyRPI_update($_IPS["TARGET"]);');
             
-
-
     }
-   /* ------------------------------------------------------------ 
-     Function: ApplyChanges 
-      ApplyChanges() Wird ausgeführt, wenn auf der Konfigurationsseite "Übernehmen" gedrückt wird 
-      und nach dem unittelbaren Erstellen der Instanz.
-     
-    SYSTEM-VARIABLE:
-        InstanceID - $this->InstanceID.
 
-    EVENTS:
-        SwitchTimeEvent".$this->InstanceID   -   Wochenplan (Mo-Fr und Sa-So)
-        SunRiseEvent".$this->InstanceID       -   cyclice Time Event jeden Tag at SunRise
-    ------------------------------------------------------------- */
-    public function ApplyChanges()
-    {
-	    //Never delete this line!
+    #---------------------------------------------------------------#
+    #     Function: ApplyChanges                                    #
+    #     ApplyChanges() Wird ausgeführt, beim anlegen der Instanz. #
+    #     und beim ändern der Parameter in der Form                 #
+    #---------------------------------------------------------------#
+    public function ApplyChanges() {
+      $this->RegisterMessage(0, IPS_KERNELSTARTED);
+      //Never delete this line!
       parent::ApplyChanges();
 
+      //prüfen ob Modul eingeschltet und Kernel hochgefahren
+      $ModReady = false;
 
 
       if($this->ReadPropertyBoolean("IPS_Server")){
@@ -163,26 +144,35 @@ class MyRaspberryPi extends IPSModule
         $this->EnableAction("IpsServer");
       }
 
-      if(!$this->ReadPropertyBoolean("Modul_Active")){
+
+
+      $ModOn = $this->ModuleUp($this->ReadPropertyBoolean("Modul_Active"));
+      if(!$ModOn){
         //Modul wurde deaktiviert
         $this->SetTimerInterval("update_Timer", 0);
       }
       else{
         //Modul ist aktiviert
-        //prüfe of RPI Monitor Service läuft
+        //prüfe of RPI Monitor Service läuft  
         $ip = $this->ReadPropertyString("IPAddress");
-        $connection = @fsockopen($ip, 8888,$errno, $errstr, 20);
-          
-        if ($errno != 0) {
-            //Service läuft nicht => Versuche Service zu starten  
-            $this->SendDebug('SocketOpen', $errstr , 0);
+        $port = "8888";
+        $RPIopen = $this->checkPortState($ip, $port, $type=false);
+        if(!$RPIopen){
+          $this->SetValue('RPIServer', false);
+          $res = $this->restartRPI($ip);
+          if($res){
+            $this->SetTimerInterval("update_Timer", $this->ReadPropertyInteger("UpdateInterval"));
+            $this->SetValue('RPIServer', true);
+            $this->update();
+          }
+          else{
             $this->SetValue('RPIServer', false);
-            exec("sudo /etc/init.d/rpimonitor start"); 
+            $this->SetTimerInterval("update_Timer", 0);
+          }
         }
-        else{
+        else {
           //Service läuft und Modul ist aktiviert
-          if($this->ReadPropertyBoolean("Modul_Active")){
-            @fclose($connection);
+          if($this->ReadPropertyBoolean("Modul_Active")){ 
             $this->SetTimerInterval("update_Timer", $this->ReadPropertyInteger("UpdateInterval"));
             $this->SetValue('RPIServer', true);
             $this->update();
@@ -192,23 +182,34 @@ class MyRaspberryPi extends IPSModule
       }
     }
     
-   /* ------------------------------------------------------------ 
-      Function: RequestAction  
-      RequestAction() Wird ausgeführt, wenn auf der Webfront eine Variable
-      geschaltet oder verändert wird. Es werden die System Variable des betätigten
-      Elementes übergeben.
-      Ausgaben über echo werden an die Visualisierung zurückgeleitet
-     
-   
-    SYSTEM-VARIABLE:
-      $this->GetIDForIdent($Ident)     -   ID der von WebFront geschalteten Variable
-      $Value                           -   Wert der von Webfront geänderten Variable
+    #------------------------------------------------------------# 
+    #  Function: MessageSink                                     #
+    #  MessageSink() wird nur bei registrierten                  #
+    #  NachrichtenIDs/SenderIDs-Kombinationen aufgerufen.        #
+    #------------------------------------------------------------#    
+    public function MessageSink($TimeStamp, $SenderID, $Message, $Data) {
+      //IPS_LogMessage("MessageSink", "Message from SenderID ".$SenderID." with Message ".$Message."\r\n Data: ".print_r($Data, true));
+      $this->SendDebug('MessageSink', $Message, 0);
+      switch ($Message) {
+          case IPS_KERNELSTARTED:
+              $this->KernelReady();
+          break;
+      }
+    } //Function: MessageSink End
 
-   STANDARD-AKTIONEN:
-      FSSC_Position    -   Slider für Position
-      UpDown           -   Switch für up / Down
-      Mode             -   Switch für Automatik/Manual
-     ------------------------------------------------------------- */
+
+    #-------------------------------------------------------------#
+    #    Function: Destroy                                        #
+    #        Destroy() wird beim löschen der Instanz              #
+    #        und update der Module aufgerufen                     #
+    #-------------------------------------------------------------#
+    
+    
+    #------------------------------------------------------------# 
+    #    Function: RequestAction                                 #
+    #        RequestAction() wird von schaltbaren Variablen      #
+    #        aufgerufen.                                         #
+    #------------------------------------------------------------#
     public function RequestAction($Ident, $Value) {
          switch($Ident) {
             case "RPIServer":
@@ -239,28 +240,16 @@ class MyRaspberryPi extends IPSModule
  
     }
 
-    /*------------------------------------------------------------ 
-      Function: MessageSink  
-      MessageSink() wird nur bei registrierten 
-      NachrichtenIDs/SenderIDs-Kombinationen aufgerufen. 
-    -------------------------------------------------------------*/
-    public function MessageSink($TimeStamp, $SenderID, $Message, $Data) {
-      //IPS_LogMessage("MessageSink", "Message from SenderID ".$SenderID." with Message ".$Message."\r\n Data: ".print_r($Data, true));
-      $this->SendDebug('MessageSink', $Message, 0);
-      switch ($Message) {
-          case IPS_KERNELSTARTED:
-              $this->KernelReady();
-          break;
-      }
-    } //Function: MessageSink End
 
-  /* ______________________________________________________________________________________________________________________
-     Section: Public Funtions
-     Die folgenden Funktionen stehen automatisch zur Verfügung, wenn das Modul über die "Module Control" eingefügt wurden.
-     Die Funktionen werden, mit dem selbst eingerichteten Prefix, in PHP und JSON-RPC wie folgt zur Verfügung gestellt:
-    
-     FSSC_XYFunktion($Instance_id, ... );
-     ________________________________________________________________________________________________________________________ */
+
+#_________________________________________________________________________________________________________
+# Section: Public Functions
+#    Die folgenden Funktionen stehen automatisch zur Verfügung, wenn das Modul über die "Module Control" 
+#    eingefügt wurden.
+#    Die Funktionen werden, mit dem selbst eingerichteten Prefix, in PHP und JSON-RPC wie folgt zur 
+#    Verfügung gestellt:
+#_________________________________________________________________________________________________________
+
     //-----------------------------------------------------------------------------
     /* Function: update
     ...............................................................................
@@ -274,109 +263,97 @@ class MyRaspberryPi extends IPSModule
         none
     ------------------------------------------------------------------------------  */
     public function update(){
-      $this->SendDebug('Update:', "hole Werte", 0);
+      $this->SendDebug('Update:', "Starte Update", 0);
       $ip = $this->ReadPropertyString("IPAddress");
-      $connection = @fsockopen($ip, 8888,$errno, $errstr, 20);
-      $services =  exec("sudo service symcon status"); 
+      $port = "8888"; # RPI Monitor Port
 
-      $this->SendDebug('ServiceListe', $services , 0);
+       //$services =  exec("sudo service symcon status"); 
 
-
-      if ($errno != 0) {
-          @fclose($connection);  
-          $this->SendDebug('SocketOpen', $errstr , 0);
+      //$this->SendDebug('ServiceListe', $services , 0);
+      
+      $SocketOpen = $this->checkPortState($ip, $port, $type=false);
+      $this->SendDebug("RPImonitor:", $SocketOpen, 0);
+      if (!$SocketOpen) {
+        $this->SendDebug('Update:', "RPImonitor: ist down", 0); 
           exec("sudo /etc/init.d/rpimonitord -b start"); 
       }
-      else{
-
-        @fclose($connection);
-
-      $ip = $this->ReadPropertyString("IPAddress");
- 
-        $data = @file_get_contents("http://".$ip.":8888/dynamic.json");
-        //$this->SendDebug('Update', $data, 0);
-
-          
-      $data = json_decode($data, true); 
-      $this->SendDebug('Update:DATA: ', $data, 0);
-      $this->SetValue("ID_cpuFreq", $data['cpu_frequency']); 
-      $this->SetValue("ID_MemTotal", $data['memory_available']);
-      $this->SetValue("ID_MemFree", $data['memory_free']);
-      $this->SetValue("ID_SD_boot_used", $data['sdcard_boot_used']);
-      $this->SetValue("ID_SD_root_used", $data['sdcard_root_used']);
-      $this->SetValue("ID_Swap_used", $data['swap_used']);
-      $this->SetValue("ID_CPU_Volt", $data['cpu_voltage']);
-      //SetValue($this->GetIDForIdent("ID_http"), $data['http']);
-      //SetValue($this->GetIDForIdent("ID_https"), $data['https']);
-      $this->SetValue("ID_RPI_monitor", $data['rpimonitor']);
-      $this->SetValue("ID_ssh", $data['ssh']);
-
-      $this->SetValue("ID_scal_Gov", $data['scaling_governor']);
-      $this->SetValue("ID_CPU_Temp", $data['soc_temp']);
-      $this->SetValue("ID_upgrade", $data['upgrade']);
-      $this->SetValue("ID_UpTime", json_encode($this->calc_uptime($data['uptime'])));
-      $this->SetValue("ID_CPU_load1", $data['load1']);
-      $this->SetValue("ID_CPU_load5", $data['load5']);
-      $this->SetValue("ID_CPU_load15", $data['load15']);
-      $this->SetValue("ID_packages", $data['packages']);
-      $this->SetValue("ID_ip",  $ip);
-if($this->ReadPropertyBoolean("IPS_Server")){
-  $this->SetValue("ID_symcon", $data['symcon']);
-  $this->SetValue("ID_wss", $data['websocketserver']);
-}
-
-    }
-      if($this->ReadPropertyBoolean("IPS_Server")){
-        //check if service is running
-        $ip = $this->ReadPropertyString("IPAddress");
-        $connection = @fsockopen($ip, 3777,$errno, $errstr, 20);
-        if ($errno != 0) {
-            //Service läuft nicht => Versuche Service zu starten  
-            $this->SendDebug('IP Symcon Service:', $errstr , 0);
-            $this->SetValue('IpsServer', false);
-            @fclose($connection);
-            exec("sudo /etc/init.d/symcon start"); 
+      else {
+        $this->SendDebug('Update:', "RPImonitor: ist offen", 0); 
+        $dataJson = @file_get_contents("http://".$ip.":8888/dynamic.json");
+        if($dataJson != false){
+          $data = json_decode($dataJson, true); 
+          $this->SendDebug('RPIMonitor:', $data, 0);  
+          if (array_key_exists('cpu_frequency', $data)) {$this->SetValue("ID_cpuFreq", $data['cpu_frequency']);} 
+          if (array_key_exists('memory_available', $data)) {$this->SetValue("ID_MemTotal", $data['memory_available']);}
+          if (array_key_exists('memory_free', $data)) {$this->SetValue("ID_MemFree", $data['memory_free']);}
+          if (array_key_exists('sdcard_boot_used', $data)) {$this->SetValue("ID_SD_boot_used", $data['sdcard_boot_used']);}
+          if (array_key_exists('sdcard_root_used', $data)) {$this->SetValue("ID_SD_root_used", $data['sdcard_root_used']);}
+          if (array_key_exists('swap_used', $data)) {$this->SetValue("ID_Swap_used", $data['swap_used']);}
+          if (array_key_exists('cpu_voltage', $data)) {$this->SetValue("ID_CPU_Volt", $data['cpu_voltage']);}
+          if (array_key_exists('http', $data)) {$this->SetValue("ID_http", $data['http']);}
+          if (array_key_exists('https', $data)) {$this->SetValue("ID_https", $data['https']);}
+          if (array_key_exists('rpimonitor', $data)) {$this->SetValue("ID_RPI_monitor", $data['rpimonitor']);}
+          if (array_key_exists('ssh', $data)) {$this->SetValue("ID_ssh", $data['ssh']);}
+          if (array_key_exists('scaling_governor', $data)) {$this->SetValue("ID_scal_Gov", $data['scaling_governor']);}
+          if (array_key_exists('soc_temp', $data)) {$this->SetValue("ID_CPU_Temp", $data['soc_temp']);}
+          if (array_key_exists('upgrade', $data)) {$this->SetValue("ID_upgrade", $data['upgrade']);}
+          if (array_key_exists('uptime', $data)) {$this->SetValue("ID_UpTime", json_encode($this->calc_uptime($data['uptime'])));}
+          if (array_key_exists('load1', $data)) {$this->SetValue("ID_CPU_load1", $data['load1']);}
+          if (array_key_exists('load5', $data)) {$this->SetValue("ID_CPU_load5", $data['load5']);}
+          if (array_key_exists('load15', $data)) {$this->SetValue("ID_CPU_load15", $data['load15']);}
+          if (array_key_exists('packages', $data)) {$this->SetValue("ID_packages", $data['packages']);}
+          $this->SetValue("ID_ip",  $ip);
+          if($this->ReadPropertyBoolean("IPS_Server")){
+            if (array_key_exists('symcon', $data)) {$this->SetValue("ID_symcon", $data['symcon']);}
+            if (array_key_exists('websocketserver', $data)) {$this->SetValue("ID_wss", $data['websocketserver']);}
+          }
         }
-        else{
-        //IP Symcon Service läuft  
-        @fclose($connection);
-        $this->SetValue('IpsServer', true);  
-        $this->SetValue("ID_IPS_Version",  IPS_GetKernelVersion());
-        $kernelStat = IPS_GetKernelRunlevel();
-        switch ($kernelStat) {
-          case KR_CREATE:
-            $ks = "Kernel wird erstellt.";
-            break;
-            case KR_INIT:
-            $ks = "Kernel wird initialisiert.";
-            break;
-            case KR_READY:
-            $ks = "Kernel ist bereit und läuft.";
-            break;
-            case KR_UNINIT:
-            $ks = "Kernel wird heruntergefahren.";
-            break;
-            case KR_SHUTDOWN:
-            $ks = "Kernel wurde beendet.";
-            break;
-          default:
-            # code...
-            break;
-        }
-      
-        $this->SetValue("ID_KernelStat",  $ks);
       }
-        
-    }  
+      if($this->ReadPropertyBoolean("IPS_Server")){
+          //check if service is running
+          $result = $this->restartIPSservice($ip);
+        if ($result) {
+            $this->SendDebug('Update:', "IPS Server läuft.", 0); 
+            //IP Symcon Service läuft  
+            $this->SetValue('IpsServer', true);  
+            $this->SetValue("ID_IPS_Version",  IPS_GetKernelVersion());
+            $kernelStat = IPS_GetKernelRunlevel();
+            switch ($kernelStat) {
+              case KR_CREATE:
+                $ks = "Kernel wird erstellt.";
+                break;
+              case KR_INIT:
+                $ks = "Kernel wird initialisiert.";
+                break;
+              case KR_READY:
+                $ks = "Kernel ist bereit und läuft.";
+                break;
+              case KR_UNINIT:
+                $ks = "Kernel wird heruntergefahren.";
+                break;
+              case KR_SHUTDOWN:
+                $ks = "Kernel wurde beendet.";
+                break;
+              default:
+                # code...
+                break;
+            }
+            $this->SetValue("ID_KernelStat", $ks);
+         }
+        else{
+          $this->SendDebug('Update:', "IPS Server ist down.", 0); 
+          $this->SetValue('IpsServer', false);
+        }  
+      }  
     }
  
+
  
-   /* _______________________________________________________________________
-    * Section: Private Funtions
-    * Die folgenden Funktionen sind nur zur internen Verwendung verfügbar
-    *   Hilfsfunktionen
-    * _______________________________________________________________________
-    */  
+#________________________________________________________________________________________
+# Section: Private Functions
+#    Die folgenden Funktionen stehen nur innerhalb des Moduls zur verfügung
+#    Hilfsfunktionen: 
+#_______________________________________________________________________________________ 
 
     /* ----------------------------------------------------------------------------
       Function: GetIPSVersion
@@ -389,8 +366,7 @@ if($this->ReadPropertyBoolean("IPS_Server")){
       Returns:   
             $uptime (array)  days - hours - minutes - seconds
     ------------------------------------------------------------------------------- */
-	protected function calc_uptime($uptime)
-	{
+	private function calc_uptime($uptime)	{
     $sek = intval($uptime);
     $min = ($sek/60); 
     $std =  ($min/60);
@@ -410,49 +386,79 @@ if($this->ReadPropertyBoolean("IPS_Server")){
     return $Laufzeit;
   }
 
-    protected function SendToSplitter(string $payload)
-		{						
-			//an Splitter schicken
-			$result = $this->SendDataToParent(json_encode(Array("DataID" => "{687E15E1-5C42-A35E-AD38-C4F1659B0DAA}", "Buffer" => $payload))); // Interface GUI
-			return $result;
-		}
-		
-        /* ----------------------------------------------------------------------------
-         Function: GetIPSVersion
-        ...............................................................................
-        gibt die instalierte IPS Version zurück
-        ...............................................................................
-        Parameters: 
-            none
-        ..............................................................................
-        Returns:   
-            $ipsversion (floatint)
-        ------------------------------------------------------------------------------- */
-	protected function GetIPSVersion()
-	{
-		$ipsversion = floatval(IPS_GetKernelVersion());
-		if ($ipsversion < 4.1) // 4.0
-		{
-			$ipsversion = 0;
-		} elseif ($ipsversion >= 4.1 && $ipsversion < 4.2) // 4.1
-		{
-			$ipsversion = 1;
-		} elseif ($ipsversion >= 4.2 && $ipsversion < 4.3) // 4.2
-		{
-			$ipsversion = 2;
-		} elseif ($ipsversion >= 4.3 && $ipsversion < 4.4) // 4.3
-		{
-			$ipsversion = 3;
-		} elseif ($ipsversion >= 4.4 && $ipsversion < 5) // 4.4
-		{
-			$ipsversion = 4;
-		} else   // 5
-		{
-			$ipsversion = 5;
-		}
+      /* ----------------------------------------------------------------------------
+      Function: restartRPI
+    ...............................................................................
+      versucht bis zu 10x den RPI Monitor service nachzustarten
+    ...............................................................................
+      Parameters: 
+            $ip - IP Adresse
+    ..............................................................................
+      Returns:   
+            false/true
+    ------------------------------------------------------------------------------- */
+  private function restartRPI(string $ip){
+    //check if service is running
+    $port = "8888"; 
+    exec("sudo /etc/init.d/rpimonitor start"); 
+    //wait until port is open
+    $i= 11;
+    while ($i <= 10) {
+      $PortOpen = $this->checkPortState($ip, $port, $type=false);
+      sleep(200);
+      if($PortOpen){
+        return true;
+      }
+      else{
+        $i++  ;            // Wert wird um 1 erhöht
+      }            
+    }   
+    //RPI Service lässt sich nicht starten.
+    return false; 
+  }
 
-		return $ipsversion;
-	}
+      /* ----------------------------------------------------------------------------
+      Function: checkIPSservice
+    ...............................................................................
+      restart Symcon Service und prüft bis zu 10x ob er läuft. 
+    ...............................................................................
+      Parameters: 
+            $ip
+    ..............................................................................
+      Returns:   
+            true/false
+    ------------------------------------------------------------------------------- */
+  private function restartIPSservice(string $ip){
+    //check if service is running
+    $port = "3777"; 
+    $PortOpen = $this->checkPortState($ip, $port, $type=false);
+    if (!$PortOpen) { 
+      //Service läuft nicht => Versuche Service zu starten    
+      exec("sudo /etc/init.d/symcon start"); 
+      //wait until port is open
+      $i= 11;
+      while ($i <= 10) {
+        $PortOpen = $this->checkPortState($ip, $port, $type=false);
+        sleep(200);
+        if($PortOpen){
+          return true;
+        }
+        else{
+          $i++  ;            // Wert wird um 1 erhöht
+        }            
+      }   
+    }
+    else {
+      //IP Symcon Service läuft  
+      return true;
+    }
+    //IPS Service lässt sich nicht starten.
+    
+    return false; 
+  }
+
+ 
+
 
  
     /* --------------------------------------------------------------------------- 
@@ -515,7 +521,13 @@ if($this->ReadPropertyBoolean("IPS_Server")){
             IPS_SetEventScheduleAction($EventID, $ActionID, $Name, $Color, $Script);
     }
 
-
+    /**
+     * Wird ausgeführt wenn der Kernel hochgefahren wurde.
+     */
+    protected function KernelReady()
+    {
+        $this->ApplyChanges();
+    }
 
 		
 }
