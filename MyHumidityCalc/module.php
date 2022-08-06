@@ -1,16 +1,28 @@
 <?php
+//require_once __DIR__.'/../libs/traits.php';  // Allgemeine Funktionen
+require_once __DIR__.'/../libs/MyHelper.php';  // diverse Klassen
 
-require_once __DIR__.'/../libs/MyHelper.php';  // Allgemeine Funktionen
 
 // CLASS HumitidySensor
 class MyHumidityCalc extends IPSModule
 {
-    use ProfileHelper, DebugHelper;
+    use ProfileHelper, DebugHelper, ModuleHelper;
 
+# ___________________________________________________________________________ 
+#    Section: Internal Modul Functions
+#    Die folgenden Funktionen sind Standard Funktionen zur Modul Erstellung.
+# ___________________________________________________________________________ 
+
+  
+    #-----------------------------------------------------------# 
+    #    Function: Create                                       #
+    #    Create() Wird ausgeführt, beim Anlegen der Instanz.    #
+    #-----------------------------------------------------------#    
     public function Create()
     {
         //Never delete this line!
         parent::Create();
+        $this->RegisterPropertyBoolean("ID_active", false);
         // Outdoor variables
         $this->RegisterPropertyInteger('TempOutdoor', 0);
         $this->RegisterPropertyInteger('HumyOutdoor', 0);
@@ -31,12 +43,24 @@ class MyHumidityCalc extends IPSModule
         // Update trigger
         $this->RegisterTimer('UpdateTrigger', 0, "THS_Update(\$_IPS['TARGET']);");
     }
+
+    #---------------------------------------------------------------#
+    #     Function: ApplyChanges                                    #
+    #     ApplyChanges() Wird ausgeführt, beim anlegen der Instanz. #
+    #     und beim ändern der Parameter in der Form                 #
+    #---------------------------------------------------------------#
     public function ApplyChanges()
     {
+        $this->RegisterMessage(0, IPS_KERNELSTARTED);
         //Never delete this line!
         parent::ApplyChanges();
-        // Update Trigger Timer
-        $this->SetTimerInterval('UpdateTrigger', 1000 * 60 * $this->ReadPropertyInteger('UpdateTimer'));
+
+        $ModOn = $this->ModuleUp($this->ReadPropertyBoolean("ID_active"));
+        if($ModOn){
+            // Update Trigger Timer
+            $this->SetTimerInterval('UpdateTrigger', 1000 * 60 * $this->ReadPropertyInteger('UpdateTimer'));
+        }
+        
         // Profile "THS.AirOrNot"
         $association = [
             [0, 'Nicht Lüften!', 'Window-100', 0xFF0000],
@@ -85,14 +109,49 @@ class MyHumidityCalc extends IPSModule
         $this->MaintainVariable('KlimaInnen', 'Klima Innen', VARIABLETYPE_STRING, "", 8, $create);
         IPS_SetInfo ($this->GetIDForIdent("KlimaInnen"), "WSS");  
     }
-    /**
-     * This function will be available automatically after the module is imported with the module control.
-     * Using the custom prefix this function will be callable from PHP and JSON-RPC through:.
-     *
-     * THS_Update($id);
-     */
-    public function Update()
-    {
+
+
+    #------------------------------------------------------------# 
+    #  Function: MessageSink                                     #
+    #  MessageSink() wird nur bei registrierten                  #
+    #  NachrichtenIDs/SenderIDs-Kombinationen aufgerufen.        #
+    #------------------------------------------------------------#    
+    public function MessageSink($TimeStamp, $SenderID, $Message, $Data) {
+        //IPS_LogMessage("MessageSink", "Message from SenderID ".$SenderID." with Message ".$Message."\r\n Data: ".print_r($Data, true));
+        $this->SendDebug('MessageSink', $Message, 0);
+        switch ($Message) {
+            case IPS_KERNELSTARTED:
+                $this->KernelReady();
+            break;
+        }
+      } //Function: MessageSink End
+ 
+    
+    #------------------------------------------------------------# 
+    #    Function: RequestAction                                 #
+    #        RequestAction() wird von schaltbaren Variablen      #
+    #        aufgerufen.                                         #
+    #------------------------------------------------------------#
+      
+#_________________________________________________________________________________________________________
+# Section: Public Functions
+#    Die folgenden Funktionen stehen automatisch zur Verfügung, wenn das Modul über die "Module Control" 
+#    eingefügt wurden.
+#    Die Funktionen werden, mit dem selbst eingerichteten Prefix, in PHP und JSON-RPC wie folgt zur 
+#    Verfügung gestellt:
+#_________________________________________________________________________________________________________
+
+
+    #---------------------------------------------------------------------------------#
+    # Function: Update                                                               #
+    #.................................................................................#
+    # Beschreibung:                                                                   #
+    #.................................................................................#
+    # Parameters:    none                                                             #
+    #.................................................................................#
+    # Returns:       none                                                             #
+    #---------------------------------------------------------------------------------#
+    public function Update() {
         $result = 'Ergebnis konnte nicht ermittelt werden!';
         // Daten lesen
         $state = true;
@@ -264,6 +323,15 @@ class MyHumidityCalc extends IPSModule
 
     }
 
+    #---------------------------------------------------------------------------------#
+    # Function: warning                                                               #
+    #.................................................................................#
+    # Beschreibung:                                                                   #
+    #.................................................................................#
+    # Parameters:    nnone                                                            #
+    #.................................................................................#
+    # Returns:       none                                                             #
+    #---------------------------------------------------------------------------------#
     private function warning(){
         $Diff = $this->GetValue('Difference');
         $Hinweis = $this->GetValue('Hint');  //Bool 
@@ -365,6 +433,28 @@ class MyHumidityCalc extends IPSModule
     {
         IPS_SetProperty($this->InstanceID, 'MessageThreshold', $threshold);
         IPS_ApplyChanges($this->InstanceID);
+    }
+
+
+
+#________________________________________________________________________________________
+# Section: Private Functions
+#    Die folgenden Funktionen stehen nur innerhalb des Moduls zur verfügung
+#    Hilfsfunktionen: 
+#_______________________________________________________________________________________    
+
+    #---------------------------------------------------------------------------------#
+    # Function: KernelReady                                                           #
+    #.................................................................................#
+    # Beschreibung:                                                                   #
+    #     Wird ausgeführt wenn der Kernel hochgefahren wurde.                         #
+    #.................................................................................#
+    # Parameters:   none                                                              #
+    #.................................................................................#
+    # Returns:      none                                                              #
+    #---------------------------------------------------------------------------------#
+    protected function KernelReady() {
+        $this->ApplyChanges();
     }
 
 
