@@ -1,7 +1,7 @@
 <?php
 //zugehoerige TRAIT-Klassen    TEST xxxy
 //require_once(__DIR__ . "/../libs/NetworkTraits.php");
-
+require_once __DIR__.'/../libs/MyHelper.php';  // diverse Klassen
 
 /** 
  * Title: Repte aus Chefkoch.de Kochbch
@@ -17,31 +17,21 @@ class MyKochbuch extends IPSModule
 {
     
     //externe Klasse einbinden - ueberlagern mit TRAIT.
-    //use MyDebugHelper;
-    ///////
+    use DebugHelper, ModuleHelper;
     
-    /* 
-    _______________________________________________________________________ 
-     Section: Internal Modul Funtions
-     Die folgenden Funktionen sind Standard Funktionen zur Modul Erstellung.
-    _______________________________________________________________________ 
-     */
-            
-    /* ------------------------------------------------------------ 
-    Function: Create  
-    Create() wird einmalig beim Erstellen einer neuen Instanz und 
-    neu laden der Modulesausgeführt. Vorhandene Variable werden nicht veändert, auch nicht 
-    eingetragene Werte (Properties).
-    Variable können hier nicht verwendet werden nur statische Werte.
-    Überschreibt die interne IPS_Create(§id)  Funktion
-   
-     CONFIG-VARIABLE:
-      FS20RSU_ID   -   ID des FS20RSU Modules (selektierbar).
-     
-    STANDARD-AKTIONEN:
-      FSSC_Position    -   Position (integer)
+    
+# ___________________________________________________________________________ 
+#    Section: Internal Modul Functions
+#    Die folgenden Funktionen sind Standard Funktionen zur Modul Erstellung.
+# ___________________________________________________________________________ 
 
-    ------------------------------------------------------------- */
+  
+    #-----------------------------------------------------------# 
+    #    Function: Create                                       #
+    #    Create() Wird ausgeführt, beim Anlegen der Instanz.    #
+    #-----------------------------------------------------------#    
+    
+
     public function Create()
     {
 	//Never delete this line!
@@ -92,25 +82,24 @@ class MyKochbuch extends IPSModule
         
         //anlegen eines Timers
         //$this->RegisterTimer(!TimerName!, 0, !FSSC_reset(\§_IPS[!TARGET!>]);!);
-            
-
-
     }
-   /* ------------------------------------------------------------ 
-     Function: ApplyChanges 
-      ApplyChanges() Wird ausgeführt, wenn auf der Konfigurationsseite "Übernehmen" gedrückt wird 
-      und nach dem unittelbaren Erstellen der Instanz.
-     
-    SYSTEM-VARIABLE:
-        InstanceID - $this->InstanceID.
 
-    EVENTS:
-        SwitchTimeEvent".$this->InstanceID   -   Wochenplan (Mo-Fr und Sa-So)
-        SunRiseEvent".$this->InstanceID       -   cyclice Time Event jeden Tag at SunRise
-    ------------------------------------------------------------- */
-    public function ApplyChanges()
-    {
-	//Never delete this line!
+    #---------------------------------------------------------------#
+    #     Function: ApplyChanges                                    #
+    #     ApplyChanges() Wird ausgeführt, beim anlegen der Instanz. #
+    #     und beim ändern der Parameter in der Form                 #
+    #---------------------------------------------------------------#
+    #
+    # SYSTEM-VARIABLE:
+    #    InstanceID - $this->InstanceID.
+    #
+    # EVENTS:
+    #    SwitchTimeEvent".$this->InstanceID   -   Wochenplan (Mo-Fr und Sa-So)
+    #    SunRiseEvent".$this->InstanceID       -   cyclice Time Event jeden Tag at SunRise
+    #-------------------------------------------------------------------------------------- 
+    public function ApplyChanges() {
+        $this->RegisterMessage(0, IPS_KERNELSTARTED);
+	    //Never delete this line!
         parent::ApplyChanges();
         
         if($this->ReadPropertyBoolean('ID_WF')){
@@ -131,23 +120,33 @@ class MyKochbuch extends IPSModule
         $this->readKochbuch(0);
     }
     
-   /* ------------------------------------------------------------ 
-      Function: RequestAction  
-      RequestAction() Wird ausgeführt, wenn auf der Webfront eine Variable
-      geschaltet oder verändert wird. Es werden die System Variable des betätigten
-      Elementes übergeben.
-      Ausgaben über echo werden an die Visualisierung zurückgeleitet
-     
-   
-    SYSTEM-VARIABLE:
-      $this->GetIDForIdent($Ident)     -   ID der von WebFront geschalteten Variable
-      $Value                           -   Wert der von Webfront geänderten Variable
+    #------------------------------------------------------------# 
+    #  Function: MessageSink                                     #
+    #  MessageSink() wird nur bei registrierten                  #
+    #  NachrichtenIDs/SenderIDs-Kombinationen aufgerufen.        #
+    #------------------------------------------------------------#    
+    public function MessageSink($TimeStamp, $SenderID, $Message, $Data) {
+        //IPS_LogMessage("MessageSink", "Message from SenderID ".$SenderID." with Message ".$Message."\r\n Data: ".print_r($Data, true));
+        $this->SendDebug('MessageSink', $Message, 0);
+        switch ($Message) {
+            case IPS_KERNELSTARTED:
+                $this->KernelReady();
+            break;
+        }
+      } //Function: MessageSink End
 
-   STANDARD-AKTIONEN:
-      FSSC_Position    -   Slider für Position
-      UpDown           -   Switch für up / Down
-      Mode             -   Switch für Automatik/Manual
-     ------------------------------------------------------------- */
+    #-------------------------------------------------------------#
+    #    Function: Destroy                                        #
+    #        Destroy() wird beim löschen der Instanz              #
+    #        und update der Module aufgerufen                     #
+    #-------------------------------------------------------------#
+
+
+    #------------------------------------------------------------# 
+    #    Function: RequestAction                                 #
+    #        RequestAction() wird von schaltbaren Variablen      #
+    #        aufgerufen.                                         #
+    #------------------------------------------------------------#
     public function RequestAction($Ident, $Value) {
          switch($Ident) {
             case "UpDown":
@@ -168,13 +167,14 @@ class MyKochbuch extends IPSModule
  
     }
 
-  /* ______________________________________________________________________________________________________________________
-     Section: Public Funtions
-     Die folgenden Funktionen stehen automatisch zur Verfügung, wenn das Modul über die "Module Control" eingefügt wurden.
-     Die Funktionen werden, mit dem selbst eingerichteten Prefix, in PHP und JSON-RPC wie folgt zur Verfügung gestellt:
-    
-     FSSC_XYFunktion($Instance_id, ... );
-     ________________________________________________________________________________________________________________________ */
+#_________________________________________________________________________________________________________
+# Section: Public Functions
+#    Die folgenden Funktionen stehen automatisch zur Verfügung, wenn das Modul über die "Module Control" 
+#    eingefügt wurden.
+#    Die Funktionen werden, mit dem selbst eingerichteten Prefix, in PHP und JSON-RPC wie folgt zur 
+#    Verfügung gestellt:
+#_________________________________________________________________________________________________________
+
     //-----------------------------------------------------------------------------
     /* Function: readKochbuch
     ...............................................................................
@@ -294,12 +294,11 @@ class MyKochbuch extends IPSModule
     }
 
     
-   /* _______________________________________________________________________
-    * Section: Private Funtions
-    * Die folgenden Funktionen sind nur zur internen Verwendung verfügbar
-    *   Hilfsfunktionen
-    * _______________________________________________________________________
-    */  
+#________________________________________________________________________________________
+# Section: Private Functions
+#    Die folgenden Funktionen stehen nur innerhalb des Moduls zur verfügung
+#    Hilfsfunktionen: 
+#_______________________________________________________________________________________
 
 		
         /* ----------------------------------------------------------------------------
@@ -456,4 +455,16 @@ class MyKochbuch extends IPSModule
         }
         return $KategorieID;
     }
+
+
+
+        /**
+     * Wird ausgeführt wenn der Kernel hochgefahren wurde.
+     */
+    protected function KernelReady()
+    {
+        $this->ApplyChanges();
+    }
+
+
 }
