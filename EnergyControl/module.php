@@ -8,41 +8,37 @@
  * 
  * Version: 0.1  20220604
  *************************************************************************** */
-/* 
-___________________________________________________________________________ 
-    Section: Beschreibung
-    Das Modul dient zum automatisieren von Virgängen, um Energie zu sparen.
-    Über Detector Sensoren wird erfasst welche Räume bzw. Wohnung leer ist.
-    In Abhängigkeit davon werden bestimmte Aktionen ausgelöst.
-    
-___________________________________________________________________________ 
-*/
 
-//require_once __DIR__ . '/../libs/_TRAIT_';
+#___________________________________________________________________________ 
+#    Section: Beschreibung
+#    Das Modul dient zum automatisieren von Virgängen, um Energie zu sparen.
+#    Über Detector Sensoren wird erfasst welche Räume bzw. Wohnung leer ist.
+#    In Abhängigkeit davon werden bestimmte Aktionen ausgelöst.
+#    
+#___________________________________________________________________________ 
+
+
 require_once __DIR__ . '/../libs/MyHelper.php';  // diverse Klassen
- 
+
 class MyEnergyControl extends IPSModule {
 
      use DebugHelper;
-   // InstanceStatus,
-   // BufferHelper,
-   // Semaphore;
-/* 
-___________________________________________________________________________ 
-    Section: Internal Modul Functions
-    Die folgenden Funktionen sind Standard Funktionen zur Modul Erstellung.
-___________________________________________________________________________ 
-*/
-    /* 
-    ------------------------------------------------------------ 
-        Function: Create  
-        Create() Wird ausgeführt, beim Anlegen der Instanz.
-    -------------------------------------------------------------
-    */
+ 
+
+# ___________________________________________________________________________ 
+#    Section: Internal Modul Functions
+#    Die folgenden Funktionen sind Standard Funktionen zur Modul Erstellung.
+# ___________________________________________________________________________ 
+
+     
+    #-----------------------------------------------------------# 
+    #    Function: Create                                       #
+    #    Create() Wird ausgeführt, beim Anlegen der Instanz.    #
+    #-----------------------------------------------------------#    
     public function Create() {
     //Never delete this line!
         parent::Create();
-
+        #REGISTER PROPERTIES
         //Register Properties from form.json
         $this->RegisterPropertyBoolean("ModAlive", false);
 
@@ -64,7 +60,7 @@ ___________________________________________________________________________
         // Register Profiles
        // $this->RegisterProfiles();
        
-        //Register Variables
+        #REGISTER VARIABLES
         $variablenID = $this->RegisterVariableBoolean ("StatWZ", "Wohnzimmer Person", '~Switch', 0);
         IPS_SetInfo ($variablenID, "WSS");
         
@@ -92,7 +88,7 @@ ___________________________________________________________________________
         $variablenID = $this->RegisterVariableBoolean ("StatDoor", "Eingangstür", '~Switch', 6);
         IPS_SetInfo ($variablenID, "WSS");
 
-        //Register Timer
+        #REGISTER TIMER 
         $this->RegisterTimer('T_WZ', 0, 'EC_checkEvent($_IPS[\'TARGET\'], "WZ");');
         $this->RegisterTimer('T_SZ', 0, 'EC_checkEvent($_IPS[\'TARGET\'], "SZ");');
         $this->RegisterTimer('T_KZ', 0, 'EC_checkEvent($_IPS[\'TARGET\'], "KZ");');
@@ -135,18 +131,19 @@ ___________________________________________________________________________
 */
 
     } //Function: Create End
-    /* 
-    ------------------------------------------------------------ 
-        Function: ApplyChanges  
-        ApplyChanges() Wird ausgeführt, beim anlegen der Instanz.
-        und beim ändern der Parameter in der Form
-    -------------------------------------------------------------
-    */
+
+    #---------------------------------------------------------------#
+    #     Function: ApplyChanges                                    #
+    #     ApplyChanges() Wird ausgeführt, beim anlegen der Instanz. #
+    #     und beim ändern der Parameter in der Form                 #
+    #---------------------------------------------------------------#
+
     public function ApplyChanges(){
+        $this->RegisterMessage(0, IPS_KERNELSTARTED);
         //Never delete this line!
         parent::ApplyChanges();
 
-        #Ein-Ausgangszähler
+         #Ein-Ausgangszähler
         $this->SetBuffer("buffer_cM", 0);
 
         # Messages deregistrieren
@@ -172,7 +169,8 @@ ___________________________________________________________________________
         else {
             //Timer ausschalten
              //$this->SetTimerInterval("Name", 0);
-        }			
+        }	
+            
             #Variablen zurücksetzen
             $this->SetValue("StatWZ", false);
             $this->SetValue("StatSZ", false);
@@ -189,26 +187,64 @@ ___________________________________________________________________________
             $this->SetTimerInterval("T_AZ", 0);
             $this->SetTimerInterval("T_D", 0);
             $this->SetTimerInterval("T_K", 0);
-        
+ 				
     } //Function: ApplyChanges  End
-    /* 
-    ------------------------------------------------------------ 
-        Function: Destroy  
-            Destroy() wird beim löschen der Instanz 
-            und update der Module aufgerufen
-    -------------------------------------------------------------
-    */
+
+
+    #------------------------------------------------------------# 
+    #  Function: MessageSink                                     #
+    #  MessageSink() wird nur bei registrierten                  #
+    #  NachrichtenIDs/SenderIDs-Kombinationen aufgerufen.        #
+    #------------------------------------------------------------#
+    public function MessageSink($TimeStamp, $SenderID, $Message, $Data) {
+        $this->SendDebug("MessageSink", "Message from SenderID ".$SenderID." with Message ".$Message);
+
+        switch ($Message) {
+            case IPS_KERNELSTARTED:
+                $this->KernelReady();
+                break;
+            case VM_UPDATE:
+                
+                $MessageList = $this->GetMessageList();
+                
+                $this->sendDebug("Messagelist: ",$MessageList, 0);
+
+                $arrString = $this->ReadPropertyString("PraesenzS");
+                $arr = json_decode($arrString);
+
+                foreach ($arr as $key => $value) {
+                   //$this->SendDebug($value->ID," == ".$SenderID);
+
+                    if($value->ID == $SenderID){
+                        $this->setRoomStat($arr[$key]->Raum, $SenderID);
+                    }
+
+                }
+                break;
+            default:
+                # code...
+                break;
+        }
+    } //Function: MessageSink End
+
+
+
+
+    #-------------------------------------------------------------#
+    #    Function: Destroy                                        #
+    #        Destroy() wird beim löschen der Instanz              #
+    #        und update der Module aufgerufen                     #
+    #-------------------------------------------------------------#
     public function Destroy() {
         //Never delete this line!
         parent::Destroy();
     } //Function: Destroy End
-    /* 
-    ------------------------------------------------------------ 
-        Function: RequestAction  
-            RequestAction() wird von schaltbaren Variablen 
-            aufgerufen.
-    -------------------------------------------------------------
-    */ 
+    
+    #------------------------------------------------------------# 
+    #    Function: RequestAction                                 #
+    #        RequestAction() wird von schaltbaren Variablen      #
+    #        aufgerufen.                                         #
+    #------------------------------------------------------------#
 //    public function RequestAction($Ident, $Value) {     
      /*
         switch($Ident) {
@@ -230,142 +266,100 @@ ___________________________________________________________________________
 
  
  
-    //-----------------------------------------------------------------------------
-    /* Function: MessageSink   
-    ...............................................................................
-    Beschreibung:
-        Wurde über MessageSink eine Änderung der Registrierten Variable (Detector)
-        erkannt wird die Funktion setRoomStat aufgerufen.
-                
-    ...............................................................................
-    Parameters: 
-        room - Raum Detector angesprochen
-        id   - ID der Raum Variablen
-    ...............................................................................
-    Variable: registrierte Variable    
-       * PraesenzS[array]
-    ------------------------------------------------------------------------------  */
-   public function MessageSink($TimeStamp, $SenderID, $Message, $Data) {
-        $this->SendDebug("MessageSink", "Message from SenderID ".$SenderID." with Message ".$Message);
-        
-        switch ($Message) {
-            case VM_UPDATE:
-                
-          $MessageList = $this->GetMessageList();
-                
-                 $this->sendDebug("Messagelist: ",$MessageList, 0);
 
-                $arrString = $this->ReadPropertyString("PraesenzS");
-                $arr = json_decode($arrString);
-                
-                foreach ($arr as $key => $value) {
-                     //$this->SendDebug($value->ID," == ".$SenderID);
-                     
-                        if($value->ID == $SenderID){
-                            $this->setRoomStat($arr[$key]->Raum, $SenderID);
-                        }
-               
-                }
-                break;
-            default:
-                # code...
-                break;
-        }
-    } //Function: MessageSink End
     
  
-/* 
-_____________________________________________________________________________________________________________________
-    Section: Public Funtions
-    Die folgenden Funktionen stehen automatisch zur Verfügung, wenn das Modul über die "Module Control" eingefügt wurden.
-    Die Funktionen werden, mit dem selbst eingerichteten Prefix, in PHP und JSON-RPC wie folgt zur Verfügung gestellt:
-    
-    FSSC_XYFunktion($Instance_id, ... );
-________________________________________________________________________________________________________________________ 
-*/
-    //-----------------------------------------------------------------------------
-    /* Function: setRoomStat
-    ...............................................................................
-    Beschreibung:
-        Wurde über MessageSink eine Änderung der Registrierten Variable (Detector)
-        erkannt wird dieses Unterprogramm gestartet.
-                * Person detektiert - 
-                    Raum setzen
-                    Raum-Timer nachstarten 
-                    Wohnung setzen
-                    Wohnungs-Timer nachstarten.
-    ...............................................................................
-    Parameters: 
-        room - Raum Detector angesprochen
-        id   - ID der Raum Variablen
-    ...............................................................................
-    Returns:    
-        none
-    ------------------------------------------------------------------------------  */
+#_________________________________________________________________________________________________________
+# Section: Public Functions
+#    Die folgenden Funktionen stehen automatisch zur Verfügung, wenn das Modul über die "Module Control" 
+#    eingefügt wurden.
+#    Die Funktionen werden, mit dem selbst eingerichteten Prefix, in PHP und JSON-RPC wie folgt zur 
+#    Verfügung gestellt:
+#_________________________________________________________________________________________________________
+
+    #---------------------------------------------------------------------------------#
+    # Function: setRoomStat                                                           #
+    #.................................................................................#
+    # Beschreibung:                                                                   #
+    #    Wurde über MessageSink eine Änderung der Registrierten Variable (Detector)   #
+    #    erkannt wird dieses Unterprogramm gestartet.                                 #
+    #            * Person detektiert -                                                #
+    #                Raum setzen                                                      #
+    #                Raum-Timer nachstarten                                           #
+    #                Wohnung setzen                                                   #
+    #                Wohnungs-Timer nachstarten.                                      #
+    #.................................................................................#
+    # Parameters:                                                                     #
+    #    room - Raum Detector angesprochen                                            #
+    #    id   - ID der Raum Variablen                                                 #
+    #.................................................................................#
+    # Returns:                                                                        #
+    #    none                                                                         #
+    #---------------------------------------------------------------------------------#
     public function setRoomStat(string $room, int $id){
         $this->SendDebug("setRoomStat: ",$room." - ".$id);
         switch ($room) {
             case "Wohnzimmer":
-                    $this->SetValue("StatWZ", true);
+                    $this->SetValue("StatWZ", true);  
                     #WZ Timer starten 5min = 5*60000 = 300 000
                     $this->SetTimerInterval("T_WZ", 300000);
-                    #Wohnungs-Timer nachstarten
-                    $this->SetValue("StatWohn", true);
-                    #Timer nachstarten
-                    $this->SetTimerInterval("T_Wohn", 0);
-                    $this->SetTimerInterval("T_Wohn", 900000);
-                break;
-            case "Kinderzimmer":
-                    $this->SetValue("StatKZ", true);
+                                    #Wohnungs-Timer nachstarten
+                                    $this->SetValue("StatWohn", true);
+                                    #Timer nachstarten
+                                    $this->SetTimerInterval("T_Wohn", 0);
+                                    $this->SetTimerInterval("T_Wohn", 900000);
+                break; 
+            case "Kinderzimmer":            
+                    $this->SetValue("StatKZ", true);     
                     $this->SetTimerInterval("T_KZ", 300000);
                     $this->SetValue("StatWohn", true);
                     #Timer nachstarten
                     $this->SetTimerInterval("T_Wohn", 0);
-                    $this->SetTimerInterval("T_Wohn", 900000);
+                    $this->SetTimerInterval("T_Wohn", 900000);         
                 break;
-            case "Schlafzimmer":
-                    $this->SetValue("StatSZ", true);
+            case "Schlafzimmer":            
+                    $this->SetValue("StatSZ", true);          
                     $this->SetTimerInterval("T_SZ", 300000);
                     $this->SetValue("StatWohn", true);
                     #Timer nachstarten
                     $this->SetTimerInterval("T_Wohn", 0);
-                    $this->SetTimerInterval("T_Wohn", 900000);
+                    $this->SetTimerInterval("T_Wohn", 900000);           
                 break;
-            case "Küche":
+            case "Küche":             
                     $this->SetValue("StatK", true);
-                    $this->SetValue("StatWohn", true);
+                    $this->SetValue("StatWohn", true);        
                     $this->SetTimerInterval("T_K", 300000);
-                    #Timer nachstarten
-                    $this->SetTimerInterval("T_Wohn", 0);
-                    $this->SetTimerInterval("T_Wohn", 900000);
+                        #Timer nachstarten
+                        $this->SetTimerInterval("T_Wohn", 0);
+                        $this->SetTimerInterval("T_Wohn", 900000);           
                 break;   
-            case "Diele":
-                    $this->SetValue("StatD", true);
+            case "Diele":           
+                    $this->SetValue("StatD", true);         
                     $this->SetTimerInterval("T_D", 300000);
                     $this->SetValue("StatWohn", true);
                     #Timer nachstarten
                     $this->SetTimerInterval("T_Wohn", 0);
-                    $this->SetTimerInterval("T_Wohn", 900000);
+                    $this->SetTimerInterval("T_Wohn", 900000);        
                 break;   
-            case "Arbeitszimmer":
+            case "Arbeitszimmer":   
                     $this->SetValue("StatAZ", true);
                     $this->SetValue("StatWohn", true);
                     $this->SetTimerInterval("T_AZ", 300000);
-                    #Timer nachstarten
-                    $this->SetTimerInterval("T_Wohn", 0);
-                    $this->SetTimerInterval("T_Wohn", 900000);
+                          #Timer nachstarten
+                          $this->SetTimerInterval("T_Wohn", 0);
+                          $this->SetTimerInterval("T_Wohn", 900000);
                 break;  
             case "Eingangstür":
-
-                    //wenn zuerst Türsensor vor Dielendetector anspricht, dann kommt Person rein sonst raus.
-                    if(GetValue(36168) == false){
-                        SetValue(13087, GetValue(13087) + 1);
-                    }
-                    else{
-                        $counter = GetValue(13087) - 1;
-                        if ($counter < 0) {$counter = 0;} 
-                        SetValue(13087, $counter );
-                    }
+          
+    //wenn zuerst Türsensor vor Dielendetector anspricht, dann kommt Person rein sonst raus.
+    if(GetValue(36168) == false){
+        SetValue(13087, GetValue(13087) + 1);
+                }
+                else{
+                    $counter = GetValue(13087) - 1;
+                    if ($counter < 0) {$counter = 0;} 
+                    SetValue(13087, $counter );
+                }
                 
 
                 break;                        
@@ -375,17 +369,16 @@ ________________________________________________________________________________
         }
     }  //xxxx End
 
-    //-----------------------------------------------------------------------------
-    /* Function: checkMovement
-    ...............................................................................
-    Beschreibung
-    ...............................................................................
-    Parameters: 
-        none
-    ...............................................................................
-    Returns:    
-        none
-    ------------------------------------------------------------------------------  */
+
+    #---------------------------------------------------------------------------------#
+    # Function: checkMovement                                                         #
+    #.................................................................................#
+    # Beschreibung:                                                                   #
+    #.................................................................................#
+    # Parameters:                                                                     #
+    #.................................................................................#
+    # Returns:                                                                        #
+    #---------------------------------------------------------------------------------#
     public function checkMovement(){
         if($this->GetBuffer("buffer_cM")>120){
             if($StatD){
@@ -419,20 +412,20 @@ ________________________________________________________________________________
         }
     }
 
-    //-----------------------------------------------------------------------------
-    /* Function: checkEvent
-    ...............................................................................
-    Beschreibung:
-        Funktion wird von den Timern aufgerufen, wenn die Timer Zeit abgelaufen ist.
-            Der entsprechende Raum wird dann zurückgesetzt. => Raum ist leer.
-            Der zugehörige Timer wird abgeschaltet.
-    ...............................................................................
-    Parameters: 
-        room - Raum Variable
-    ...............................................................................
-    Returns:    
-        none
-    ------------------------------------------------------------------------------  */
+   
+
+    #---------------------------------------------------------------------------------#
+    # Function: checkEvent                                                            #
+    #.................................................................................#
+    # Beschreibung:                                                                   #
+    #   Funktion wird von den Timern aufgerufen, wenn die Timer Zeit abgelaufen ist.  #
+    #   Der entsprechende Raum wird dann zurückgesetzt. => Raum ist leer.             #
+    #   Der zugehörige Timer wird abgeschaltet.                                       #                        
+    #.................................................................................#
+    # Parameters:    $room                                                            #
+    #.................................................................................#
+    # Returns:      none                                                              #
+    #---------------------------------------------------------------------------------#
     public function checkEvent($room){
         #Timer ist abgelaufen RaumStatus auf false setzen - keine Person im Raum seit 5 Minuten
         switch ($room) {
@@ -467,7 +460,7 @@ ________________________________________________________________________________
             case "AZ":
                 $this->SetValue("StatAZ", false);
                 $this->SetTimerInterval("T_AZ", 0);
-                break;        
+                break;  
 
             default:
                 # code...
@@ -475,7 +468,7 @@ ________________________________________________________________________________
         }
 
         #prüfen ob Wohnung leer
-        if($this->GetValue("StatWohn") == false) {
+      if($this->GetValue("StatWohn") == false) {
 
         }       
             #Wohnung ist leer nun können Licht ausgeschalten
@@ -484,18 +477,21 @@ ________________________________________________________________________________
             #werden
 
 
-        
 
-    }
+    
+        }
+
+    
 
 
+#________________________________________________________________________________________
+# Section: Private Functions
+#    Die folgenden Funktionen stehen nur innerhalb des Moduls zur verfügung
+#    Hilfsfunktionen: 
+#_______________________________________________________________________________________
 
-/* 
-_______________________________________________________________________
-    Die folgenden Funktionen sind nur zur internen Verwendung verfügbar
-    Hilfsfunktionen
-______________________________________________________________________
-*/ 
+
+ 
     /* ----------------------------------------------------------------------------
     Function: createProfile
     ...............................................................................
