@@ -1,0 +1,89 @@
+{
+    "elements": [
+        {
+            "type" : "CheckBox",
+            "name": "Open",
+            "caption": "Module_Active",
+            "enabled": "",
+            "link": "",
+            "onChange": "",
+            "value": "false",
+            "visible": "true",
+            "width": ""
+        },
+        {
+            "name": "Update_Interval",
+            "type": "NumberSpinner",
+            "caption": "Update Intervalzeit"
+        },
+        {
+            "type" : "NumberSpinner",
+            "name": "StromPreis",
+            "caption": "Strom Preis",
+            "digits": "4",
+            "enabled": "",
+            "hex": "",
+            "minimum": "0",
+            "maximum": "1.0",
+            "moreDigits": "",
+            "suffix": "",
+            "value": "",
+            "visible": "true",
+            "width": ""
+        },
+        {
+            "type" : "CheckBox",
+            "name": "AddGrundPreis",
+            "caption": "Grundpreis berücksichtigen",
+            "enabled": "",
+            "link": "",
+            "onChange": "",
+            "value": "false",
+            "visible": "true",
+            "width": ""
+        },
+        {
+            "type" : "NumberSpinner",
+            "name": "GrundPreis",
+            "caption": "Grund Preis",
+            "digits": "2",
+            "enabled": "",
+            "hex": "",
+            "minimum": "0",
+            "maximum": "1000.00",
+            "moreDigits": "",
+            "suffix": "",
+            "value": "",
+            "visible": "true",
+            "width": ""
+        },
+        {
+            "type": "Label",
+            "label": "Add/Delete Energy sensor variables"
+        },
+        {
+            "type": "List",
+            "name": "StromSensorList",
+            "caption": "StromMessSensor",
+            "rowCount": 5,
+            "add": true,
+            "delete": true,
+            "sort": {
+            "column": "ID",
+            "direction": "ascending"
+            },
+                    "columns": [{
+                    "name": "ID",
+                    "label": "ID",
+                    "width": "auto",
+                    "add": "",
+                    "edit": {
+                        "type": "SelectVariable"
+                    }
+                }],
+            "values": [{
+
+            }]
+        }
+    ]
+}

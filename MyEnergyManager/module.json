@@ -1,0 +1,16 @@
+{
+  "id": "{9BCD513A-B6A1-466F-98DA-BE2E7538F81E}",
+  "name": "MyEnergyManager",
+  "type": 3,
+  "vendor": "PiTo",
+  "aliases": ["MyEnergyManager"],
+  "parentRequirements": [],
+  "childRequirements": [],
+  "implemented": [],
+  "prefix": "MEM"
+}
+
+
+
+
+

@@ -153,6 +153,7 @@ trait ProfileHelper
     #.......................................................................................#
     #  Parameters:                                                                          #
     #    * @param string $vartype      Type of the variable.                                #
+    #                                  0=bool, 1=Integer, 2=Float, 3=String                 #
     #    * @param string $name         Profil name.                                         #
     #    * @param string $icon         Icon to display.                                     #
     #    * @param string $prefix       Variable prefix.                                     #
@@ -190,16 +191,16 @@ trait ProfileHelper
     {
         if (!IPS_VariableProfileExists($name)) {
             switch ($vartype) {
-                case vtBoolean:
+                case VARIABLETYPE_BOOLEAN:
                     $this->RegisterProfileBoolean($name, $icon, $prefix, $suffix, $associations);
                     break;
-                case vtInteger:
+                case VARIABLETYPE_INTEGER:
                     $this->RegisterProfileInteger($name, $icon, $prefix, $suffix, $minvalue, $maxvalue, $stepsize, $digits, $associations);
                     break;
-                case vtFloat:
+                case VARIABLETYPE_FLOAT:
                     $this->RegisterProfileFloat($name, $icon, $prefix, $suffix, $minvalue, $maxvalue, $stepsize, $digits, $associations);
                     break;
-                case vtString:
+                case VARIABLETYPE_STRING:
                     $this->RegisterProfileString($name, $icon);
                     break;
             }
@@ -258,7 +259,7 @@ trait ProfileHelper
      */
     protected function RegisterProfileInteger($name, $icon, $prefix, $suffix, $minvalue, $maxvalue, $stepsize, $digits, $asso)
     {
-        $this->RegisterProfileType($name, vtInteger);
+        $this->RegisterProfileType($name, VARIABLETYPE_INTEGER);
         IPS_SetVariableProfileIcon($name, $icon);
         IPS_SetVariableProfileText($name, $prefix, $suffix);
         IPS_SetVariableProfileDigits($name, $digits);
@@ -290,7 +291,7 @@ trait ProfileHelper
      */
     protected function RegisterProfileFloat($name, $icon, $prefix, $suffix, $minvalue, $maxvalue, $stepsize, $digits, $asso)
     {
-        $this->RegisterProfileType($name, vtFloat);
+        $this->RegisterProfileType($name, VARIABLETYPE_FLOAT);
         IPS_SetVariableProfileIcon($name, $icon);
         IPS_SetVariableProfileText($name, $prefix, $suffix);
         IPS_SetVariableProfileDigits($name, $digits);
@@ -315,7 +316,7 @@ trait ProfileHelper
      */
     protected function RegisterProfileString($name, $icon, $prefix, $suffix)
     {
-        $this->RegisterProfileType($name, IPSVarType::vtString);
+        $this->RegisterProfileType($name, IPSVarType::VARIABLETYPE_STRING);
         IPS_SetVariableProfileText($name, $prefix, $suffix);
         IPS_SetVariableProfileIcon($name, $icon);
     }
