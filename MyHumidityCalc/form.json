@@ -1,5 +1,11 @@
 {
-    "elements": [{
+    "elements": [
+        {
+        "name": "ID_active",
+        "type": "CheckBox",
+        "caption": "active"
+        },
+        {
             "type": "ExpansionPanel",
             "caption": "Outdoor climate",
             "items": [{
