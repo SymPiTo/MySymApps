@@ -3,153 +3,190 @@
   TRAITS: MyHelper
 ...............................................................................
         
+  * LogErrorToFile
   * MyLogger
   * SendDebug
 
   * DecodeUTF8
  
 -------------------------------------------------------------------------------*/
-trait DebugHelper {
-        /* --------------------------------------------------------------------------- 
-         Function: ModErrorLog
-        ...............................................................................
-         erweiterte Log Funktion die in eine LogDatei schreibt.
-        ...............................................................................
-        Parameters: 
-           ModName        -   Name des Moduls
-           text           -   Beschreibung
-           array          -   Wert (array oder text)
-        ...............................................................................
-        Returns:    
-                none
-        -------------------------------------------------------------------------------*/
+trait LogErrorToFile
+{
+    /**
+     * Ergänzt SendDebug um die Möglichkeit Objekte und Array auszugeben.
+     *
+     * @access protected
+     * @param string $Message Nachricht für Data.
+     * @param WebSocketFrame|mixed $Data Daten für die Ausgabe.
+     * @return int $Format Ausgabeformat für Strings.
+     */
         protected function ModErrorLog($ModName, $text, $array){
-                $path = "/home/pi/pi-share/"; 
-                $file=$ModName.".log";
-                $datum = date("d.m.Y");
-                $uhrzeit = date("H:i");
-                $logtime = $datum." - ".$uhrzeit." Uhr";
-                if (!$array){
+        {
+            $path = "/home/pi/pi-share/"; 
+            $file=$ModName.".log";
+            
+            $datum = date("d.m.Y");
+            $uhrzeit = date("H:i");
+            $logtime = $datum." - ".$uhrzeit." Uhr";
+            if (!$array){
+
                     $array = '-';
-                }
-                if(($FileHandle = fopen($path.$file, "a")) === false) {
-                        Exit;
-                }
-                if (is_array($array)){
-                        //$comma_seperated=implode("\r\n",$array);
-                        $comma_seperated=print_r($array, true);
-                }
-                else {
-                        $comma_seperated=$array;
-                }
-                        fwrite($FileHandle, $logtime.": ".$text.": ");
-                fwrite($FileHandle, $comma_seperated."\r\n");
-                fclose($FileHandle);
-        }
- 
-        /* --------------------------------------------------------------------------- 
-         Function: SendDebug
-        ...............................................................................
-         Adds functionality to serialize arrays and objects.
-        ...............................................................................
-        Parameters: 
-           msg        -   Title of the debug message.
-           data       -   Data output.
-           format     -   Output format.
-        ...............................................................................
-        Returns:    
-                none
-        -------------------------------------------------------------------------------*/
-        protected function SendDebug($msg, $data, $format = 0){
-                if (is_object($data)) {
-                foreach ($data as $key => $value) {
-                        $this->SendDebug($msg.':'.$key, $value, 1);
-                }
-                } elseif (is_array($data)) {
-                foreach ($data as $key => $value) {
-                        $this->SendDebug($msg.':'.$key, $value, 0);
-                }
-                } elseif (is_bool($data)) {
-                parent::SendDebug($msg, ($data ? 'TRUE' : 'FALSE'), 0);
-                } else {
-                parent::SendDebug($msg, $data, $format);
-                }
-        }
- 
-}
-
-
-trait UTF8Coder1{
-
-    /**
-     * Führt eine UTF8-Dekodierung für einen String oder ein Objekt durch (rekursiv)
-     *
-     * @access private
-     * @param string|object $item Zu dekodierene Daten.
-     * @return string|object Dekodierte Daten.
-     */
-    private function DecodeUTF8($item)
-    {
-        if (is_string($item)) {
-            $item = utf8_decode($item);
-        } elseif (is_object($item)) {
-            foreach ($item as $property => $value) {
-                $item->{$property} = $this->DecodeUTF8($value);
             }
-        }
-        return $item;
-    }
 
-    /**
-     * Führt eine UTF8-Enkodierung für einen String oder ein Objekt durch (rekursiv)
-     *
-     * @access private
-     * @param string|object $item Zu Enkodierene Daten.
-     * @return string|object Enkodierte Daten.
-     */
-    private function EncodeUTF8($item)
-    {
-        if (is_string($item)) {
-            $item = utf8_encode($item);
-        } elseif (is_object($item)) {
-            foreach ($item as $property => $value) {
-                $item->{$property} = $this->EncodeUTF8($value);
-            }
+            //prüfen, ob file vorhanden.
+            //if (file_exists($path.$filename)) {
+
+
+
+                    if(($FileHandle = fopen($path.$file, "a")) === false) {
+                            //SetValue($ID_OutEnabled, false);
+                            Exit;
+                    }
+                    if (is_array($array)){
+                            //$comma_seperated=implode("\r\n",$array);
+                            $comma_seperated=print_r($array, true);
+                    }
+                    else {
+                            $comma_seperated=$array;
+                    }
+                    fwrite($FileHandle, $logtime.": ".$text.": ");
+                    fwrite($FileHandle, $comma_seperated."\r\n");
+                    fclose($FileHandle);
+           //}
         }
-        return $item;
     }
 }
 
- 
-    /***************************************************************************
-    * Name:  ProfileHelper - TRAIT
-    * 
-    * Helper class for create variable profiles.
-    *
-    * Functions:    
-    *   RegisterProfile($vartype, $name, $icon, $prefix = '', $suffix = '', $minvalue = 0, $maxvalue = 0, $stepsize = 0, $digits = 0, $associations = null)
-    *   RegisterProfileType($name, $vartype)
-    *   RegisterProfileBoolean($name, $icon, $prefix, $suffix, $asso)
-    *   RegisterProfileInteger($name, $icon, $prefix, $suffix, $minvalue, $maxvalue, $stepsize, $digits, $asso)
-    *   RegisterProfileFloat($name, $icon, $prefix, $suffix, $minvalue, $maxvalue, $stepsize, $digits, $asso)
-    *   RegisterProfileString($name, $icon, $prefix, $suffix)
-    * 
-    * Parameters:  
-    *   $vartype      Type of the variable.
-    *   $name         Profil name.
-    *   $icon         Icon to display.
-    *   $prefix       Variable prefix.
-    *   $suffix       Variable suffix.
-    *   $minvalue     Minimum value.
-    *   $maxvalue     Maximum value.
-    *   $stepsize     Increment.
-    *   $digits       Decimal places.
-    *   $associations Associations of the values.[key, value,icon,color]
-    * 
-    * Returns:  none
-    *************************************************************************** */
-trait ProfileHelper {
-     protected function RegisterProfile($vartype, $name, $icon, $prefix = '', $suffix = '', $minvalue = 0, $maxvalue = 0, $stepsize = 0, $digits = 0, $associations = null)
+/**
+ * Helper class for the debug output.
+ */
+trait DebugHelper
+{
+    #------------------------------------------------------------------------------# 
+    #  Function: UnregisSendDebugterProfile                                        #
+    #..............................................................................#
+    #  Beschreibung:                                                               #
+    #      Adds functionality to serialize arrays and objects.                     #
+    #..............................................................................#
+    #  Parameters:  $msg    Title of the debug message.                            #
+    #               $data   Data output.                                           #
+    #               $format Output format.                                         #                              
+    #..............................................................................#
+    # Returns:     none                                                            #
+    #------------------------------------------------------------------------------#
+    protected function SendDebug($msg, $data, $format = 0)
+    {
+        if (is_object($data)) {
+            foreach ($data as $key => $value) {
+                $this->SendDebug($msg.':'.$key, $value, 1);
+            }
+        } elseif (is_array($data)) {
+            foreach ($data as $key => $value) {
+                $this->SendDebug($msg.':'.$key, $value, 0);
+            }
+        } elseif (is_bool($data)) {
+            parent::SendDebug($msg, ($data ? 'TRUE' : 'FALSE'), 0);
+        } else {
+            parent::SendDebug($msg, $data, $format);
+        }
+    }
+}
+
+
+trait NMapHelper {
+    #------------------------------------------------------------------------------# 
+    #  Function: checkPortState                                                    #
+    #..............................................................................#
+    #   Beschreibung:                                                              #
+    #         prüft ob ein bestimmter Port einer TCP-Adresse offen ist             #
+    #..............................................................................#
+    #  Parameters:                                                                 #
+    #          $ip     = string '192.168.178.28'                                   #
+    #          $port   = string '8888'                                             #                              
+    #..............................................................................#
+    # Returns:    true  => Port is open                                            #
+    #             false => Port is closed                                          #
+    #------------------------------------------------------------------------------#
+    protected function checkPortState($ip, $port, $type=true){
+      
+        $cmd = "sudo nmap -p T:".$port." ".$ip;
+        // linux Befehl ausführen mit  ``'
+        $output = `$cmd`;
+        $posOpen = strpos($output, "open");
+        $posClose = strpos($output, "closed");
+        //open Textstring gefunden
+        if($posOpen != false){
+          $result = "open";
+        }
+        //closed Textstring gefunden
+        if($posClose!= false){
+          $result = "closed";
+        }
+        if(($posOpen == false) & ($posClose!= false)){
+            //Keine Antwort
+            $result = false;
+        }
+        if(!$type){
+            if($result == "open"){
+                $result = true;
+            } else{
+                $result = false;
+            }
+        }
+
+
+  
+        return $result;
+    }
+}
+
+/**
+ * Helper class for create variable profiles.
+ */
+trait ProfileHelper
+{
+    #---------------------------------------------------------------------------------------# 
+    #  Function: RegisterProfile                                                            #
+    #.......................................................................................#
+    #   Beschreibung:                                                                       #
+    #        Create the profile for the given type, values and associations.                #
+    #.......................................................................................#
+    #  Parameters:                                                                          #
+    #    * @param string $vartype      Type of the variable.                                #
+    #    * @param string $name         Profil name.                                         #
+    #    * @param string $icon         Icon to display.                                     #
+    #    * @param string $prefix       Variable prefix.                                     #
+    #    * @param string $suffix       Variable suffix.                                     #
+    #    * @param int    $minvalue     Minimum value.                                       #
+    #    * @param int    $maxvalue     Maximum value.                                       #
+    #    * @param int    $stepsize     Increment.                                           #
+    #    * @param int    $digits       Decimal places.                                      #
+    #    * @param array  $associations Associations of the values.[key, value,icon,color]   #                                 #                              
+    #.......................................................................................#
+    # Returns:    none                                                                      #
+    #---------------------------------------------------------------------------------------#
+    #   $Assoc[0]['value'] = "Kalt";
+    #   $Assoc[1]['value'] = "Anwärmen";
+    #   $Assoc[2]['value'] = "Heizen";
+    #   $Assoc[3]['value'] = "Störung";
+    #   $Assoc[0]['icon'] =  NULL;
+    #   $Assoc[1]['icon'] =  NULL;
+    #   $Assoc[2]['icon'] = NULL;
+    #   $Assoc[3]['icon'] = NULL;
+    #   $Assoc[0]['color'] = "0xFFFF00";
+    #   $Assoc[1]['color'] = "0xFFA500";
+    #   $Assoc[2]['color'] = "0xFF0000";
+    #   $Assoc[3]['color'] = "0x0000FF";
+    #   $Name = "Heat.Status";
+    #   $Vartype = 1;
+    #   $Icon = NULL;
+    #   $Prefix = NULL;
+    #   $Suffix = NULL;
+    #   $MinValue = 0;
+    #   $MaxValue = 4;
+    #   $StepSize = 1;
+    #   $Digits = NULL;
+    protected function RegisterProfile($vartype, $name, $icon, $prefix = '', $suffix = '', $minvalue = 0, $maxvalue = 0, $stepsize = 0, $digits = 0, $associations = null)
     {
         if (!IPS_VariableProfileExists($name)) {
             switch ($vartype) {
@@ -175,7 +212,6 @@ trait ProfileHelper {
      * @param string $name    Profil name.
      * @param string $vartype Type of the variable.
      */
-
     protected function RegisterProfileType($name, $vartype)
     {
         if (!IPS_VariableProfileExists($name)) {
@@ -283,47 +319,252 @@ trait ProfileHelper {
         IPS_SetVariableProfileText($name, $prefix, $suffix);
         IPS_SetVariableProfileIcon($name, $icon);
     }
-}          
 
-trait NMapHelper {
-    //-----------------------------------------------------------------------------
-    /* Function: checkPortState($ip, $port)
-    ...............................................................................
-    Beschreibung:
-        prüft ob ein bestimmter Port einer TCP-Adresse offen ist
-    ...............................................................................
-    Parameters: 
-        $ip     = string '192.168.178.28'
-        $port   = string '8888'
-    ...............................................................................
-    Returns:    
-        true  => Port is open
-        false => Port is closed
-    ------------------------------------------------------------------------------  */
-    protected function checkPortState($ip, $port, $type=true){
-        $output_file = "/var/lib/symcon/modules/MySymApps/NMap/file.xml";
-        if (file_exists($output_file)) {
-            unlink($output_file);
-         }
-        $cmd = "sudo nmap -p T:8888 -oX /var/lib/symcon/modules/MySymApps/NMap/file.xml 192.168.178.28";
-        exec($cmd, $retval);
-        sleep(1000);
-        $xml=simplexml_load_file('/var/lib/symcon/modules/MySymApps/NMap/file.xml') or die("Error: Cannot create object");
-        $PortState = $xml->host->ports->port->state['state'];
-        $PortState = json_decode(json_encode($PortState),true);
-        if($PortState[0] === "open"){
-            if($type){
-                return 1;
-            } else{
-                return "open";
-            }
+        
+    #------------------------------------------------------------------------------# 
+    #  Function: UnregisterProfile                                                 #
+    #..............................................................................#
+    #  Legt ein Unterverzeichnis an                                                #
+    #..............................................................................#
+    #  Parameters:  $Name                                                          #                              
+    #..............................................................................#
+    # Returns:     none                                                            #
+    #------------------------------------------------------------------------------#
+    protected function UnregisterProfile(string $Name){
+        if (IPS_VariableProfileExists($Name)) {
+           IPS_DeleteVariableProfile($Name);
+        }   
+    }	
+}
+/**
+ * Helper class to create timer and events.
+ */
+trait TimerHelper
+{
+    /**
+     * Create a cyclic timer.
+     *
+     * @param string $ident  Name and ident of the timer.
+     * @param int    $hour   Start hour.
+     * @param int    $minute Start minute.
+     * @param int    $second Start second.
+     * @param int    $script Script ID.                 _PREFIX__Scriptname($_IPS[\'TARGET\'])
+     * @param bool   $active True to activate the timer, oterwise false.
+     */
+    protected function RegisterCyclicTimer($ident, $hour, $minute, $second, $script, $active)
+    {
+        $id = @$this->GetIDForIdent($ident);
+        $name = $ident;
+        if ($id && IPS_GetEvent($id)['EventType'] != 1) {
+            IPS_DeleteEvent($id);
+            $id = 0;
         }
-        if($PortState[0] === "closed"){
-            if($type){
-                return 0;
-            } else{
-                return "closed";
-            }
+        if (!$id) {
+            $id = IPS_CreateEvent(1);
+            IPS_SetParent($id, $this->InstanceID);
+            IPS_SetIdent($id, $ident);
         }
+        IPS_SetName($id, $name);
+        // IPS_SetInfo($id, "Update Timer");
+        // IPS_SetHidden($id, true);
+        IPS_SetEventScript($id, $script);
+        if (!IPS_EventExists($id)) {
+            throw new Exception("Ident with name $ident is used for wrong object type");
+        }
+        //IPS_SetEventCyclic($id, 0, 0, 0, 0, 0, 0);
+        IPS_SetEventCyclicTimeFrom($id, $hour, $minute, $second);
+        IPS_SetEventActive($id, $active);
+    }
+}
+
+
+trait VersionHelper{		
+    #----------------------------------------------------------------------------#
+    #   Function: GetIPSVersion                                                  #
+    #............................................................................#
+    #   Beschreibung: gibt die instalierte IPS Version zurück                    #
+    #............................................................................#
+    #   Parameters:   none                                                       #
+    #    ........................................................................#
+    #    Returns:                                                                # 
+    #        $ipsversion (floatint)                                              #
+    #----------------------------------------------------------------------------#
+        protected function GetIPSVersion(){
+            $ipsversion = floatval(IPS_GetKernelVersion());
+            if ($ipsversion < 4.1) // 4.0
+            {
+                $ipsversion = 0;
+            } elseif ($ipsversion >= 4.1 && $ipsversion < 4.2) // 4.1
+            {
+                $ipsversion = 1;
+            } elseif ($ipsversion >= 4.2 && $ipsversion < 4.3) // 4.2
+            {
+                $ipsversion = 2;
+            } elseif ($ipsversion >= 4.3 && $ipsversion < 4.4) // 4.3
+            {
+                $ipsversion = 3;
+            } elseif ($ipsversion >= 4.4 && $ipsversion < 5) // 4.4
+            {
+                $ipsversion = 4;
+            } elseif ($ipsversion >= 4.4 && $ipsversion < 6) // 5
+            {
+                $ipsversion = 5;
+            }
+            else {
+                $ipsversion = 6;
+            }
+    
+            return $ipsversion;
+        }
+}
+
+trait ModuleHelper{
+    #-------------------------------------------------------------------------------#
+    #    Function: ModuleUp                                                         #
+    #...............................................................................#
+    #    prüft ob Kernelhochgefahren und Modul eingeschaltet                        #
+    #    wird benutzt um Timer nur einzuschaltenwen true;                           #
+    # ..............................................................................#
+    #    Parameters:                                                                #
+    #        $ModuleSwitchedOn -> true/false                                        #
+    #...............................................................................# 
+    #   Returns:                                                                    #
+    #        true/false                                                             #
+    #-------------------------------------------------------------------------------#
+    protected function ModuleUp($ModuleSwitchedOn){
+        //Only call this in READY state. On startup the WebHook instance might not be available yet
+        if ((IPS_GetKernelRunlevel() == KR_READY) & ($ModuleSwitchedOn)){
+        #Kernel ist hochgefahren und Module ist eingeschaltet 
+        return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    #------------------------------------------------------------------------------------------------------# 
+    #  Function: RegisterCategory                                                                          #
+    #......................................................................................................#
+    #  Legt ein Unterverzeichnis an                                                                        #
+    #......................................................................................................#
+    #  Parameters:      $ident                                                                             #
+    #                   $catName                                                                           #         
+    #......................................................................................................#
+    #  Returns:     none                                                                                   #
+    #------------------------------------------------------------------------------------------------------#
+    private function RegisterCategory($ident, $catName ) {
+        $KategorieID = @IPS_GetCategoryIDByName($catName, $this->InstanceID);
+        if ($KategorieID === false){
+            // Anlegen einer neuen Kategorie mit dem Namen $catName
+            $CatID = IPS_CreateCategory();       // Kategorie anlegen
+            IPS_SetName($CatID, $catName); // Kategorie benennen
+             IPS_SetIdent($CatID, $ident);
+            IPS_SetParent($CatID, $this->InstanceID); // Kategorie einsortieren unterhalb der der Instanz
+        }
+        return $KategorieID;
+    }
+
+    protected function CreateCategoryByIdent($Parentid, $ident, $name) {
+             $cid = @IPS_GetObjectIDByIdent($ident, $Parentid);
+             if($cid === false) {
+                     $cid = IPS_CreateCategory();
+                     IPS_SetParent($cid, $Parentid);
+                     IPS_SetName($cid, $name);
+                     IPS_SetIdent($cid, $ident);
+             }
+             return $cid;
+    } 
+
+
+    
+    #-------------------------------------------------------------------------------------------------------# 
+    #  Function: Create Link                                                                                #
+    #.......................................................................................................#
+    #  Beschreibung:  Legt ein Link zu einem Object an                                                      #
+    #.......................................................................................................#
+    #  Parameters: $Name                                                                                    #
+    #              $ParentID                                                                                #
+    #              $LinkedVariableID                                                                        #                           
+    #.......................................................................................................#
+    #  Returns:    none                                                                                     #
+    #-------------------------------------------------------------------------------------------------------#
+    protected function CreateLink(string $Name,  $ParentID,  $LinkedVariableID){
+        $LinkID = @IPS_GetLinkIDByName($Name, $ParentID);
+        if ($LinkID === false){
+            // Anlegen eines neuen Links mit dem Namen "Regenerfassung"
+            $LinkID = IPS_CreateLink();             // Link anlegen
+            IPS_SetName($LinkID, $Name); // Link benennen
+            IPS_SetParent($LinkID, $ParentID); // Link einsortieren unter dem Objekt mit der ID "12345"
+            IPS_SetLinkTargetID($LinkID, $LinkedVariableID);    // Link verknüpfen
+        }
+    }
+
+
+}
+
+trait EventHelper{
+    #----------------------------------------------------------------------------------------------# 
+    #  Function: RegisterVarEvent                                                                  #
+    #..............................................................................................#
+    # Beschreibung:  legt einen Event an wenn nicht schon vorhanden                                #
+    #     Beispiel:                                                                                #
+    #     ("Wochenplan", "SwitchTimeEvent".$this->InstanceID, 2, $this->InstanceID, 20);           #  
+    #..............................................................................................#
+    # Parameters:                                                                                  #  
+    #  $Name        -   Name des Events                                                            #
+    #  $Ident       -   Ident Name des Events                                                      #
+    #  $Typ         -   Typ des Events (1=cyclic 2=Wochenplan)                                     #
+    #  $Trigger                                                                                    #
+    #      0	Bei Variablenaktualisierung                                                        #
+    #      1	Bei Variablenänderung                                                              #
+    #      2	Bei Grenzüberschreitung. Grenzwert wird über IPS_SetEventTriggerValue festgelegt   #
+    #      3	Bei Grenzunterschreitung. Grenzwert wird über IPS_SetEventTriggerValue festgelegt  #
+    #      4	Bei bestimmtem Wert. Wert wird über IPS_SetEventTriggerValue festgelegt            #
+    #                                                                                              #
+    #  $Parent      -   ID des Parents                                                             #
+    #  $Position    -   Position der Instanz                                                       #
+    #..............................................................................................#
+    #  Returns:       none                                                                         #
+    #----------------------------------------------------------------------------------------------#
+    protected function RegisterVarEvent($Name, $Ident, $Typ, $ParentID, $Position, $trigger, $var, $cmd){
+        $eid =  @IPS_GetEventIDByName($Name, $ParentID);
+        if($eid === false) {
+            //we need to create a new one
+            $EventID = IPS_CreateEvent($Typ);
+            IPS_SetParent($EventID, $ParentID);
+            @IPS_SetIdent($EventID, $Ident);
+            IPS_SetName($EventID, $Name);
+            IPS_SetPosition($EventID, $Position);
+            IPS_SetEventTrigger($EventID, $trigger, $var);   //OnChange für Variable $var    
+            IPS_SetEventScript($EventID, $cmd );
+            IPS_SetEventActive($EventID, true);
+            return $EventID;
+        } 
+        else{
+            return $eid;
+        }    
+    }   
+}
+
+trait ScheduleHelper {
+    #------------------------------------------------------------------------------------------------------------# 
+    #  Function: RegisterScheduleAction                                                                          #
+    #............................................................................................................#
+    #  Legt eine Aktion für den Event fest                                                                       #
+    #  Beispiel:                                                                                                 #
+    #  ("SwitchTimeEvent".$this->InstanceID), 1, "Down", 0xFF0040, "FSSC_SetRolloDown(\$_IPS['TARGET']);");      #
+    #............................................................................................................#
+    #  Parameters:                                                                                               #
+    #     $EventID                                                                                               #
+    #     $ActionID                                                                                              #
+    #     $Name                                                                                                  #
+    #     $Color                                                                                                 #
+    #     $Script                                                                                                #
+    #............................................................................................................#
+    #  Returns:    none                                                                                          #
+    #------------------------------------------------------------------------------------------------------------#
+    private function RegisterScheduleAction($EventID, $ActionID, $Name, $Color, $Script)
+    {
+            IPS_SetEventScheduleAction($EventID, $ActionID, $Name, $Color, $Script);
     }
 }
