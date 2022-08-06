@@ -14,23 +14,22 @@ require_once __DIR__ . '/../libs/MyHelper.php';  // diverse Klassen
 //Class: MyHeatAlarm
 class MyHeatStat extends IPSModule
 {    
- 
+    use DebugHelper,
+    EventHelper,
+    ProfileHelper,
+    ModuleHelper;
     
-    /* 
-    _______________________________________________________________________ 
-     Section: Internal Modul Funtions
-     Die folgenden Funktionen sind Standard Funktionen zur Modul Erstellung.
-    _______________________________________________________________________ 
-     */
-            
-    /* ------------------------------------------------------------ 
-    Function: Create  
-    Create() wird einmalig beim Erstellen einer neuen Instanz und 
-    neu laden der Modulesausgeführt. Vorhandene Variable werden nicht veändert, auch nicht 
-    eingetragene Werte (Properties).
-    Variable können hier nicht verwendet werden nur statische Werte.
-    Überschreibt die interne IPS_Create(§id)  Funktion
+# ___________________________________________________________________________ 
+#    Section: Internal Modul Functions
+#    Die folgenden Funktionen sind Standard Funktionen zur Modul Erstellung.
+# ___________________________________________________________________________ 
 
+  
+    #-----------------------------------------------------------# 
+    #    Function: Create                                       #
+    #    Create() Wird ausgeführt, beim Anlegen der Instanz.    #
+    #-----------------------------------------------------------#    
+    /*    
     CONFIG-Properties:
         * RaumTemp          -   integer
         * TempSoll          -   Integer 
@@ -42,7 +41,6 @@ class MyHeatStat extends IPSModule
     IPS Variable:
         * HeatAlarm         -   StrörFlag (binary)
         * HeatStat          -   Störungsindex (0), Anwärmen (1), Heizen (2),  Kalt (3)  (Integer)
-       
     ------------------------------------------------------------- */
     public function Create(){
 
@@ -57,7 +55,7 @@ class MyHeatStat extends IPSModule
         $this->RegisterPropertyInteger("TempRueck", 0);
         $this->RegisterPropertyBoolean("DTsens", false);
 
-        $this->RegisterProfiles();
+        $this->RegisterAllProfiles();
 
         $variablenID = $this->RegisterVariableBoolean("HeatAlarm", "Störung");
         IPS_SetInfo ($variablenID, "WSS");  
@@ -70,25 +68,17 @@ class MyHeatStat extends IPSModule
         // Timer erstellen
         //$this->RegisterTimer("T_TodZeit", 0,  'HS_Todzeit_Reached(' . $this->InstanceID . ');');
         $this->RegisterTimer("T_TodZeit", 0, 'HS_Todzeit_Reached($_IPS[\'TARGET\']);');
-
-        
     }
-   /* ------------------------------------------------------------ 
-    Function: ApplyChanges 
-    ApplyChanges() Wird ausgeführt, wenn auf der Konfigurationsseite "Übernehmen" gedrückt wird 
-    und nach dem unittelbaren Erstellen der Instanz.
-     
-        SYSTEM-VARIABLE:
-            InstanceID - $this->InstanceID.
 
-        EVENTS:
-  
-    ------------------------------------------------------------- */
-   
-
+    
+    #---------------------------------------------------------------#
+    #     Function: ApplyChanges                                    #
+    #     ApplyChanges() Wird ausgeführt, beim anlegen der Instanz. #
+    #     und beim ändern der Parameter in der Form                 #
+    #---------------------------------------------------------------#
     public function ApplyChanges(){
 
-
+        $this->RegisterMessage(0, IPS_KERNELSTARTED);
         //Never delete this line!
         parent::ApplyChanges();
 
@@ -131,12 +121,9 @@ class MyHeatStat extends IPSModule
            $EventID = $this->RegisterVarEvent($EventName, $Ident, 0, $ParentID, 0, 1, $varID, $cmd); 
         }
 
-  
-     
-        
+        $ModOn = $this->ModuleUp($this->ReadPropertyBoolean("ID_active"));
 
-
-        if($this->ReadPropertyBoolean("ID_active")){
+        if($ModOn){
             //Überprüfen dass die Links gesetzt wurden
             if($this->ReadPropertyInteger("VtlPos") >0){
                 //Event aktivieren - wenn Postion von Aktor sich ändert dann Trigger Event
@@ -154,26 +141,46 @@ class MyHeatStat extends IPSModule
          
     }
     
+    #------------------------------------------------------------# 
+    #  Function: MessageSink                                     #
+    #  MessageSink() wird nur bei registrierten                  #
+    #  NachrichtenIDs/SenderIDs-Kombinationen aufgerufen.        #
+    #------------------------------------------------------------#    
+    public function MessageSink($TimeStamp, $SenderID, $Message, $Data) {
+        //IPS_LogMessage("MessageSink", "Message from SenderID ".$SenderID." with Message ".$Message."\r\n Data: ".print_r($Data, true));
+        $this->SendDebug('MessageSink', $Message, 0);
+        switch ($Message) {
+            case IPS_KERNELSTARTED:
+                $this->KernelReady();
+            break;
+        }
+      } //Function: MessageSink End
 
 
-  /* ______________________________________________________________________________________________________________________
-     Section: Public Funtions
-     Die folgenden Funktionen stehen automatisch zur Verfügung, wenn das Modul über die "Module Control" eingefügt wurden.
-     Die Funktionen werden, mit dem selbst eingerichteten Prefix, in PHP und JSON-RPC wie folgt zur Verfügung gestellt:
-    
-     HS_XYFunktion($Instance_id, ... );
-     ________________________________________________________________________________________________________________________ */
-    //-----------------------------------------------------------------------------
-    /* Function: Heat_Stat
-    ...............................................................................
-    Beschreibung
-    ...............................................................................
-    Parameters: 
-        none
-    ...............................................................................
-    Returns:    
-        none
-    ------------------------------------------------------------------------------  */
+    #------------------------------------------------------------# 
+    #    Function: RequestAction                                 #
+    #        RequestAction() wird von schaltbaren Variablen      #
+    #        aufgerufen.                                         #
+    #------------------------------------------------------------#
+
+
+#_________________________________________________________________________________________________________
+# Section: Public Functions
+#    Die folgenden Funktionen stehen automatisch zur Verfügung, wenn das Modul über die "Module Control" 
+#    eingefügt wurden.
+#    Die Funktionen werden, mit dem selbst eingerichteten Prefix, in PHP und JSON-RPC wie folgt zur 
+#    Verfügung gestellt:
+#_________________________________________________________________________________________________________
+
+    #-----------------------------------------------------------------------------#
+    # Function: Heat_Stat                                                         #
+    #.............................................................................#
+    # Beschreibung                                                                #
+    #.............................................................................#
+    # Parameters:    none                                                         #
+    #.............................................................................#
+    # Returns:       none                                                         #  
+    #-----------------------------------------------------------------------------#
     public function Heat_Stat(){
       
         $MemVal = new puffer($this->GetIDForIdent("puffer"));
@@ -182,8 +189,8 @@ class MyHeatStat extends IPSModule
         $this->SendDebug("Start:MemVal->timerOn", $MemVal->getMem("timerOn"), 0);
         $this->SendDebug("Start:MemVal->RT_before", $MemVal->getMem("RT_before"), 0);
         $this->SendDebug("Start:MemVal->RLFT_before", $MemVal->getMem("RLFT_before"), 0);
-
-        if($this->ReadPropertyBoolean("ID_active")){
+        $ModOn = $this->ModuleUp($this->ReadPropertyBoolean("ID_active"));
+        if($ModOn){
             if($this->ReadPropertyBoolean("DTsens")){
                 $VorlaufTemp = getvalue($this->ReadPropertyInteger("TempVor"));
                 $RücklaufTemp = getvalue($this->ReadPropertyInteger("TempRueck"));
@@ -308,18 +315,16 @@ class MyHeatStat extends IPSModule
     }  
 
 
-     //-----------------------------------------------------------------------------
-    /* Function: Todzeit_Reached
-    ...............................................................................
-    Beschreibung:
-        Funktion wird vom Timer Todzeit getriggert
-    ...............................................................................
-    Parameters: 
-        none
-    ...............................................................................
-    Returns:    
-        none
-    ------------------------------------------------------------------------------  */
+    #------------------------------------------------------------------------------#
+    # Function: Todzeit_Reached                                                    #
+    #..............................................................................#
+    # Beschreibung:                                                                #
+    #    Funktion wird vom Timer Todzeit getriggert                                #
+    #..............................................................................#
+    # Parameters:    none                                                          #
+    #..............................................................................#
+    # Returns:       none                                                          #
+    #------------------------------------------------------------------------------#
     public function Todzeit_Reached(){  
          
          $MemVal = new puffer($this->GetIDForIdent("puffer"));
@@ -334,62 +339,38 @@ class MyHeatStat extends IPSModule
 
 
 
-   /* _______________________________________________________________________
-    * Section: Private Funtions
-    * Die folgenden Funktionen sind nur zur internen Verwendung verfügbar
-    *   Hilfsfunktionen
-    * _______________________________________________________________________
-    */  
-
+#________________________________________________________________________________________
+# Section: Private Functions
+#    Die folgenden Funktionen stehen nur innerhalb des Moduls zur verfügung
+#    Hilfsfunktionen: 
+#_______________________________________________________________________________________
+  
+    #---------------------------------------------------------------------------------#
+    # Function: KernelReady                                                           #
+    #.................................................................................#
+    # Beschreibung:                                                                   #
+    #     Wird ausgeführt wenn der Kernel hochgefahren wurde.                         #
+    #.................................................................................#
+    # Parameters:   none                                                              #
+    #.................................................................................#
+    # Returns:      none                                                              #
+    #---------------------------------------------------------------------------------#
+    protected function KernelReady() {
+        $this->ApplyChanges();
+    }
 		
-        /* ----------------------------------------------------------------------------
-         Function: GetIPSVersion
-        ...............................................................................
-        gibt die instalierte IPS Version zurück
-        ...............................................................................
-        Parameters: 
-            none
-        ..............................................................................
-        Returns:   
-            $ipsversion (floatint)
-        ------------------------------------------------------------------------------- */
-	protected function GetIPSVersion()
-	{
-		$ipsversion = floatval(IPS_GetKernelVersion());
-		if ($ipsversion < 4.1) // 4.0
-		{
-			$ipsversion = 0;
-		} elseif ($ipsversion >= 4.1 && $ipsversion < 4.2) // 4.1
-		{
-			$ipsversion = 1;
-		} elseif ($ipsversion >= 4.2 && $ipsversion < 4.3) // 4.2
-		{
-			$ipsversion = 2;
-		} elseif ($ipsversion >= 4.3 && $ipsversion < 4.4) // 4.3
-		{
-			$ipsversion = 3;
-		} elseif ($ipsversion >= 4.4 && $ipsversion < 5) // 4.4
-		{
-			$ipsversion = 4;
-		} else   // 5
-		{
-			$ipsversion = 5;
-		}
 
-		return $ipsversion;
-	}
-
-    /* ----------------------------------------------------------------------------
-     Function: RegisterProfiles()
-    ...............................................................................
-        Profile fürVaiable anlegen falls nicht schon vorhanden
-    ...............................................................................
-    Parameters: 
-        $Vartype => 0 boolean, 1 int, 2 float, 3 string
-    ..............................................................................
-    Returns:   
-    ------------------------------------------------------------------------------- */
-    protected function RegisterProfiles(){
+    #---------------------------------------------------------------------------------#
+    # Function: RegisterAllProfiles                                                   #
+    #.................................................................................#
+    # Beschreibung:                                                                   #
+    #     Profile für Variable anlegen falls nicht schon vorhanden.                   #
+    #.................................................................................#
+    # Parameters:   $Vartype => 0 boolean, 1 int, 2 float, 3 string                   #
+    #.................................................................................#
+    # Returns:      none                                                              #
+    #---------------------------------------------------------------------------------#
+    protected function RegisterAllProfiles(){
         $Assoc[0]['value'] = "Kalt";
         $Assoc[1]['value'] = "Anwärmen";
         $Assoc[2]['value'] = "Heizen";
@@ -411,104 +392,8 @@ class MyHeatStat extends IPSModule
         $MaxValue = 4;
         $StepSize = 1;
         $Digits = NULL;
-        $this->createProfile($Name, $Vartype,  $Assoc, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize, $Digits);
-       
+        $this->RegisterProfile($Vartype, $Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize, $Digits, $Assoc);  
     }
-
-    /* ----------------------------------------------------------------------------
-     Function: RegisterProfile
-    ...............................................................................
-    Erstellt ein neues Profil und ordnet es einer Variablen zu.
-    ...............................................................................
-    Parameters: 
-        $Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize, $Digits, $Vartype, $VarIdent, $Assoc
-     * $Vartype: 0 boolean, 1 int, 2 float, 3 string,
-     * $Assoc: array mit statustexte
-     *         $assoc[0] = "aus";
-     *         $assoc[1] = "ein";
-     * RegisterProfile("Rollo.Mode", "", "", "", "", "", "", "", 0, "", $Assoc)
-    ..............................................................................
-    Returns:   
-        none
-    ------------------------------------------------------------------------------- */
-    protected function createProfile(string $Name, int $Vartype, $Assoc, $Icon,  $Prefix,  $Suffix,   $MinValue,   $MaxValue,  $StepSize,  $Digits){
-        if (!IPS_VariableProfileExists($Name)) {
-            IPS_CreateVariableProfile($Name, $Vartype); // 0 boolean, 1 int, 2 float, 3 string,
-            if(!is_Null($Icon)){
-                IPS_SetVariableProfileIcon($Name, $Icon);
-            }
-            if(!is_Null($Prefix)){
-                IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
-            }
-            if(!is_Null($Digits)){
-                IPS_SetVariableProfileDigits($Name, $Digits); //  Nachkommastellen
-            }
-            if(!is_Null($MinValue)){
-                IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);
-            }
-            if(!is_Null($Assoc)){
-                foreach ($Assoc as $key => $data) {
-                    if(is_null($data['icon'])){$data['icon'] = "";}; 
-                    if(is_null($data['color'])){$data['color'] = "";}; 
-                    IPS_SetVariableProfileAssociation($Name, $key, $data['value'], $data['icon'], $data['color']);  
-                }
-            }
-        } 
-        else {
-            $profile = IPS_GetVariableProfile($Name);
-            if ($profile['ProfileType'] != $Vartype){
-                   // $this->SendDebug("Alarm.Reset:", "Variable profile type does not match for profile " . $Name, 0);
-            }
-        }
-}	
-
-    
-     /* --------------------------------------------------------------------------- 
-    Function: RegisterVarEvent
-    ...............................................................................
-    legt einen Event an wenn nicht schon vorhanden
-      Beispiel:
-      ("Wochenplan", "SwitchTimeEvent".$this->InstanceID, 2, $this->InstanceID, 20);  
-      ...............................................................................
-    Parameters: 
-      $Name        -   Name des Events
-      $Ident       -   Ident Name des Events
-      $Typ         -   Typ des Events (1=cyclic 2=Wochenplan)
-      $Trigger
-                0	Bei Variablenaktualisierung
-                1	Bei Variablenänderung
-                2	Bei Grenzüberschreitung. Grenzwert wird über IPS_SetEventTriggerValue festgelegt
-                3	Bei Grenzunterschreitung. Grenzwert wird über IPS_SetEventTriggerValue festgelegt
-                4	Bei bestimmtem Wert. Wert wird über IPS_SetEventTriggerValue festgelegt
-
-      $Parent      -   ID des Parents
-      $Position    -   Position der Instanz
-    ...............................................................................
-    Returns:    
-        none 
-    -------------------------------------------------------------------------------*/
-    private function RegisterVarEvent($Name, $Ident, $Typ, $ParentID, $Position, $trigger, $var, $cmd){
-            $eid =  @IPS_GetEventIDByName($Name, $ParentID);
-            if($eid === false) {
-                //we need to create a new one
-                $EventID = IPS_CreateEvent($Typ);
-                IPS_SetParent($EventID, $ParentID);
-                @IPS_SetIdent($EventID, $Ident);
-                IPS_SetName($EventID, $Name);
-                IPS_SetPosition($EventID, $Position);
-                IPS_SetEventTrigger($EventID, $trigger, $var);   //OnChange für Variable $var
-                
-                IPS_SetEventScript($EventID, $cmd );
-                IPS_SetEventActive($EventID, true);
-                return $EventID;
-            } 
-            else{
-                return $eid;
-            }
-            
-    }
-
-
 
 
 		

@@ -15,21 +15,20 @@ class MyBrita extends IPSModule {
 
     use 
     DebugHelper,
-    TimerHelper;
+    TimerHelper,
+    ModuleHelper;
  
    
-/* 
-___________________________________________________________________________ 
-    Section: Internal Modul Funtions
-    Die folgenden Funktionen sind Standard Funktionen zur Modul Erstellung.
-___________________________________________________________________________ 
-    */
-    /* 
-    ------------------------------------------------------------ 
-        Function: Create  
-        Create() Wird ausgeführt, beim anlegen der Instanz.
-    -------------------------------------------------------------
-    */
+# ___________________________________________________________________________ 
+#    Section: Internal Modul Functions
+#    Die folgenden Funktionen sind Standard Funktionen zur Modul Erstellung.
+# ___________________________________________________________________________ 
+
+  
+    #-----------------------------------------------------------# 
+    #    Function: Create                                       #
+    #    Create() Wird ausgeführt, beim Anlegen der Instanz.    #
+    #-----------------------------------------------------------#    
     public function Create() {
     //Never delete this line!
         parent::Create();
@@ -96,14 +95,14 @@ ___________________________________________________________________________
         $this->EnableAction("incFilUsage");
         
     } //Function: Create End
-    /* 
-    ------------------------------------------------------------ 
-        Function: ApplyChanges  
-        ApplyChanges() Wird ausgeführt, beim anlegen der Instanz.
-        und beim ändern der Parameter in der Form
-    -------------------------------------------------------------
-    */
+
+    #---------------------------------------------------------------#
+    #     Function: ApplyChanges                                    #
+    #     ApplyChanges() Wird ausgeführt, beim anlegen der Instanz. #
+    #     und beim ändern der Parameter in der Form                 #
+    #---------------------------------------------------------------#
     public function ApplyChanges(){
+        $this->RegisterMessage(0, IPS_KERNELSTARTED);
         //Never delete this line!
         parent::ApplyChanges();
 
@@ -123,24 +122,39 @@ ___________________________________________________________________________
             //$this->SetTimerInterval("Name", 0);
         }                   
     } //Function: ApplyChanges  End
-    /* 
-    ------------------------------------------------------------ 
-        Function: Destroy  
-            Destroy() wird beim löschen der Instanz 
-            und update der Module aufgerufen
-    -------------------------------------------------------------
-    */
+
+    #------------------------------------------------------------# 
+    #  Function: MessageSink                                     #
+    #  MessageSink() wird nur bei registrierten                  #
+    #  NachrichtenIDs/SenderIDs-Kombinationen aufgerufen.        #
+    #------------------------------------------------------------#    
+    public function MessageSink($TimeStamp, $SenderID, $Message, $Data) {
+        //IPS_LogMessage("MessageSink", "Message from SenderID ".$SenderID." with Message ".$Message."\r\n Data: ".print_r($Data, true));
+        $this->SendDebug('MessageSink', $Message, 0);
+        switch ($Message) {
+            case IPS_KERNELSTARTED:
+                $this->KernelReady();
+            break;
+        }
+      } //Function: MessageSink End
+
+
+    #-------------------------------------------------------------#
+    #    Function: Destroy                                        #
+    #        Destroy() wird beim löschen der Instanz              #
+    #        und update der Module aufgerufen                     #
+    #-------------------------------------------------------------#
     public function Destroy() {
         //Never delete this line!
         parent::Destroy();
     } //Function: Destroy End
-    /* 
-    ------------------------------------------------------------ 
-        Function: RequestAction  
-            RequestAction() wird von schaltbaren Variablen 
-            aufgerufen.
-    -------------------------------------------------------------
-    */ 
+
+
+    #------------------------------------------------------------# 
+    #    Function: RequestAction                                 #
+    #        RequestAction() wird von schaltbaren Variablen      #
+    #        aufgerufen.                                         #
+    #------------------------------------------------------------#
     public function RequestAction($Ident, $Value) {     
         switch($Ident) {
             case "setNewFilter":
@@ -166,19 +180,16 @@ ___________________________________________________________________________
                 throw new Exception("Invalid Ident");
             }
     } //Function: RequestAction End
-    /* 
 
 
+#_________________________________________________________________________________________________________
+# Section: Public Functions
+#    Die folgenden Funktionen stehen automatisch zur Verfügung, wenn das Modul über die "Module Control" 
+#    eingefügt wurden.
+#    Die Funktionen werden, mit dem selbst eingerichteten Prefix, in PHP und JSON-RPC wie folgt zur 
+#    Verfügung gestellt:
+#_________________________________________________________________________________________________________
 
-
-_____________________________________________________________________________________________________________________
-    Section: Public Funtions
-    Die folgenden Funktionen stehen automatisch zur Verfügung, wenn das Modul über die "Module Control" eingefügt wurden.
-    Die Funktionen werden, mit dem selbst eingerichteten Prefix, in PHP und JSON-RPC wie folgt zur Verfügung gestellt:
-    
-    FSSC_XYFunktion($Instance_id, ... );
-________________________________________________________________________________________________________________________ 
-*/
     //-----------------------------------------------------------------------------
     /* Function: checkFilter
     ...............................................................................
@@ -273,13 +284,13 @@ ________________________________________________________________________________
         $this->SetValue("Liter", $Menge + 1.5) ;
         $this->checkFilter();
      }  //incFill End
-/* 
-_______________________________________________________________________
-    Section: Private Funtions
-    Die folgenden Funktionen sind nur zur internen Verwendung verfügbar
-    Hilfsfunktionen
-______________________________________________________________________
-*/ 
+
+     
+#________________________________________________________________________________________
+# Section: Private Functions
+#    Die folgenden Funktionen stehen nur innerhalb des Moduls zur verfügung
+#    Hilfsfunktionen: 
+#_______________________________________________________________________________________
  
     /** Wird ausgeführt wenn der Kernel hochgefahren wurde. */
     protected function KernelReady(){
@@ -314,6 +325,11 @@ ______________________________________________________________________
         return $ipsversion;
     } //Function: GetIPSVersion End
     
+
+
+    
+    
+
 
 } //end Class
 

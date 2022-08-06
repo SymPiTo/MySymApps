@@ -15,23 +15,24 @@ require_once __DIR__.'/../libs/MyHelper.php';  // diverse Klassen
 class MyAlarm extends IPSModule
 {
    //externe Klasse einbinden - ueberlagern mit TRAIT.
-    use DebugHelper;
+    use DebugHelper, 
+    ModuleHelper,
+    EventHelper,
+    VersionHelper,
+    ProfileHelper;
     
-    /* 
-    _______________________________________________________________________ 
-     Section: Internal Modul Funtions
-     Die folgenden Funktionen sind Standard Funktionen zur Modul Erstellung.
-    _______________________________________________________________________ 
-     */
-            
-    /* ------------------------------------------------------------ 
-    Function: Create  
-    Create() wird einmalig beim Erstellen einer neuen Instanz und 
-    neu laden der Modulesausgeführt. Vorhandene Variable werden nicht veändert, auch nicht 
-    eingetragene Werte (Properties).
-    Variable können hier nicht verwendet werden nur statische Werte.
-    Überschreibt die interne IPS_Create(§id)  Funktion
-   
+# ___________________________________________________________________________ 
+#    Section: Internal Modul Functions
+#    Die folgenden Funktionen sind Standard Funktionen zur Modul Erstellung.
+# ___________________________________________________________________________ 
+
+  
+    #-----------------------------------------------------------# 
+    #    Function: Create                                       #
+    #    Create() Wird ausgeführt, beim Anlegen der Instanz.    #
+    #-----------------------------------------------------------#    
+    
+/*
     CONFIG-Properties:
      * Battery         -   list json array of Battery Sensors
      * SecAlarms       -   list json array of Alarm Sensors
@@ -61,7 +62,7 @@ class MyAlarm extends IPSModule
     {
 	//Never delete this line!
         parent::Create();
- 
+         
          // Variable aus dem Instanz Formular registrieren (zugänglich zu machen)
          // Aufruf dieser Form Variable mit  §this->ReadPropertyFloat(-IDENTNAME-)
         //$this->RegisterPropertyInteger(!IDENTNAME!, 0);
@@ -80,6 +81,38 @@ class MyAlarm extends IPSModule
   
             $this->RegisterPropertyString("FTPPassword", "");
           
+
+
+        //Profil anlegen //A_SecActivate
+        $assoc[0]['value'] = "aus";
+        $assoc[1]['value'] = "ein";
+        $assoc[0]['icon'] =  NULL;
+        $assoc[1]['icon'] =  NULL;
+        $assoc[0]['color'] = "0xFFFF00";
+        $assoc[1]['color'] = "0xFFA500";
+        $name = "Alarm.Activate";
+        $vartype = 0;  //bool
+        $icon = NULL;
+        $prefix = NULL;
+        $suffix = NULL;
+        $this->RegisterProfile($vartype, $name, $icon, $prefix, $suffix, "", "", "", "", $assoc);
+
+      
+        //Profil anlegen //A_SecActivate
+        $assoc[0]['value'] = "deaktiviert";
+        $assoc[1]['value'] = "aktiviert";
+        $assoc[0]['icon'] =  NULL;
+        $assoc[1]['icon'] =  NULL;
+        $assoc[0]['color'] = "0xFFFF00";
+        $assoc[1]['color'] = "0xFFA500";
+        $name = "Alarm.Active";
+        $vartype = 0;  //bool        
+        $this->RegisterProfile($vartype, $name, "", "", "", "", "", "", "", $assoc);   
+
+
+
+
+
         //Integer Variable anlegen
         //integer RegisterVariableInteger ( string §Ident, string §Name, string §Profil, integer §Position )
         // Aufruf dieser Variable mit $his->GetIDForIdent("IDENTNAME)
@@ -92,11 +125,11 @@ class MyAlarm extends IPSModule
          
         //Boolean Variable anlegen
         // Aufruf dieser Variable mit §this->GetIDForIdent("IDENTNAME")
-        $this->RegisterVariableBoolean("A_SecActivate", "Alarmanlage aktivieren");
+        $this->RegisterVariableBoolean("A_SecActivate", "Alarmanlage aktivieren","Alarm.Active");
         $variablenID = $this->RegisterVariableBoolean("A_SecActive", "Alarmanlage");
         IPS_SetInfo ($variablenID, "WSS");   
         //Alexa Sprachbefehl Trigger
-        $this->RegisterVariableBoolean("Alexa_SecActivate", "Alexa Alarmanlage aktivieren");
+        $this->RegisterVariableBoolean("Alexa_SecActivate", "Alexa Alarmanlage aktivieren","Alarm.Activate");
                 //CanShot aktivieren
                 $this->RegisterPropertyBoolean("FKBCamShot", false);
         //TTS Trigger
@@ -152,48 +185,41 @@ class MyAlarm extends IPSModule
     }
     
     
+    #---------------------------------------------------------------#
+    #     Function: ApplyChanges                                    #
+    #     ApplyChanges() Wird ausgeführt, beim anlegen der Instanz. #
+    #     und beim ändern der Parameter in der Form                 #
+    #---------------------------------------------------------------#
+    # SYSTEM-VARIABLE:
+    #    InstanceID = $this->InstanceID.
+    #
+    # Profiles:
+    #   Alarm.Activate
+    #   Alarm.Active
+    # 
+    # Categories:
+    #   Security                  (webfront)
+    #   Keyboard                  (webfront)
+    #   Meldungen                 (webfront)
+    # WaterAlarmEvents
+    # BatAlarmEvents
+    # SecAlarmEvents
+    
+    # EVENTS:
+    #   "WAE".$sensor->ID;    -   für alle Wasser Sensoren
+    #   "AE".$sensor->ID;     -   für alle Batterie Sensoren
+    #   "SecAE".$sensor->ID;  -   für alle Alarm Sensoren
+    #---------------------------------------------------------------#
+    public function ApplyChanges() {
+        $this->RegisterMessage(0, IPS_KERNELSTARTED);
+        
 
         
-   /* ------------------------------------------------------------ 
-     Function: ApplyChanges 
-      ApplyChanges() Wird ausgeführt, wenn auf der Konfigurationsseite "Übernehmen" gedrückt wird 
-      und nach dem unittelbaren Erstellen der Instanz.
-     
-    SYSTEM-VARIABLE:
-        InstanceID = $this->InstanceID.
-
-    Profiles:
-    * Alarm.Activate
-    * Alarm.Active
-    * 
-    Categories:
-    * Security                  (webfront)
-    * Keyboard                  (webfront)
-    * Meldungen                 (webfront)
-    * WaterAlarmEvents
-    * BatAlarmEvents
-    * SecAlarmEvents
-    
-    EVENTS:
-    * "WAE".$sensor->ID;    -   für alle Wasser Sensoren
-    * "AE".$sensor->ID;     -   für alle Batterie Sensoren
-    * "SecAE".$sensor->ID;  -   für alle Alarm Sensoren
-    ------------------------------------------------------------- */
-    public function ApplyChanges()
-    {
-        //Profil anlegen
-        $assoc[0] = "aus";
-        $assoc[1] = "ein";  
-	$this->RegisterProfile("Alarm.Activate", "","", "", "", "", "", "", 0, "A_SecActivate", $assoc);
-
-        $assoc[0] = "deaktiviert";
-        $assoc[1] = "aktiviert";  
-	$this->RegisterProfile("Alarm.Active", "","", "", "", "", "", "", 0, "A_SecActive", $assoc);
+ 
         
         //Never delete this line!        
         parent::ApplyChanges();        
         
-            
         
              
         //Unterkategorie für Webfront anlegen 
@@ -288,6 +314,22 @@ class MyAlarm extends IPSModule
         */
     }
     
+    #------------------------------------------------------------# 
+    #  Function: MessageSink                                     #
+    #  MessageSink() wird nur bei registrierten                  #
+    #  NachrichtenIDs/SenderIDs-Kombinationen aufgerufen.        #
+    #------------------------------------------------------------#    
+    public function MessageSink($TimeStamp, $SenderID, $Message, $Data) {
+        //IPS_LogMessage("MessageSink", "Message from SenderID ".$SenderID." with Message ".$Message."\r\n Data: ".print_r($Data, true));
+        $this->SendDebug('MessageSink', $Message, 0);
+        switch ($Message) {
+            case IPS_KERNELSTARTED:
+                $this->KernelReady();
+            break;
+        }
+      } //Function: MessageSink End
+
+
    /* ------------------------------------------------------------ 
       Function: RequestAction  
       RequestAction() Wird ausgeführt, wenn auf der Webfront eine Variable
@@ -331,10 +373,11 @@ class MyAlarm extends IPSModule
             
     }
 
-   /* ------------------------------------------------------------ 
-    Function: Destroy  
-      Destroy() Wird ausgeführt, wenn die Instance gelöscht wird.
-     ------------------------------------------------------------- */
+    #-------------------------------------------------------------#
+    #    Function: Destroy                                        #
+    #        Destroy() wird beim löschen der Instanz              #
+    #        und update der Module aufgerufen                     #
+    #-------------------------------------------------------------#
     public function Destroy()
     {
         if (IPS_GetKernelRunlevel() <> KR_READY) {
@@ -350,13 +393,23 @@ class MyAlarm extends IPSModule
         parent::Destroy();
     }
     
-    /* ======================================================================================================================
-     Section: Public Funtions
-     Die folgenden Funktionen stehen automatisch zur Verfügung, wenn das Modul über die "Module Control" eingefügt wurden.
-     Die Funktionen werden, mit dem selbst eingerichteten Prefix, in PHP und JSON-RPC wie folgt zur Verfügung gestellt:
-    
-     FSSC_XYFunktion($Instance_id, ... );
-     ======================================================================================================================= */
+
+
+    #------------------------------------------------------------# 
+    #    Function: RequestAction                                 #
+    #        RequestAction() wird von schaltbaren Variablen      #
+    #        aufgerufen.                                         #
+    #------------------------------------------------------------#
+
+
+#_________________________________________________________________________________________________________
+# Section: Public Functions
+#    Die folgenden Funktionen stehen automatisch zur Verfügung, wenn das Modul über die "Module Control" 
+#    eingefügt wurden.
+#    Die Funktionen werden, mit dem selbst eingerichteten Prefix, in PHP und JSON-RPC wie folgt zur 
+#    Verfügung gestellt:
+#_________________________________________________________________________________________________________
+
     
         //-----------------------------------------------------------------------------
         /* Function: ResetAlarm
@@ -769,223 +822,27 @@ class MyAlarm extends IPSModule
         }
         
         
-   /* ==========================================================================
-    * Section: Private Funtions
-    * Die folgenden Funktionen sind nur zur internen Verwendung verfügbar
-    *   Hilfsfunktionen
-    * ==========================================================================
-    */  
+#________________________________________________________________________________________
+# Section: Private Functions
+#    Die folgenden Funktionen stehen nur innerhalb des Moduls zur verfügung
+#    Hilfsfunktionen: 
+#_______________________________________________________________________________________
 
-        /* ----------------------------------------------------------------------------
-         Function: RegisterProfile
-        ...............................................................................
-        Erstellt ein neues Profil und ordnet es einer Variablen zu.
-        ...............................................................................
-        Parameters: 
-            $Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize, $Digits, $Vartype, $VarIdent, $Assoc
-         * $Vartype: 0 boolean, 1 int, 2 float, 3 string,
-         * $Assoc: array mit statustexte
-        ..............................................................................
-        Returns:   
-            none
-        ------------------------------------------------------------------------------- */
-	protected function RegisterProfile($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize, $Digits, $Vartype, $VarIdent, $Assoc){
-
-            
-		if (!IPS_VariableProfileExists($Name)) {
-			IPS_CreateVariableProfile($Name, $Vartype); // 0 boolean, 1 int, 2 float, 3 string,
-		} else {
-			$profile = IPS_GetVariableProfile($Name);
-			if ($profile['ProfileType'] != $Vartype)
-				$this->SendDebug("Alarm.Reset:", "Variable profile type does not match for profile " . $Name, 0);
-		}
-
-		//IPS_SetVariableProfileIcon($Name, $Icon);
-		//IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
-		//IPS_SetVariableProfileDigits($Name, $Digits); //  Nachkommastellen
-		//IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize); // string $ProfilName, float $Minimalwert, float $Maximalwert, float $Schrittweite
-
-             
-                foreach ($Assoc as $key => $value) {
-                    IPS_SetVariableProfileAssociation($Name, $key, $value, $Icon, 0xFFFFFF);  
-                }
-                IPS_SetVariableCustomProfile($this->GetIDForIdent($VarIdent), $Name);
-        }
-		
-        /* ----------------------------------------------------------------------------
-         Function: GetIPSVersion
-        ...............................................................................
-        gibt die instalierte IPS Version zurück
-        ...............................................................................
-        Parameters: 
-            none
-        ..............................................................................
-        Returns:   
-            $ipsversion (floatint)
-        ------------------------------------------------------------------------------- */
-	protected function GetIPSVersion()
-	{
-		$ipsversion = floatval(IPS_GetKernelVersion());
-		if ($ipsversion < 4.1) // 4.0
-		{
-			$ipsversion = 0;
-		} elseif ($ipsversion >= 4.1 && $ipsversion < 4.2) // 4.1
-		{
-			$ipsversion = 1;
-		} elseif ($ipsversion >= 4.2 && $ipsversion < 4.3) // 4.2
-		{
-			$ipsversion = 2;
-		} elseif ($ipsversion >= 4.3 && $ipsversion < 4.4) // 4.3
-		{
-			$ipsversion = 3;
-		} elseif ($ipsversion >= 4.4 && $ipsversion < 5) // 4.4
-		{
-			$ipsversion = 4;
-		} else   // 5
-		{
-			$ipsversion = 5;
-		}
-
-		return $ipsversion;
-	}
-
+    
  
-    /* --------------------------------------------------------------------------- 
-    Function: RegisterEvent
-    ...............................................................................
-    legt einen Event an wenn nicht schon vorhanden
-      Beispiel:
-      ("Wochenplan", "SwitchTimeEvent".$this->InstanceID, 2, $this->InstanceID, 20);  
-      ...............................................................................
-    Parameters: 
-      $Name        -   Name des Events
-      $Ident       -   Ident Name des Events
-      $Typ         -   Typ des Events (1=cyclic 2=Wochenplan)
-      $Parent      -   ID des Parents
-      $Position    -   Position der Instanz
-    ...............................................................................
-    Returns:    
-        none 
-    -------------------------------------------------------------------------------*/
-    private function RegisterVarEvent($Name, $Ident, $Typ, $ParentID, $Position, $trigger, $var, $cmd)
+
+
+
+
+
+
+        /**
+     * Wird ausgeführt wenn der Kernel hochgefahren wurde.
+     */
+    protected function KernelReady()
     {
-            $eid =  @IPS_GetEventIDByName($Name, $ParentID);
-            if($eid === false) {
-                //we need to create one
-                $EventID = IPS_CreateEvent($Typ);
-                IPS_SetParent($EventID, $ParentID);
-                @IPS_SetIdent($EventID, $Ident);
-                IPS_SetName($EventID, $Name);
-                IPS_SetPosition($EventID, $Position);
-                IPS_SetEventTrigger($EventID, $trigger, $var);   //OnChange für Variable $var
-                
-                IPS_SetEventScript($EventID, $cmd );
-                IPS_SetEventActive($EventID, true);
-            } 
-            else{
-            }
- 
-    }
-    
- 
-    /* ----------------------------------------------------------------------------------------------------- 
-    Function: RegisterScheduleAction
-    ...............................................................................
-     *  Legt eine Aktion für den Event fest
-     * Beispiel:
-     * ("SwitchTimeEvent".$this->InstanceID), 1, "Down", 0xFF0040, "FSSC_SetRolloDown(\$_IPS[!TARGET!]);");
-    ...............................................................................
-    Parameters: 
-      $EventID
-      $ActionID
-      $Name
-      $Color
-      $Script
-    .......................................................................................................
-    Returns:    
-        none
-    -------------------------------------------------------------------------------------------------------- */
-    private function RegisterScheduleAction($EventID, $ActionID, $Name, $Color, $Script)
-    {
-            IPS_SetEventScheduleAction($EventID, $ActionID, $Name, $Color, $Script);
+        $this->ApplyChanges();
     }
 
-    /* ----------------------------------------------------------------------------------------------------- 
-    Function: RegisterCategory
-    ...............................................................................
-     *  Legt ein Unterverzeichnis an
-     * Beispiel:
-     *  
-    ...............................................................................
-    Parameters: 
- 
-    .......................................................................................................
-    Returns:    
-        none
-    -------------------------------------------------------------------------------------------------------- */
-    private function RegisterCategory($ident, $catName ) {
-        $KategorieID = @IPS_GetCategoryIDByName($catName, $this->InstanceID);
-        if ($KategorieID === false){
-            // Anlegen einer neuen Kategorie mit dem Namen $catName
-            $CatID = IPS_CreateCategory();       // Kategorie anlegen
-            IPS_SetName($CatID, $catName); // Kategorie benennen
-             IPS_SetIdent($CatID, $ident);
-            IPS_SetParent($CatID, $this->InstanceID); // Kategorie einsortieren unterhalb der der Instanz
-        }
-        return $KategorieID;
-    }
 
-    protected function CreateCategoryByIdent($Parentid, $ident, $name) {
-             $cid = @IPS_GetObjectIDByIdent($ident, $Parentid);
-             if($cid === false) {
-                     $cid = IPS_CreateCategory();
-                     IPS_SetParent($cid, $Parentid);
-                     IPS_SetName($cid, $name);
-                     IPS_SetIdent($cid, $ident);
-             }
-             return $cid;
-    } 
-    
-    /* ----------------------------------------------------------------------------------------------------- 
-    Function: UnregisterProfile
-    ...............................................................................
-     *  Legt ein Unterverzeichnis an
-     * Beispiel:
-     *  
-    ...............................................................................
-    Parameters: 
- 
-    .......................................................................................................
-    Returns:    
-        none
-    -------------------------------------------------------------------------------------------------------- */
-    protected function UnregisterProfile(string $Name){
-        if (IPS_VariableProfileExists($Name)) {
-           IPS_DeleteVariableProfile($Name);
-        }   
-    }	
-    
-    /* ----------------------------------------------------------------------------------------------------- 
-    Function: Create Link
-    ...............................................................................
-     *  Legt ein Link zu einem Object an
-     * Beispiel:
-     *  
-    ...............................................................................
-    Parameters: 
- 
-    .......................................................................................................
-    Returns:    
-        none
-    -------------------------------------------------------------------------------------------------------- */
-    protected function CreateLink(string $Name,  $ParentID,  $LinkedVariableID){
-        $LinkID = @IPS_GetLinkIDByName($Name, $ParentID);
-        if ($LinkID === false){
-            // Anlegen eines neuen Links mit dem Namen "Regenerfassung"
-            $LinkID = IPS_CreateLink();             // Link anlegen
-            IPS_SetName($LinkID, $Name); // Link benennen
-            IPS_SetParent($LinkID, $ParentID); // Link einsortieren unter dem Objekt mit der ID "12345"
-            IPS_SetLinkTargetID($LinkID, $LinkedVariableID);    // Link verknüpfen
-        }
-    }
 }

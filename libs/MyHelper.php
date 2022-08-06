@@ -62,13 +62,18 @@ trait LogErrorToFile
  */
 trait DebugHelper
 {
-    /**
-     * Adds functionality to serialize arrays and objects.
-     *
-     * @param string $msg    Title of the debug message.
-     * @param mixed  $data   Data output.
-     * @param int    $format Output format.
-     */
+    #------------------------------------------------------------------------------# 
+    #  Function: UnregisSendDebugterProfile                                        #
+    #..............................................................................#
+    #  Beschreibung:                                                               #
+    #      Adds functionality to serialize arrays and objects.                     #
+    #..............................................................................#
+    #  Parameters:  $msg    Title of the debug message.                            #
+    #               $data   Data output.                                           #
+    #               $format Output format.                                         #                              
+    #..............................................................................#
+    # Returns:     none                                                            #
+    #------------------------------------------------------------------------------#
     protected function SendDebug($msg, $data, $format = 0)
     {
         if (is_object($data)) {
@@ -89,20 +94,19 @@ trait DebugHelper
 
 
 trait NMapHelper {
-    //-----------------------------------------------------------------------------
-    /* Function: checkPortState($ip, $port)
-    ...............................................................................
-    Beschreibung:
-        prüft ob ein bestimmter Port einer TCP-Adresse offen ist
-    ...............................................................................
-    Parameters: 
-        $ip     = string '192.168.178.28'
-        $port   = string '8888'
-    ...............................................................................
-    Returns:    
-        true  => Port is open
-        false => Port is closed
-    ------------------------------------------------------------------------------  */
+    #------------------------------------------------------------------------------# 
+    #  Function: checkPortState                                                    #
+    #..............................................................................#
+    #   Beschreibung:                                                              #
+    #         prüft ob ein bestimmter Port einer TCP-Adresse offen ist             #
+    #..............................................................................#
+    #  Parameters:                                                                 #
+    #          $ip     = string '192.168.178.28'                                   #
+    #          $port   = string '8888'                                             #                              
+    #..............................................................................#
+    # Returns:    true  => Port is open                                            #
+    #             false => Port is closed                                          #
+    #------------------------------------------------------------------------------#
     protected function checkPortState($ip, $port, $type=true){
       
         $cmd = "sudo nmap -p T:".$port." ".$ip;
@@ -141,20 +145,47 @@ trait NMapHelper {
  */
 trait ProfileHelper
 {
-    /**
-     * Create the profile for the given type, values and associations.
-     *
-     * @param string $vartype      Type of the variable.
-     * @param string $name         Profil name.
-     * @param string $icon         Icon to display.
-     * @param string $prefix       Variable prefix.
-     * @param string $suffix       Variable suffix.
-     * @param int    $minvalue     Minimum value.
-     * @param int    $maxvalue     Maximum value.
-     * @param int    $stepsize     Increment.
-     * @param int    $digits       Decimal places.
-     * @param array  $associations Associations of the values.[key, value,icon,color]
-     */
+    #---------------------------------------------------------------------------------------# 
+    #  Function: RegisterProfile                                                            #
+    #.......................................................................................#
+    #   Beschreibung:                                                                       #
+    #        Create the profile for the given type, values and associations.                #
+    #.......................................................................................#
+    #  Parameters:                                                                          #
+    #    * @param string $vartype      Type of the variable.                                #
+    #    * @param string $name         Profil name.                                         #
+    #    * @param string $icon         Icon to display.                                     #
+    #    * @param string $prefix       Variable prefix.                                     #
+    #    * @param string $suffix       Variable suffix.                                     #
+    #    * @param int    $minvalue     Minimum value.                                       #
+    #    * @param int    $maxvalue     Maximum value.                                       #
+    #    * @param int    $stepsize     Increment.                                           #
+    #    * @param int    $digits       Decimal places.                                      #
+    #    * @param array  $associations Associations of the values.[key, value,icon,color]   #                                 #                              
+    #.......................................................................................#
+    # Returns:    none                                                                      #
+    #---------------------------------------------------------------------------------------#
+    #   $Assoc[0]['value'] = "Kalt";
+    #   $Assoc[1]['value'] = "Anwärmen";
+    #   $Assoc[2]['value'] = "Heizen";
+    #   $Assoc[3]['value'] = "Störung";
+    #   $Assoc[0]['icon'] =  NULL;
+    #   $Assoc[1]['icon'] =  NULL;
+    #   $Assoc[2]['icon'] = NULL;
+    #   $Assoc[3]['icon'] = NULL;
+    #   $Assoc[0]['color'] = "0xFFFF00";
+    #   $Assoc[1]['color'] = "0xFFA500";
+    #   $Assoc[2]['color'] = "0xFF0000";
+    #   $Assoc[3]['color'] = "0x0000FF";
+    #   $Name = "Heat.Status";
+    #   $Vartype = 1;
+    #   $Icon = NULL;
+    #   $Prefix = NULL;
+    #   $Suffix = NULL;
+    #   $MinValue = 0;
+    #   $MaxValue = 4;
+    #   $StepSize = 1;
+    #   $Digits = NULL;
     protected function RegisterProfile($vartype, $name, $icon, $prefix = '', $suffix = '', $minvalue = 0, $maxvalue = 0, $stepsize = 0, $digits = 0, $associations = null)
     {
         if (!IPS_VariableProfileExists($name)) {
@@ -288,6 +319,22 @@ trait ProfileHelper
         IPS_SetVariableProfileText($name, $prefix, $suffix);
         IPS_SetVariableProfileIcon($name, $icon);
     }
+
+        
+    #------------------------------------------------------------------------------# 
+    #  Function: UnregisterProfile                                                 #
+    #..............................................................................#
+    #  Legt ein Unterverzeichnis an                                                #
+    #..............................................................................#
+    #  Parameters:  $Name                                                          #                              
+    #..............................................................................#
+    # Returns:     none                                                            #
+    #------------------------------------------------------------------------------#
+    protected function UnregisterProfile(string $Name){
+        if (IPS_VariableProfileExists($Name)) {
+           IPS_DeleteVariableProfile($Name);
+        }   
+    }	
 }
 /**
  * Helper class to create timer and events.
@@ -332,19 +379,17 @@ trait TimerHelper
 
 
 trait VersionHelper{		
-        /* ----------------------------------------------------------------------------
-         Function: GetIPSVersion
-        ...............................................................................
-        gibt die instalierte IPS Version zurück
-        ...............................................................................
-        Parameters: 
-            none
-        ..............................................................................
-        Returns:   
-            $ipsversion (floatint)
-        ------------------------------------------------------------------------------- */
-        protected function GetIPSVersion()
-        {
+    #----------------------------------------------------------------------------#
+    #   Function: GetIPSVersion                                                  #
+    #............................................................................#
+    #   Beschreibung: gibt die instalierte IPS Version zurück                    #
+    #............................................................................#
+    #   Parameters:   none                                                       #
+    #    ........................................................................#
+    #    Returns:                                                                # 
+    #        $ipsversion (floatint)                                              #
+    #----------------------------------------------------------------------------#
+        protected function GetIPSVersion(){
             $ipsversion = floatval(IPS_GetKernelVersion());
             if ($ipsversion < 4.1) // 4.0
             {
@@ -361,11 +406,165 @@ trait VersionHelper{
             } elseif ($ipsversion >= 4.4 && $ipsversion < 5) // 4.4
             {
                 $ipsversion = 4;
-            } else   // 5
+            } elseif ($ipsversion >= 4.4 && $ipsversion < 6) // 5
             {
                 $ipsversion = 5;
+            }
+            else {
+                $ipsversion = 6;
             }
     
             return $ipsversion;
         }
+}
+
+trait ModuleHelper{
+    #-------------------------------------------------------------------------------#
+    #    Function: ModuleUp                                                         #
+    #...............................................................................#
+    #    prüft ob Kernelhochgefahren und Modul eingeschaltet                        #
+    #    wird benutzt um Timer nur einzuschaltenwen true;                           #
+    # ..............................................................................#
+    #    Parameters:                                                                #
+    #        $ModuleSwitchedOn -> true/false                                        #
+    #...............................................................................# 
+    #   Returns:                                                                    #
+    #        true/false                                                             #
+    #-------------------------------------------------------------------------------#
+    protected function ModuleUp($ModuleSwitchedOn){
+        //Only call this in READY state. On startup the WebHook instance might not be available yet
+        if ((IPS_GetKernelRunlevel() == KR_READY) & ($ModuleSwitchedOn)){
+        #Kernel ist hochgefahren und Module ist eingeschaltet 
+        return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    #------------------------------------------------------------------------------------------------------# 
+    #  Function: RegisterCategory                                                                          #
+    #......................................................................................................#
+    #  Legt ein Unterverzeichnis an                                                                        #
+    #......................................................................................................#
+    #  Parameters:      $ident                                                                             #
+    #                   $catName                                                                           #         
+    #......................................................................................................#
+    #  Returns:     none                                                                                   #
+    #------------------------------------------------------------------------------------------------------#
+    private function RegisterCategory($ident, $catName ) {
+        $KategorieID = @IPS_GetCategoryIDByName($catName, $this->InstanceID);
+        if ($KategorieID === false){
+            // Anlegen einer neuen Kategorie mit dem Namen $catName
+            $CatID = IPS_CreateCategory();       // Kategorie anlegen
+            IPS_SetName($CatID, $catName); // Kategorie benennen
+             IPS_SetIdent($CatID, $ident);
+            IPS_SetParent($CatID, $this->InstanceID); // Kategorie einsortieren unterhalb der der Instanz
+        }
+        return $KategorieID;
+    }
+
+    protected function CreateCategoryByIdent($Parentid, $ident, $name) {
+             $cid = @IPS_GetObjectIDByIdent($ident, $Parentid);
+             if($cid === false) {
+                     $cid = IPS_CreateCategory();
+                     IPS_SetParent($cid, $Parentid);
+                     IPS_SetName($cid, $name);
+                     IPS_SetIdent($cid, $ident);
+             }
+             return $cid;
+    } 
+
+
+    
+    #-------------------------------------------------------------------------------------------------------# 
+    #  Function: Create Link                                                                                #
+    #.......................................................................................................#
+    #  Beschreibung:  Legt ein Link zu einem Object an                                                      #
+    #.......................................................................................................#
+    #  Parameters: $Name                                                                                    #
+    #              $ParentID                                                                                #
+    #              $LinkedVariableID                                                                        #                           
+    #.......................................................................................................#
+    #  Returns:    none                                                                                     #
+    #-------------------------------------------------------------------------------------------------------#
+    protected function CreateLink(string $Name,  $ParentID,  $LinkedVariableID){
+        $LinkID = @IPS_GetLinkIDByName($Name, $ParentID);
+        if ($LinkID === false){
+            // Anlegen eines neuen Links mit dem Namen "Regenerfassung"
+            $LinkID = IPS_CreateLink();             // Link anlegen
+            IPS_SetName($LinkID, $Name); // Link benennen
+            IPS_SetParent($LinkID, $ParentID); // Link einsortieren unter dem Objekt mit der ID "12345"
+            IPS_SetLinkTargetID($LinkID, $LinkedVariableID);    // Link verknüpfen
+        }
+    }
+
+
+}
+
+trait EventHelper{
+    #----------------------------------------------------------------------------------------------# 
+    #  Function: RegisterVarEvent                                                                  #
+    #..............................................................................................#
+    # Beschreibung:  legt einen Event an wenn nicht schon vorhanden                                #
+    #     Beispiel:                                                                                #
+    #     ("Wochenplan", "SwitchTimeEvent".$this->InstanceID, 2, $this->InstanceID, 20);           #  
+    #..............................................................................................#
+    # Parameters:                                                                                  #  
+    #  $Name        -   Name des Events                                                            #
+    #  $Ident       -   Ident Name des Events                                                      #
+    #  $Typ         -   Typ des Events (1=cyclic 2=Wochenplan)                                     #
+    #  $Trigger                                                                                    #
+    #      0	Bei Variablenaktualisierung                                                        #
+    #      1	Bei Variablenänderung                                                              #
+    #      2	Bei Grenzüberschreitung. Grenzwert wird über IPS_SetEventTriggerValue festgelegt   #
+    #      3	Bei Grenzunterschreitung. Grenzwert wird über IPS_SetEventTriggerValue festgelegt  #
+    #      4	Bei bestimmtem Wert. Wert wird über IPS_SetEventTriggerValue festgelegt            #
+    #                                                                                              #
+    #  $Parent      -   ID des Parents                                                             #
+    #  $Position    -   Position der Instanz                                                       #
+    #..............................................................................................#
+    #  Returns:       none                                                                         #
+    #----------------------------------------------------------------------------------------------#
+    protected function RegisterVarEvent($Name, $Ident, $Typ, $ParentID, $Position, $trigger, $var, $cmd){
+        $eid =  @IPS_GetEventIDByName($Name, $ParentID);
+        if($eid === false) {
+            //we need to create a new one
+            $EventID = IPS_CreateEvent($Typ);
+            IPS_SetParent($EventID, $ParentID);
+            @IPS_SetIdent($EventID, $Ident);
+            IPS_SetName($EventID, $Name);
+            IPS_SetPosition($EventID, $Position);
+            IPS_SetEventTrigger($EventID, $trigger, $var);   //OnChange für Variable $var    
+            IPS_SetEventScript($EventID, $cmd );
+            IPS_SetEventActive($EventID, true);
+            return $EventID;
+        } 
+        else{
+            return $eid;
+        }    
+    }   
+}
+
+trait ScheduleHelper {
+    #------------------------------------------------------------------------------------------------------------# 
+    #  Function: RegisterScheduleAction                                                                          #
+    #............................................................................................................#
+    #  Legt eine Aktion für den Event fest                                                                       #
+    #  Beispiel:                                                                                                 #
+    #  ("SwitchTimeEvent".$this->InstanceID), 1, "Down", 0xFF0040, "FSSC_SetRolloDown(\$_IPS['TARGET']);");      #
+    #............................................................................................................#
+    #  Parameters:                                                                                               #
+    #     $EventID                                                                                               #
+    #     $ActionID                                                                                              #
+    #     $Name                                                                                                  #
+    #     $Color                                                                                                 #
+    #     $Script                                                                                                #
+    #............................................................................................................#
+    #  Returns:    none                                                                                          #
+    #------------------------------------------------------------------------------------------------------------#
+    private function RegisterScheduleAction($EventID, $ActionID, $Name, $Color, $Script)
+    {
+            IPS_SetEventScheduleAction($EventID, $ActionID, $Name, $Color, $Script);
+    }
 }

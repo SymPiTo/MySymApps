@@ -28,18 +28,19 @@ class MyRaspberryPi extends IPSModule
 {
     //Traits verbinden
     use DebugHelper,
-        NMapHelper;
+        NMapHelper,
+        ModuleHelper;
      
-/*_______________________________________________________________________ 
-     Section: Internal Modul Funtions
-     Die folgenden Funktionen sind Standard Funktionen zur Modul Erstellung.
-  _______________________________________________________________________ */
-    /* 
-    ------------------------------------------------------------ 
-        Function: Create  
-        Create() Wird ausgeführt, beim anlegen der Instanz.
-    -------------------------------------------------------------
-    */
+# ___________________________________________________________________________ 
+#    Section: Internal Modul Functions
+#    Die folgenden Funktionen sind Standard Funktionen zur Modul Erstellung.
+# ___________________________________________________________________________ 
+
+  
+    #-----------------------------------------------------------# 
+    #    Function: Create                                       #
+    #    Create() Wird ausgeführt, beim Anlegen der Instanz.    #
+    #-----------------------------------------------------------#    
     public function Create()
     {
 	    //Never delete this line!
@@ -112,18 +113,19 @@ class MyRaspberryPi extends IPSModule
         $this->RegisterTimer("update_Timer", $this->ReadPropertyInteger("UpdateInterval"), 'MyRPI_update($_IPS["TARGET"]);');
             
     }
-    /* 
-    ------------------------------------------------------------ 
-        Function: ApplyChanges  
-        ApplyChanges() Wird ausgeführt, beim anlegen der Instanz.
-        und beim ändern der Parameter in der Form
-    -------------------------------------------------------------
-    */
-    public function ApplyChanges()
-    {
-	    //Never delete this line!
+
+    #---------------------------------------------------------------#
+    #     Function: ApplyChanges                                    #
+    #     ApplyChanges() Wird ausgeführt, beim anlegen der Instanz. #
+    #     und beim ändern der Parameter in der Form                 #
+    #---------------------------------------------------------------#
+    public function ApplyChanges() {
+      $this->RegisterMessage(0, IPS_KERNELSTARTED);
+      //Never delete this line!
       parent::ApplyChanges();
 
+      //prüfen ob Modul eingeschltet und Kernel hochgefahren
+      $ModReady = false;
 
 
       if($this->ReadPropertyBoolean("IPS_Server")){
@@ -142,7 +144,10 @@ class MyRaspberryPi extends IPSModule
         $this->EnableAction("IpsServer");
       }
 
-      if(!$this->ReadPropertyBoolean("Modul_Active")){
+
+
+      $ModOn = $this->ModuleUp($this->ReadPropertyBoolean("Modul_Active"));
+      if(!$ModOn){
         //Modul wurde deaktiviert
         $this->SetTimerInterval("update_Timer", 0);
       }
@@ -177,17 +182,34 @@ class MyRaspberryPi extends IPSModule
       }
     }
     
- 
-     
-    /* 
-    ------------------------------------------------------------ 
-        Function: RequestAction  
-        RequestAction() Wird ausgeführt, wenn auf der Webfront eine Variable
-        geschaltet oder verändert wird. Es werden die System Variable des betätigten
-        Elementes übergeben.
-        Ausgaben über echo werden an die Visualisierung zurückgeleitet
-    -------------------------------------------------------------
-    */
+    #------------------------------------------------------------# 
+    #  Function: MessageSink                                     #
+    #  MessageSink() wird nur bei registrierten                  #
+    #  NachrichtenIDs/SenderIDs-Kombinationen aufgerufen.        #
+    #------------------------------------------------------------#    
+    public function MessageSink($TimeStamp, $SenderID, $Message, $Data) {
+      //IPS_LogMessage("MessageSink", "Message from SenderID ".$SenderID." with Message ".$Message."\r\n Data: ".print_r($Data, true));
+      $this->SendDebug('MessageSink', $Message, 0);
+      switch ($Message) {
+          case IPS_KERNELSTARTED:
+              $this->KernelReady();
+          break;
+      }
+    } //Function: MessageSink End
+
+
+    #-------------------------------------------------------------#
+    #    Function: Destroy                                        #
+    #        Destroy() wird beim löschen der Instanz              #
+    #        und update der Module aufgerufen                     #
+    #-------------------------------------------------------------#
+    
+    
+    #------------------------------------------------------------# 
+    #    Function: RequestAction                                 #
+    #        RequestAction() wird von schaltbaren Variablen      #
+    #        aufgerufen.                                         #
+    #------------------------------------------------------------#
     public function RequestAction($Ident, $Value) {
          switch($Ident) {
             case "RPIServer":
@@ -218,28 +240,16 @@ class MyRaspberryPi extends IPSModule
  
     }
 
-    /*------------------------------------------------------------ 
-      Function: MessageSink  
-      MessageSink() wird nur bei registrierten 
-      NachrichtenIDs/SenderIDs-Kombinationen aufgerufen. 
-    -------------------------------------------------------------*/
-    public function MessageSink($TimeStamp, $SenderID, $Message, $Data) {
-      //IPS_LogMessage("MessageSink", "Message from SenderID ".$SenderID." with Message ".$Message."\r\n Data: ".print_r($Data, true));
-      $this->SendDebug('MessageSink', $Message, 0);
-      switch ($Message) {
-          case IPS_KERNELSTARTED:
-              $this->KernelReady();
-          break;
-      }
-    } //Function: MessageSink End
 
-  /* ______________________________________________________________________________________________________________________
-     Section: Public Funtions
-     Die folgenden Funktionen stehen automatisch zur Verfügung, wenn das Modul über die "Module Control" eingefügt wurden.
-     Die Funktionen werden, mit dem selbst eingerichteten Prefix, in PHP und JSON-RPC wie folgt zur Verfügung gestellt:
-    
-     FSSC_XYFunktion($Instance_id, ... );
-     ________________________________________________________________________________________________________________________ */
+
+#_________________________________________________________________________________________________________
+# Section: Public Functions
+#    Die folgenden Funktionen stehen automatisch zur Verfügung, wenn das Modul über die "Module Control" 
+#    eingefügt wurden.
+#    Die Funktionen werden, mit dem selbst eingerichteten Prefix, in PHP und JSON-RPC wie folgt zur 
+#    Verfügung gestellt:
+#_________________________________________________________________________________________________________
+
     //-----------------------------------------------------------------------------
     /* Function: update
     ...............................................................................
@@ -270,67 +280,66 @@ class MyRaspberryPi extends IPSModule
       else {
         $this->SendDebug('Update:', "RPImonitor: ist offen", 0); 
         $dataJson = @file_get_contents("http://".$ip.":8888/dynamic.json");
-        //$this->SendDebug('Update', $data, 0);
-
-        $data = json_decode($dataJson, true); 
-        $this->SendDebug('RPIMonitor:', $data, 0); 
-        $this->SendDebug('Update:DATA: ', $data, 0);
-        $this->SetValue("ID_cpuFreq", $data['cpu_frequency']); 
-        $this->SetValue("ID_MemTotal", $data['memory_available']);
-        $this->SetValue("ID_MemFree", $data['memory_free']);
-        $this->SetValue("ID_SD_boot_used", $data['sdcard_boot_used']);
-        $this->SetValue("ID_SD_root_used", $data['sdcard_root_used']);
-        $this->SetValue("ID_Swap_used", $data['swap_used']);
-        $this->SetValue("ID_CPU_Volt", $data['cpu_voltage']);
-        //SetValue($this->GetIDForIdent("ID_http"), $data['http']);
-        //SetValue($this->GetIDForIdent("ID_https"), $data['https']);
-        $this->SetValue("ID_RPI_monitor", $data['rpimonitor']);
-        $this->SetValue("ID_ssh", $data['ssh']);
-        $this->SetValue("ID_scal_Gov", $data['scaling_governor']);
-        $this->SetValue("ID_CPU_Temp", $data['soc_temp']);
-        $this->SetValue("ID_upgrade", $data['upgrade']);
-        $this->SetValue("ID_UpTime", json_encode($this->calc_uptime($data['uptime'])));
-        $this->SetValue("ID_CPU_load1", $data['load1']);
-        $this->SetValue("ID_CPU_load5", $data['load5']);
-        $this->SetValue("ID_CPU_load15", $data['load15']);
-        $this->SetValue("ID_packages", $data['packages']);
-        $this->SetValue("ID_ip",  $ip);
-        if($this->ReadPropertyBoolean("IPS_Server")){
-            $this->SetValue("ID_symcon", $data['symcon']);
-          //$this->SetValue("ID_wss", $data['websocketserver']);
+        if($dataJson != false){
+          $data = json_decode($dataJson, true); 
+          $this->SendDebug('RPIMonitor:', $data, 0);  
+          if (array_key_exists('cpu_frequency', $data)) {$this->SetValue("ID_cpuFreq", $data['cpu_frequency']);} 
+          if (array_key_exists('memory_available', $data)) {$this->SetValue("ID_MemTotal", $data['memory_available']);}
+          if (array_key_exists('memory_free', $data)) {$this->SetValue("ID_MemFree", $data['memory_free']);}
+          if (array_key_exists('sdcard_boot_used', $data)) {$this->SetValue("ID_SD_boot_used", $data['sdcard_boot_used']);}
+          if (array_key_exists('sdcard_root_used', $data)) {$this->SetValue("ID_SD_root_used", $data['sdcard_root_used']);}
+          if (array_key_exists('swap_used', $data)) {$this->SetValue("ID_Swap_used", $data['swap_used']);}
+          if (array_key_exists('cpu_voltage', $data)) {$this->SetValue("ID_CPU_Volt", $data['cpu_voltage']);}
+          if (array_key_exists('http', $data)) {$this->SetValue("ID_http", $data['http']);}
+          if (array_key_exists('https', $data)) {$this->SetValue("ID_https", $data['https']);}
+          if (array_key_exists('rpimonitor', $data)) {$this->SetValue("ID_RPI_monitor", $data['rpimonitor']);}
+          if (array_key_exists('ssh', $data)) {$this->SetValue("ID_ssh", $data['ssh']);}
+          if (array_key_exists('scaling_governor', $data)) {$this->SetValue("ID_scal_Gov", $data['scaling_governor']);}
+          if (array_key_exists('soc_temp', $data)) {$this->SetValue("ID_CPU_Temp", $data['soc_temp']);}
+          if (array_key_exists('upgrade', $data)) {$this->SetValue("ID_upgrade", $data['upgrade']);}
+          if (array_key_exists('uptime', $data)) {$this->SetValue("ID_UpTime", json_encode($this->calc_uptime($data['uptime'])));}
+          if (array_key_exists('load1', $data)) {$this->SetValue("ID_CPU_load1", $data['load1']);}
+          if (array_key_exists('load5', $data)) {$this->SetValue("ID_CPU_load5", $data['load5']);}
+          if (array_key_exists('load15', $data)) {$this->SetValue("ID_CPU_load15", $data['load15']);}
+          if (array_key_exists('packages', $data)) {$this->SetValue("ID_packages", $data['packages']);}
+          $this->SetValue("ID_ip",  $ip);
+          if($this->ReadPropertyBoolean("IPS_Server")){
+            if (array_key_exists('symcon', $data)) {$this->SetValue("ID_symcon", $data['symcon']);}
+            if (array_key_exists('websocketserver', $data)) {$this->SetValue("ID_wss", $data['websocketserver']);}
+          }
         }
       }
       if($this->ReadPropertyBoolean("IPS_Server")){
-        //check if service is running
-        $result = $this->restartIPSservice($ip);
+          //check if service is running
+          $result = $this->restartIPSservice($ip);
         if ($result) {
-          $this->SendDebug('Update:', "IPS Server läuft.", 0); 
-          //IP Symcon Service läuft  
-          $this->SetValue('IpsServer', true);  
-          $this->SetValue("ID_IPS_Version",  IPS_GetKernelVersion());
-          $kernelStat = IPS_GetKernelRunlevel();
-          switch ($kernelStat) {
-            case KR_CREATE:
-              $ks = "Kernel wird erstellt.";
-              break;
-            case KR_INIT:
-              $ks = "Kernel wird initialisiert.";
-              break;
-            case KR_READY:
-              $ks = "Kernel ist bereit und läuft.";
-              break;
-            case KR_UNINIT:
-              $ks = "Kernel wird heruntergefahren.";
-              break;
-            case KR_SHUTDOWN:
-              $ks = "Kernel wurde beendet.";
-              break;
-            default:
-              # code...
-              break;
-          }
-          $this->SetValue("ID_KernelStat", $ks);
-        }
+            $this->SendDebug('Update:', "IPS Server läuft.", 0); 
+            //IP Symcon Service läuft  
+            $this->SetValue('IpsServer', true);  
+            $this->SetValue("ID_IPS_Version",  IPS_GetKernelVersion());
+            $kernelStat = IPS_GetKernelRunlevel();
+            switch ($kernelStat) {
+              case KR_CREATE:
+                $ks = "Kernel wird erstellt.";
+                break;
+              case KR_INIT:
+                $ks = "Kernel wird initialisiert.";
+                break;
+              case KR_READY:
+                $ks = "Kernel ist bereit und läuft.";
+                break;
+              case KR_UNINIT:
+                $ks = "Kernel wird heruntergefahren.";
+                break;
+              case KR_SHUTDOWN:
+                $ks = "Kernel wurde beendet.";
+                break;
+              default:
+                # code...
+                break;
+            }
+            $this->SetValue("ID_KernelStat", $ks);
+         }
         else{
           $this->SendDebug('Update:', "IPS Server ist down.", 0); 
           $this->SetValue('IpsServer', false);
@@ -340,12 +349,11 @@ class MyRaspberryPi extends IPSModule
  
 
  
-   /* _______________________________________________________________________
-    * Section: Private Funtions
-    * Die folgenden Funktionen sind nur zur internen Verwendung verfügbar
-    *   Hilfsfunktionen
-    * _______________________________________________________________________
-    */  
+#________________________________________________________________________________________
+# Section: Private Functions
+#    Die folgenden Funktionen stehen nur innerhalb des Moduls zur verfügung
+#    Hilfsfunktionen: 
+#_______________________________________________________________________________________ 
 
     /* ----------------------------------------------------------------------------
       Function: GetIPSVersion
@@ -358,7 +366,7 @@ class MyRaspberryPi extends IPSModule
       Returns:   
             $uptime (array)  days - hours - minutes - seconds
     ------------------------------------------------------------------------------- */
-	protected function calc_uptime($uptime)	{
+	private function calc_uptime($uptime)	{
     $sek = intval($uptime);
     $min = ($sek/60); 
     $std =  ($min/60);
@@ -513,7 +521,13 @@ class MyRaspberryPi extends IPSModule
             IPS_SetEventScheduleAction($EventID, $ActionID, $Name, $Color, $Script);
     }
 
-
+    /**
+     * Wird ausgeführt wenn der Kernel hochgefahren wurde.
+     */
+    protected function KernelReady()
+    {
+        $this->ApplyChanges();
+    }
 
 		
 }

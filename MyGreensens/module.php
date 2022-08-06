@@ -6,28 +6,27 @@
  * 
  * GITHUB: <https://github.com/SymPiTo/MySymApps/tree/master/MySymApps>
  * 
- * Version: 1.0
+ * Version: 1.01_2022_08_06
  *************************************************************************** */
-//require_once __DIR__ . '/../libs/traits.php';
+
 require_once __DIR__ . '/../libs/MyHelper.php';  // diverse Klassen
 
 class MyGreensens extends IPSModule {
 
     use DebugHelper,
-        ProfileHelper;
+        ProfileHelper,
+        ModuleHelper;
 
-/* 
-___________________________________________________________________________ 
-    Section: Internal Module Functions
-    Die folgenden Funktionen sind Standard Funktionen zur Modul Erstellung.
-___________________________________________________________________________ 
-*/
-    /* 
-    ------------------------------------------------------------ 
-        Function: Create  
-        Create() Wird ausgeführt, beim anlegen der Instanz.
-    -------------------------------------------------------------
-    */
+# ___________________________________________________________________________ 
+#    Section: Internal Modul Functions
+#    Die folgenden Funktionen sind Standard Funktionen zur Modul Erstellung.
+# ___________________________________________________________________________ 
+
+  
+    #-----------------------------------------------------------# 
+    #    Function: Create                                       #
+    #    Create() Wird ausgeführt, beim Anlegen der Instanz.    #
+    #-----------------------------------------------------------#    
     public function Create() {
     //Never delete this line!
         parent::Create();
@@ -54,13 +53,12 @@ ___________________________________________________________________________
         $this->RegisterTimer("updatePlant", 0, 'GS_Update($_IPS[\'TARGET\']);');
 
     } //Function: Create End
-    /* 
-    ------------------------------------------------------------ 
-        Function: ApplyChanges  
-        ApplyChanges() Wird ausgeführt, beim anlegen der Instanz.
-        und beim ändern der Parameter in der Form
-    -------------------------------------------------------------
-    */
+    
+    #---------------------------------------------------------------#
+    #     Function: ApplyChanges                                    #
+    #     ApplyChanges() Wird ausgeführt, beim anlegen der Instanz. #
+    #     und beim ändern der Parameter in der Form                 #
+    #---------------------------------------------------------------#
     public function ApplyChanges(){
         $this->RegisterMessage(0, IPS_KERNELSTARTED);
 
@@ -114,8 +112,8 @@ ___________________________________________________________________________
                 IPS_SetInfo ($variablenID, "WSS");
             }
         }
-
-        if($this->ReadPropertyBoolean("ID_active")){
+        $ModOn = $this->ModuleUp($this->ReadPropertyBoolean("ID_active"));
+        if($ModOn){
             $this->SetBuffer("token", "");
             $this->SetBuffer("timestamp", "");
             $this->SetBuffer("valid", false);
@@ -129,64 +127,67 @@ ___________________________________________________________________________
             $this->SetTimerInterval("updatePlant", 0);
         }                   
     } //Function: ApplyChanges  End
-    /* 
-    ------------------------------------------------------------ 
-        Function: Destroy  
-            Destroy() wird beim löschen der Instanz 
-            und update der Module aufgerufen
-    -------------------------------------------------------------
-    */
+
+
+    #------------------------------------------------------------# 
+    #  Function: MessageSink                                     #
+    #  MessageSink() wird nur bei registrierten                  #
+    #  NachrichtenIDs/SenderIDs-Kombinationen aufgerufen.        #
+    #------------------------------------------------------------#    
+    public function MessageSink($TimeStamp, $SenderID, $Message, $Data) {
+        //IPS_LogMessage("MessageSink", "Message from SenderID ".$SenderID." with Message ".$Message."\r\n Data: ".print_r($Data, true));
+        $this->SendDebug('MessageSink', $Message, 0);
+        switch ($Message) {
+            case IPS_KERNELSTARTED:
+                $this->KernelReady();
+            break;
+        }
+      } //Function: MessageSink End
+
+
+
+    #-------------------------------------------------------------#
+    #    Function: Destroy                                        #
+    #        Destroy() wird beim löschen der Instanz              #
+    #        und update der Module aufgerufen                     #
+    #-------------------------------------------------------------#
     public function Destroy() {
         //Never delete this line!
         parent::Destroy();
     } //Function: Destroy End
-    /* 
-    ------------------------------------------------------------ 
-        Function: MessageSink  
-            MessageSink() wird aufgerufen wenn registrierte 
-            Meldung 
-    -------------------------------------------------------------
-    */    
-    public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
-    {
-        switch ($Message) {
-            case IPS_KERNELSTARTED:
-                $this->KernelReady(); 
-                break;
-  
-        }
-    }
-/* 
-________________________________________________________________________________________________
-    Section: Public Functions
-    Die folgenden Funktionen stehen automatisch zur Verfügung, wenn das Modul über die "Module Control" eingefügt wurden.
-    Die Funktionen werden, mit dem selbst eingerichteten Prefix, in PHP und JSON-RPC wie folgt zur Verfügung gestellt:
-    
-    GS_XYFunktion($Instance_id, ... );
-________________________________________________________________________________________________________________________ 
-*/
 
-
+    #------------------------------------------------------------# 
+    #    Function: RequestAction                                 #
+    #        RequestAction() wird von schaltbaren Variablen      #
+    #        aufgerufen.                                         #
+    #------------------------------------------------------------#
     
-    //-----------------------------------------------------------------------------
-    /* Function: GetPlantData
-    ...............................................................................
-    Beschreibung: Holt die Sensor Daten per API
-    ...............................................................................
-    Parameters: 
-        none
-    ...............................................................................
-    Returns:    
-        $plantdata =>Sensordaten als Array {}
-            ['sensorID']
-            ['plantNameDE']
-            ['status']
-            ['temperature']
-            ['illumination']
-            ['moisture']
-            ['state']
-            ['link']
-    ------------------------------------------------------------------------------  */
+#_________________________________________________________________________________________________________
+# Section: Public Functions
+#    Die folgenden Funktionen stehen automatisch zur Verfügung, wenn das Modul über die "Module Control" 
+#    eingefügt wurden.
+#    Die Funktionen werden, mit dem selbst eingerichteten Prefix, in PHP und JSON-RPC wie folgt zur 
+#    Verfügung gestellt:
+#_________________________________________________________________________________________________________
+
+    #---------------------------------------------------------------------------------#
+    # Function: GetPlantData                                                          #
+    #.................................................................................#
+    # Beschreibung:                                                                   #
+    #    Holt die Sensor Daten per API                                                #
+    #.................................................................................#
+    # Parameters:   none                                                              #
+    #.................................................................................#
+    # Returns:    $plantdata =>Sensordaten als Array {}                               #
+    #               ['sensorID']                                                      #
+    #               ['plantNameDE']                                                   #
+    #               ['status']                                                        #
+    #               ['temperature']                                                   #
+    #               ['illumination']                                                  #
+    #               ['moisture']                                                      #
+    #               ['state']                                                         #
+    #               ['link']                                                          #
+    #---------------------------------------------------------------------------------#
     public function GetPlantData() {
         //prüfen ob token noch gültig ist
         $valid = $this->CheckValidToken();
@@ -251,43 +252,41 @@ ________________________________________________________________________________
     }  //End
 
 
-
-    //-----------------------------------------------------------------------------
-    /* Function: Update
-    ...............................................................................
-    Beschreibung: Funktion wird vom Timergetriggert. Sensordaten werden im
-        eingestellten Zeit Interval abgefragt 
-    ...............................................................................
-    Parameters: 
-        none
-    ...............................................................................
-    Returns:    
-        none
-    ------------------------------------------------------------------------------  */
+    #---------------------------------------------------------------------------------#
+    # Function: Update                                                                #
+    #.................................................................................#
+    # Beschreibung:                                                                   #
+    #    Funktion wird vom Timer getriggert. Sensordaten werden im                    #
+    #       eingestellten Zeit Interval abgefragt.                                    #
+    #.................................................................................#
+    # Parameters:   none                                                              #
+    #.................................................................................#
+    # Returns:      none                                                              #
+    #---------------------------------------------------------------------------------#
     public function Update() {
         $this->GetPlantData();
     }
 
 
-/* 
-_______________________________________________________________________
-    Section: Private Funtions
-    Die folgenden Funktionen sind nur zur internen Verwendung verfügbar
-    Hilfsfunktionen
-______________________________________________________________________
-*/ 
-    //-----------------------------------------------------------------------------
-    /* Function: FetchToken
-    ...............................................................................
-    Beschreibung: holt ein Token von der API. 
-    Token ist nur 7 Tage gültig.
-    ...............................................................................
-    Parameters: 
-        none
-    ...............................................................................
-    Returns:    
-        $token
-    ------------------------------------------------------------------------------  */
+#________________________________________________________________________________________
+# Section: Private Functions
+#    Die folgenden Funktionen stehen nur innerhalb des Moduls zur verfügung
+#    Hilfsfunktionen: 
+#_______________________________________________________________________________________ 
+
+    #---------------------------------------------------------------------------------#
+    # Function: FetchToken                                                           #
+    #.................................................................................#
+    # Beschreibung:                                                                   #
+    #    holt ein Token von der API.                                                  #
+    #    Token ist nur 7 Tage gültig.                                                 #
+    #.................................................................................#
+    # Parameters:   none                                                              #
+    #.................................................................................#
+    # Returns:                                                                        #
+    #    $token                                                                       #
+    #---------------------------------------------------------------------------------#
+
     protected function FetchToken(){
         $url = "https://api.greensens.de";   
         $auth_url ="/api/users/authenticate";
@@ -338,17 +337,18 @@ ______________________________________________________________________
     }  //End
 
     
-    //-----------------------------------------------------------------------------
-    /* Function: CheckValidToken
-    ...............................................................................
-    Beschreibung: Prüfen ob Token abgelaufen ist. Gültigkeit 7 Tage
-    ...............................................................................
-    Parameters: 
-        none
-    ...............................................................................
-    Returns:    
-        $valid => Token gültig "true/false"
-    ------------------------------------------------------------------------------  */
+
+    #---------------------------------------------------------------------------------#
+    # Function: CheckValidToken                                                       #
+    #.................................................................................#
+    # Beschreibung:                                                                   #
+    #    Prüfen ob Token abgelaufen ist. Gültigkeit 7 Tage                            #
+    #.................................................................................#
+    # Parameters:   none                                                              #
+    #.................................................................................#
+    # Returns:                                                                        #
+    #          $valid => Token gültig "true/false"                                    #
+    #---------------------------------------------------------------------------------#
     protected function CheckValidToken(){
         $timestamp = $this->GetBuffer("timestamp");
         $aktTime = time();
@@ -369,18 +369,16 @@ ______________________________________________________________________
     }  //End
 
 
-    //-----------------------------------------------------------------------------
-    /* Function: KernelReady
-    ...............................................................................
-    Beschreibung: Wird ausgeführt wenn der Kernel hochgefahren wurde.
-    ...............................................................................
-    Parameters: 
-        none
-    ...............................................................................
-    Returns:    
-        none
-    ------------------------------------------------------------------------------  */
-
+    #---------------------------------------------------------------------------------#
+    # Function: KernelReady                                                           #
+    #.................................................................................#
+    # Beschreibung:                                                                   #
+    #    Wird ausgeführt wenn der Kernel hochgefahren wurde.                          #
+    #.................................................................................#
+    # Parameters:   none                                                              #
+    #.................................................................................#
+    # Returns:   none                                                                 #
+    #---------------------------------------------------------------------------------#
     protected function KernelReady()
     {
         $this->ApplyChanges();
