@@ -9,30 +9,30 @@
  * Version:1.0.2019.4.5
  */
 //Class: MyWeather
+
+
+require_once __DIR__.'/../libs/MyHelper.php';  // diverse Klassen
+
+
+
 class MyWeather extends IPSModule
 {
-    /* 
-    _______________________________________________________________________ 
-     Section: Internal Modul Funtions
-     Die folgenden Funktionen sind Standard Funktionen zur Modul Erstellung.
-    _______________________________________________________________________ 
-     */
-            
-    /* ------------------------------------------------------------ 
-    Function: Create  
-    Create() wird einmalig beim Erstellen einer neuen Instanz und 
-    neu laden der Modulesausgeführt. Vorhandene Variable werden nicht veändert, auch nicht 
-    eingetragene Werte (Properties).
-    Variable können hier nicht verwendet werden nur statische Werte.
-    Überschreibt die interne IPS_Create(§id)  Funktion
-   
-     CONFIG-VARIABLE:
-      FS20RSU_ID   -   ID des FS20RSU Modules (selektierbar).
-     
-    STANDARD-AKTIONEN:
-      FSSC_Position    -   Position (integer)
+       //Traits verbinden
+       use DebugHelper,
+       ModuleHelper;
 
-    ------------------------------------------------------------- */
+# ___________________________________________________________________________ 
+#    Section: Internal Modul Functions
+#    Die folgenden Funktionen sind Standard Funktionen zur Modul Erstellung.
+# ___________________________________________________________________________ 
+
+  
+    #-----------------------------------------------------------# 
+    #    Function: Create                                       #
+    #    Create() Wird ausgeführt, beim Anlegen der Instanz.    #
+    #-----------------------------------------------------------#    
+    
+
     public function Create()
     {
 	//Never delete this line!
@@ -79,48 +79,60 @@ class MyWeather extends IPSModule
         $this->RegisterTimer("TimerGetWeather", 0, 'W_update($_IPS[\'TARGET\']);');
 
     }
-   /* ------------------------------------------------------------ 
-     Function: ApplyChanges 
-      ApplyChanges() Wird ausgeführt, wenn auf der Konfigurationsseite "Übernehmen" gedrückt wird 
-      und nach dem unittelbaren Erstellen der Instanz.
-     
-    SYSTEM-VARIABLE:
-        InstanceID - $this->InstanceID.
 
-    EVENTS:
-        SwitchTimeEvent".$this->InstanceID   -   Wochenplan (Mo-Fr und Sa-So)
-        SunRiseEvent".$this->InstanceID       -   cyclice Time Event jeden Tag at SunRise
-    ------------------------------------------------------------- */
-    public function ApplyChanges()
-    {   
-	//Never delete this line!
+    #---------------------------------------------------------------#
+    #     Function: ApplyChanges                                    #
+    #     ApplyChanges() Wird ausgeführt, beim anlegen der Instanz. #
+    #     und beim ändern der Parameter in der Form                 #
+    #---------------------------------------------------------------#
+    # SYSTEM-VARIABLE:
+    #    InstanceID - $this->InstanceID.
+    #
+    # EVENTS:
+    #    SwitchTimeEvent".$this->InstanceID   -   Wochenplan (Mo-Fr und Sa-So)
+    #    SunRiseEvent".$this->InstanceID       -   cyclice Time Event jeden Tag at SunRise
+    #---------------------------------------------------------------------------------------- 
+    public function ApplyChanges() {   
+	    $this->RegisterMessage(0, IPS_KERNELSTARTED);
+        //Never delete this line!
         parent::ApplyChanges();
         
-        if($this->ReadPropertyBoolean("ID_active")){
+        $ModOn = $this->ModuleUp($this->ReadPropertyBoolean("ID_active"));
+        if(!$ModOn){
             $this->SetTimerInterval("TimerGetWeather", 3600000);
         }
         else{
            $this->SetTimerInterval("TimerGetWeather", 0); 
         }
     }
-    
-   /* ------------------------------------------------------------ 
-      Function: RequestAction  
-      RequestAction() Wird ausgeführt, wenn auf der Webfront eine Variable
-      geschaltet oder verändert wird. Es werden die System Variable des betätigten
-      Elementes übergeben.
-      Ausgaben über echo werden an die Visualisierung zurückgeleitet
-     
-   
-    SYSTEM-VARIABLE:
-      $this->GetIDForIdent($Ident)     -   ID der von WebFront geschalteten Variable
-      $Value                           -   Wert der von Webfront geänderten Variable
+ 
+    #------------------------------------------------------------# 
+    #  Function: MessageSink                                     #
+    #  MessageSink() wird nur bei registrierten                  #
+    #  NachrichtenIDs/SenderIDs-Kombinationen aufgerufen.        #
+    #------------------------------------------------------------#    
+    public function MessageSink($TimeStamp, $SenderID, $Message, $Data) {
+        switch ($Message) {
+            case IPS_KERNELSTARTED: // Nach dem IPS-Start
+                $this->KernelReady(); // Sagt alles.
+                break;
+        }
+    }
 
-   STANDARD-AKTIONEN:
-      FSSC_Position    -   Slider für Position
-      UpDown           -   Switch für up / Down
-      Mode             -   Switch für Automatik/Manual
-     ------------------------------------------------------------- */
+
+    #-------------------------------------------------------------#
+    #    Function: Destroy                                        #
+    #        Destroy() wird beim löschen der Instanz              #
+    #        und update der Module aufgerufen                     #
+    #-------------------------------------------------------------#
+    
+    
+
+    #------------------------------------------------------------# 
+    #    Function: RequestAction                                 #
+    #        RequestAction() wird von schaltbaren Variablen      #
+    #        aufgerufen.                                         #
+    #------------------------------------------------------------#
     public function RequestAction($Ident, $Value) {
          switch($Ident) {
             case "UpDown":
@@ -141,13 +153,14 @@ class MyWeather extends IPSModule
  
     }
 
-  /* ______________________________________________________________________________________________________________________
-     Section: Public Funtions
-     Die folgenden Funktionen stehen automatisch zur Verfügung, wenn das Modul über die "Module Control" eingefügt wurden.
-     Die Funktionen werden, mit dem selbst eingerichteten Prefix, in PHP und JSON-RPC wie folgt zur Verfügung gestellt:
-    
-     FSSC_XYFunktion($Instance_id, ... );
-     ________________________________________________________________________________________________________________________ */
+#_________________________________________________________________________________________________________
+# Section: Public Functions
+#    Die folgenden Funktionen stehen automatisch zur Verfügung, wenn das Modul über die "Module Control" 
+#    eingefügt wurden.
+#    Die Funktionen werden, mit dem selbst eingerichteten Prefix, in PHP und JSON-RPC wie folgt zur 
+#    Verfügung gestellt:
+#_________________________________________________________________________________________________________
+
     /*-----------------------------------------------------------------------------
     Function: getAPIData
     ...............................................................................
@@ -186,7 +199,7 @@ class MyWeather extends IPSModule
     Returns:    
         $wetterNowData - aktuelle Wetter Daten als Array
     ------------------------------------------------------------------------------  */
-    Public function Weather_Now(string $array_json)  
+    Public function Weather_Now($array_json)  
     { 
         $weather_now = $array_json['currently'];
         $html = '<head> 
@@ -363,7 +376,12 @@ class MyWeather extends IPSModule
     }    
         
         
-        
+#________________________________________________________________________________________
+# Section: Private Functions
+#    Die folgenden Funktionen stehen nur innerhalb des Moduls zur verfügung
+#    Hilfsfunktionen: 
+#_______________________________________________________________________________________
+  
     /*-----------------------------------------------------------------------------
     Function: Get_PrecipitationType
     ...............................................................................
@@ -783,6 +801,12 @@ class MyWeather extends IPSModule
     }
 
 
-
+    /**
+     * Wird ausgeführt wenn der Kernel hochgefahren wurde.
+     */
+    protected function KernelReady()
+    {
+        $this->ApplyChanges();
+    }
 		
 }
