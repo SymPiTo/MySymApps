@@ -60,8 +60,7 @@ trait LogErrorToFile
 /**
  * Helper class for the debug output.
  */
-trait DebugHelper
-{
+trait DebugHelper {
     #------------------------------------------------------------------------------# 
     #  Function: UnregisSendDebugterProfile                                        #
     #..............................................................................#
@@ -115,42 +114,37 @@ trait NMapHelper {
         $posOpen = strpos($output, "open");
         $posClose = strpos($output, "closed");
         //open Textstring gefunden
-        if($posOpen != false){
-          $result = "open";
-        }
-        //closed Textstring gefunden
-        if($posClose!= false){
-          $result = "closed";
-        }
-        if(($posOpen == false) & ($posClose!= false)){
-            //Keine Antwort
-            $result = false;
-        }
-        if(!$type){
-            if($result == "open"){
+        if ($posOpen != false) {
+            if ($type) {
                 $result = true;
-            } else{
-                $result = false;
+            }
+            else {
+                $result = "open";
             }
         }
-
-
-  
+        elseif ($posClose != false){
+            if ($type){
+                $result = false; //closed Textstring gefunden
+              }
+              else {
+                $result = "closed";
+              }
+        }
+        else {
+            $result = false;
+        }
         return $result;
-    }
+    }    
 }
 
-/**
- * Helper class for create variable profiles.
- */
-trait ProfileHelper
-{
+
+trait ProfileHelper {
     #---------------------------------------------------------------------------------------# 
     #  Function: RegisterProfile                                                            #
     #.......................................................................................#
     #   Beschreibung:                                                                       #
     #        Create the profile for the given type, values and associations.                #
-    #.......................................................................................#
+    # ..................................................................................... #
     #  Parameters:                                                                          #
     #    * @param string $vartype      Type of the variable.                                #
     #                                  0=bool, 1=Integer, 2=Float, 3=String                 #
