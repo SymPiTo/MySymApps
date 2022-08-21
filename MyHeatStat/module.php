@@ -118,7 +118,7 @@ class MyHeatStat extends IPSModule
            $Ident = "IDPosEvnt";
            $ParentID = $varID; //Event unter die Variable hängen
            $cmd = "HS_Heat_Stat(".$this->InstanceID.");" ;
-           $EventID = $this->RegisterVarEvent($EventName, $Ident, 0, $ParentID, 0, 1, $varID, $cmd); 
+           $EventID = $this->RegisterVarEvent($EventName, $Ident, 0, $ParentID, 0, 1, $varID,  $cmd); 
         }
 
         $ModOn = $this->ModuleUp($this->ReadPropertyBoolean("ID_active"));

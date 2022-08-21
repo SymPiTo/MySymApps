@@ -255,7 +255,7 @@ class MyAlarm extends IPSModule
             $Ident = "WAE".$sensor->ID;
             $Name = "WAEvent".$sensor->ID;
             $cmd = "A_WaterAlarm(".$this->InstanceID.");" ;
-            $this->RegisterVarEvent($Name, $Ident, $Typ, $ParentID, 0, 1, $sensor->ID, $cmd  );
+            $this->RegisterVarEvent($Name, $Ident, $Typ, $ParentID, 0, 1, $sensor->ID,  $cmd  );
         }    
         
         //Unterkategorie Batterie Alarme anlegen
@@ -268,7 +268,7 @@ class MyAlarm extends IPSModule
             $Ident = "AE".$sensor->ID;
             $Name = "AEvent".$sensor->ID;
             $cmd = "A_BatAlarm(".$this->InstanceID.");" ;
-            $this->RegisterVarEvent($Name, $Ident, $Typ, $ParentID, 0, 1, $sensor->ID, $cmd  );
+            $this->RegisterVarEvent($Name, $Ident, $Typ, $ParentID, 0, 1, $sensor->ID, $cmd);
         }       
 
         //Unterkategorie Window Open Alarme anlegen

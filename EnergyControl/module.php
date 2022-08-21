@@ -651,6 +651,7 @@ class MyEnergyControl extends IPSModule {
                 IPS_SetPosition($EventID, $Position);
                 IPS_SetEventActive($EventID, false);  
         }
+        return $eid = @$this->GetIDForIdent($Ident);
     } //Function: RegisterEvent End
 
 

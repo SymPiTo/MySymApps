@@ -101,7 +101,9 @@ trait NMapHelper {
     #..............................................................................#
     #  Parameters:                                                                 #
     #          $ip     = string '192.168.178.28'                                   #
-    #          $port   = string '8888'                                             #                              
+    #          $port   = string '8888'                                             #
+    #          %type   = bool if true => result as bool                            #
+    #                         if false => result as string                         #                              
     #..............................................................................#
     # Returns:    true  => Port is open                                            #
     #             false => Port is closed                                          #
@@ -135,6 +137,35 @@ trait NMapHelper {
         }
         return $result;
     }    
+
+    protected function checkHost($ip, $type=true) {
+        $cmd = "sudo nmap -sn ".$ip;
+        // linux Befehl ausführen mit  ``'
+        $output = `$cmd`;
+        $up = strpos($output, "up");
+        $down = strpos($output, "down");
+
+        if ($up != false) {
+            if ($type) {
+                $result = true;
+            }
+            else {
+                $result = "on";
+            }
+        }
+        elseif ($down != false){
+            if ($type){
+                $result = false; //closed Textstring gefunden
+              }
+              else {
+                $result = "off";
+              }
+        }
+        else {
+            $result = false;
+        }
+        return $result;
+    }
 }
 
 
@@ -508,7 +539,7 @@ trait EventHelper{
     # Parameters:                                                                                  #  
     #  $Name        -   Name des Events                                                            #
     #  $Ident       -   Ident Name des Events                                                      #
-    #  $Typ         -   Typ des Events (1=cyclic 2=Wochenplan)                                     #
+    #  $Typ         -   Typ des Events (0=ausgelöstes 1=cyclic 2=Wochenplan)                       #
     #  $Trigger                                                                                    #
     #      0	Bei Variablenaktualisierung                                                        #
     #      1	Bei Variablenänderung                                                              #
@@ -533,6 +564,7 @@ trait EventHelper{
             IPS_SetEventTrigger($EventID, $trigger, $var);   //OnChange für Variable $var    
             IPS_SetEventScript($EventID, $cmd );
             IPS_SetEventActive($EventID, true);
+            //IPS_SetEventTriggerValue($EventID, $limit);
             return $EventID;
         } 
         else{

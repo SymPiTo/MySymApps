@@ -1,0 +1,103 @@
+{
+	"elements": [
+	{
+		"type" : "Label",
+		"name": "l1",
+		"caption": "Modul aktivieren."
+	},
+	{
+		"type" : "CheckBox",
+		"name": "active",
+		"caption": "aktivieren",
+		"value": "false"
+	},
+	{
+		"type" : "Label",
+		"name": "l9",
+		"caption": "Symcon-Server Login Daten eingeben."
+	},
+	{ 
+		"type": "ValidationTextBox", 
+		"name": "user", 
+		"caption": "User Name:" 
+	},
+	{ 
+		"type": "PasswordTextBox", 
+		"name": "password", 
+		"caption": "Passwort" 
+	},
+	{
+		"type" : "Label",
+		"name": "l7",
+		"caption": "Rechner IP Adresse eingeben."
+	},
+	{
+		"type" : "ValidationTextBox",
+		"name": "IP",
+		"caption": "IP eingeben"
+	},
+	{
+		"type" : "Label",
+		"name": "l2",
+		"caption": "Mac Adresse eingeben."
+	},
+	{
+		"type" : "ValidationTextBox",
+		"name": "mac",
+		"caption": "MAC Adresse:",
+		"value": "F8:32:E4:BE:03:0B"
+	},
+	{
+		"type" : "Label",
+		"name": "l31",
+		"caption": "Update Intervall"
+	},
+	{
+		"type" : "NumberSpinner",
+		"name": "update",
+		"caption": "[s]",
+		"value": "30"
+	},
+	{
+		"type" : "Label",
+		"name": "l3",
+		"caption": "Strom-Schaltwerte"
+	},
+	{
+		"type" : "NumberSpinner",
+		"name": "limitDown",
+		"caption": "[mA]",
+		"value": "80"
+	},
+	{
+		"type" : "NumberSpinner",
+		"name": "limitUp",
+		"caption": "[mA]",
+		"value": "600"
+	},
+	{
+		"type" : "Label",
+		"name": "l5",
+		"caption": "SchaltSteckdose auswählen"
+	},
+	{
+		"type" : "NumberSpinner",
+		"name": "FSM",
+		"caption": "ID Kanal 3: eingeben"
+	},
+	{
+		"type" : "Label",
+		"name": "l8",
+		"caption": "Strommessung auswählen"
+	},
+	{
+		"type" : "NumberSpinner",
+		"name": "I_ID",
+		"caption": "ID eingeben"
+	}
+	],
+	"actions": [
+	],
+	"status": [
+	]
+}

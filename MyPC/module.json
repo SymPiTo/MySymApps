@@ -1,0 +1,12 @@
+{
+	"id": "{C93ED947-1EFE-4210-A73C-082B260155F6}",
+	"name": "MyPC",
+	"type": 3,
+	"vendor": "PiTo",
+	"aliases": ["PC Control"],
+	"parentRequirements": [],
+	"childRequirements": [],
+	"implemented": [],
+	"prefix": "PC"
+}
+
