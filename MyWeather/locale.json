@@ -1,0 +1,18 @@
+{
+    "translations": {
+        "de": { 
+            "temperature": "Benutzername",
+            "temperatureApparent": "Passwort",
+            "dewPoint": "Absender",
+            "humidity": "Typ",
+            "windSpeed": "Kombi-SMS",
+            "windDirection": "Nummer",
+            "windGust": "Nachricht",
+            "pressureSurfaceLevel": "Sende Nachricht",
+            "pressureSeaLevel": "Frage Guthaben ab",
+            "precipitationIntensity": "Logindaten sind gültig",
+            "rainIntensity": "Authentifizierung ist fehlgeschlagen",
+            "freezingRainIntensity": "Kein Guthaben vorhanden"
+        }
+    }
+}

@@ -10,7 +10,7 @@
                     "label" : "API Key"
             },
             {
-                    "name" : "key",
+                    "name" : "APIkey",
                     "type" : "ValidationTextBox",
                     "caption" : "API Key"
             },
@@ -31,7 +31,256 @@
                     "name" : "longitude",
                     "type" : "ValidationTextBox",
                     "caption" : "longitude"
-            } 
+            },
+            {
+                "name" : "Town_ID",
+                "type" : "ValidationTextBox",
+                "caption" : "Stadt ID"
+            },
+            {
+                "type": "List",
+                "name": "WetterDaten",
+                "caption": "Auswahl",
+                "rowCount": 10,
+                "add": false,
+                "delete": false,
+                "sort": {
+                    "column": "WetterData",
+                    "direction": "ascending"
+                },
+                "columns": 
+                [
+                    {   
+                        "caption": "Wochen Daten",
+                        "name": "weekData",
+                        "width": "50px",
+                        "visible": true,
+                        "edit": 
+                        {
+                            "caption": "Aktiviert",
+                            "type": "CheckBox"
+                        }
+                        
+                    } ,
+                    {   
+                        "caption": "Now Daten",
+                        "name": "nowData",
+                        "width": "50px",
+                        "visible": true,
+                        "edit": 
+                        {
+                            "caption": "Aktiviert",
+                            "type": "CheckBox"
+                        }
+                        
+                    } ,
+                    {
+                        "caption": "Daten Feld",
+                        "name": "WetterData",
+                        "width": "auto",
+                        "visible": true,
+                        "edit":
+                        {
+                            "caption": "IP",
+                            "type": "ValidationTextBox"
+                        }
+                         
+                    }
+                ], 
+                "values": [
+                        {
+                                "nowData": false,
+                                "weekData": false,
+                                "WetterData": "temperature"
+                        },
+                        {
+                                "nowData": false,
+                                "weekData": false,
+                                "WetterData": "temperatureMin"
+                        },
+                        {
+                                "nowData": false,
+                                "weekData": false,
+                                "WetterData": "temperatureMax"
+                        },
+                        {
+                                "nowData": false,
+                                "weekData": false,
+                                "WetterData": "temperatureApparent"
+                        },
+                        {
+                                "nowData": false,
+                                "weekData": false,
+                                "WetterData": "dewPoint"
+                        },   
+                        {
+                                "nowData": false,
+                                "weekData": false,
+                                "WetterData": "humidity"
+                        },
+                        {
+                                "nowData": false,
+                                "weekData": false,
+                                "WetterData": "windSpeed"
+                        },
+                        {
+                                "nowData": false,
+                                "weekData": false,
+                                "WetterData": "windDirection"
+                        },  
+                        {
+                                "nowData": false,
+                                "weekData": false,
+                                "WetterData": "windGust"
+                        },
+                        {
+                                "nowData": false,
+                                "weekData": false,
+                                "WetterData": "pressureSurfaceLevel"
+                        },
+                        {
+                                "nowData": false,
+                                "weekData": false,
+                                "WetterData": "pressureSeaLevel"
+                        },  
+                        {
+                                "nowData": false,
+                                "weekData": false,
+                                "WetterData": "precipitationIntensity"
+                        },
+                        {
+                                "nowData": false,
+                                "weekData": false,
+                                "WetterData": "rainIntensity"
+                        },
+                        {
+                                "nowData": false,
+                                "weekData": false,
+                                "WetterData": "freezingRainIntensity"
+                        }, 
+                        {
+                                "nowData": false,
+                                "activeData": false,
+                                "WetterData": "snowIntensity"
+                        },   
+                        {
+                                "nowData": false,
+                                "weekData": false,
+                                "WetterData": "sleetIntensity"
+                        },  
+                        {
+                                "nowData": false,
+                                "weekData": false,
+                                "WetterData": "precipitationProbability"
+                        },  
+                        {
+                                "nowData": false,
+                                "weekData": false,
+                                "WetterData": "precipitationType"
+                        },  
+                        {
+                                "nowData": false,
+                                "weekData": false,
+                                "WetterData": "rainAccumulation"
+                        },  
+                        {
+                                "nowData": false,
+                                "weekData": false,
+                                "WetterData": "snowAccumulation"
+                        },  
+                        {
+                                "nowData": false,
+                                "weekData": false,
+                                "WetterData": "snowAccumulationLwe"
+                        },  
+                        {
+                                "nowData": false,
+                                "weekData": false,
+                                "WetterData": "sleetAccumulation"
+                        },  
+                        {
+                                "nowData": false,
+                                "weekData": false,
+                                "WetterData": "sleetAccumulationLwe"
+                        },  
+                        {
+                                "nowData": false,
+                                "weekData": false,
+                                "WetterData": "iceAccumulation"
+                        },  
+                        {
+                                "nowData": false,
+                                "weekData": false,
+                                "WetterData": "iceAccumulationLwe"
+                        },  
+                        {
+                                "nowData": false,
+                                "activeData": false,
+                                "WetterData": "sunriseTime"
+                        },  
+                        {
+                                "nowData": false,
+                                "weekData": false,
+                                "WetterData": "sunsetTime"
+                        },  
+                        {
+                                "nowData": false,
+                                "weekData": false,
+                                "WetterData": "visibility"
+                        },  
+                        {
+                                "nowData": false,
+                                "weekData": false,
+                                "WetterData": "cloudCover"
+                        },  
+                        {
+                                "nowData": false,
+                                "activeData": false,
+                                "WetterData": "cloudBase"
+                        },  
+                        {
+                                "nowData": false,
+                                "weekData": false,
+                                "WetterData": "cloudCeiling"
+                        },  
+                        {
+                                "nowData": false,
+                                "weekData": false,
+                                "WetterData": "moonPhase"
+                        },  
+                        {
+                                "nowData": false,
+                                "weekData": false,
+                                "WetterData": "uvIndex"
+                        },  
+                        {
+                                "nowData": false,
+                                "activeData": false,
+                                "WetterData": "uvHealthConcern"
+                        },
+                        {
+                                "nowData": false,
+                                "weekData": false,
+                                "WetterData": "weatherCodeFullDay"
+                        },  
+                        {
+                                "nowData": false,
+                                "activeData": false,
+                                "WetterData": "weatherCodeDay"
+                        },  
+                        {
+                                "nowData": false,
+                                "activeData": false,
+                                "WetterData": "weatherCodeNight"
+                        },
+                        {
+                                "nowData": false,
+                                "weekData": false,
+                                "WetterData": "weatherCode"
+                        }
+                ]
+    
+            }  
 	],
 	"actions":
 	[

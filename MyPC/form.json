@@ -66,13 +66,13 @@
 	{
 		"type" : "NumberSpinner",
 		"name": "limitDown",
-		"caption": "[mA]",
+		"caption": "Unterer Schwellwert [mA]",
 		"value": "80"
 	},
 	{
 		"type" : "NumberSpinner",
 		"name": "limitUp",
-		"caption": "[mA]",
+		"caption": "Oberer Schwellwert [mA]",
 		"value": "600"
 	},
 	{
@@ -87,8 +87,18 @@
 	},
 	{
 		"type" : "Label",
+		"name": "20",
+		"caption": "SchaltSteckdose Statusvariable"
+	},
+	{
+		"type" : "NumberSpinner",
+		"name": "FSMState",
+		"caption": "ID Kanal 3: eingeben"
+	},
+	{
+		"type" : "Label",
 		"name": "l8",
-		"caption": "Strommessung auswählen"
+		"caption": "SchaltSteckdose Statusvariable eingeben."
 	},
 	{
 		"type" : "NumberSpinner",

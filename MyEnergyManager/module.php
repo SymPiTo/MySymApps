@@ -16,12 +16,16 @@
 #    
 # ___________________________________________________________________________ 
 require_once __DIR__ . '/../libs/MyHelper.php';
+require_once __DIR__ . '/../libs/DataHelper.php'; 
+
 
 class MyEnergyManager extends IPSModule {
 
 	use DebugHelper,
-	ProfileHelper;
-
+	ProfileHelper,
+    csv;
+    
+    
 # ___________________________________________________________________________ 
 #    Section: Internal Modul Functions
 #    Die folgenden Funktionen sind Standard Funktionen zur Modul Erstellung.
@@ -96,7 +100,8 @@ class MyEnergyManager extends IPSModule {
  
 		if($this->ReadPropertyBoolean("Open")){
 			$this->SetTimerInterval('UpdateTrigger', 1000  * $this->ReadPropertyInteger('Update_Interval'));
-		}
+            $this->updateData();
+        }
 		else{
 			$this->SetTimerInterval('UpdateTrigger', 0);
 		}
@@ -109,6 +114,37 @@ class MyEnergyManager extends IPSModule {
 #    Die Funktionen werden, mit dem selbst eingerichteten Prefix, in PHP und JSON-RPC wie folgt zur 
 #    Verfügung gestellt:
 #_________________________________________________________________________________________________________
+    #---------------------------------------------------------------------------------#
+    # Function: readCSVData                                                                #
+    #.................................................................................#
+    # Beschreibung:                                                                   #
+    #      #
+    #                                                                                 #
+    #.................................................................................#
+    # Parameters:                                                                     #
+    #                                              #
+    #                                                      #
+    #.................................................................................#
+    # Returns:                                                                        #
+    #                                                                              #
+    #---------------------------------------------------------------------------------#
+
+	public Function updateData() {
+        $filename = "/home/pi/pi-share/MyEnergy.csv";   
+        $year = date("Y");
+        $previousyear = $year -1;
+        $result = $this->findCellValue($filename,"year",  $year, "kWh");
+        $this->SetValue("kwh_jahr", $result);
+
+        $result = $this->findCellValue($filename,"year",  $year, "NetCost");
+        $this->SetValue("VJ_Kosten", $result);
+
+        $result = $this->findCellValue($filename,"year",  $year, "TotalCost");
+        $this->SetValue("VJ_GesKosten", $result);
+
+	}
+
+  
 
     #---------------------------------------------------------------------------------#
     # Function: setRoomStat                                                           #
@@ -137,9 +173,10 @@ class MyEnergyManager extends IPSModule {
 			$SIdent = $sensor->ID;
 			$value = GetValue($SIdent);
 			$actPower += $value;
+            $this->SendDebug("calcActEnergy", $SIdent."-".$value);
 			
 		}
-		$this->SetValue("kwh_akt", $actPower/1000);
+		$this->SetValue("kwh_akt", $actPower);
 	}
 
     #---------------------------------------------------------------------------------#
@@ -164,7 +201,7 @@ class MyEnergyManager extends IPSModule {
 
 	private Function calcCost() {
 		$actPower = $this->getvalue("kwh_akt");
-		$cost = ($actPower *1000 * $this->ReadPropertyFloat("StromPreis"))/100 ;
+		$cost = ($actPower * $this->ReadPropertyFloat("StromPreis")) ;
 		if ($this->ReadPropertyBoolean("AddGrundPreis")){
 			$cost = $cost + $this->ReadPropertyFloat("GrundPreis");
 		}

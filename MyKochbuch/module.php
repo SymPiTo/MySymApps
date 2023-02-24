@@ -1,6 +1,5 @@
 <?php
-//zugehoerige TRAIT-Klassen    TEST xxxy
-//require_once(__DIR__ . "/../libs/NetworkTraits.php");
+
 require_once __DIR__.'/../libs/MyHelper.php';  // diverse Klassen
 
 /** 

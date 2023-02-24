@@ -48,7 +48,7 @@ class MyPC extends IPSModule{
 		$this->RegisterPropertyInteger("I_ID", 0);
 		$this->RegisterPropertyString("user", "");
 		$this->RegisterPropertyString("password", "");
-
+		$this->RegisterPropertyInteger('FSMState', 0);
 		
 		// Register Variable
 		$variablenID = $this->RegisterVariableBoolean('StopOff', 'Stop SwitchOff', '~Switch', 0);
@@ -162,10 +162,12 @@ class MyPC extends IPSModule{
         switch($Ident) {
             case "PC_Switch":
                 if ($Value == true){ 
+					$this->SendDebug("Action_Command","PC_Switch On");
 					$this->SwitchPC(true);
 					$this->SetValue("PC_Switch", true);
                 }
                 else {
+					$this->SendDebug("Action_Command","PC_Switch On");
 					$this->SwitchPC(false);
 					$this->SetValue("PC_Switch", false);
                 }
@@ -234,9 +236,11 @@ class MyPC extends IPSModule{
 	#------------------------------------------------------------------------------  
 
 	public Function SwitchPC($state) {
+		$this->SendDebug("SwitchPC","Status: ". $state);
 		$user = $this->ReadPropertyString("user"); 
 		if ($state){
 			$this->setValue("PC_State", 2);
+			$this->SendDebug("SwitchPC","Status: ". $state. " - ". "starting PC.");
 			//Steckdose einschalten, falls nicht ein
 			$ParentID = $this->ReadPropertyInteger('FSM');
 			$StatID = @IPS_GetObjectIDByName("STATE", $ParentID);
@@ -251,42 +255,45 @@ class MyPC extends IPSModule{
 
 			if (!$state){
 				    // Steckdose einschalten
-					IPS_LogMessage("MyPC", "Steckdose einschalten.");
+					$this->SendDebug("SwitchPC","Status: ". $state. " - ". "Steckdose einschalten.");
 					HM_WriteValueBoolean($ParentID, "STATE", true);
 					//warten bis Netzwerkkarte vom Rechner erreichbar ist.
 					$PCon = $this->waitHostUp(100, 10);
+					$this->SendDebug("SwitchPC","PC erreichbar: ". $PCon );
 			}
 			else {
 				//Steckdose ist schon ein.
 				IPS_LogMessage("MyPC".$user, "- Steckdose ist ein - warte auf Verbindung zur Netzwerkkarte.");
 				$PCon = $this->waitHostUp(60, 0);
-			
-				IPS_LogMessage("MyPC", "Rechner erreichbar.".$PCon);
+				$this->SendDebug("SwitchPC","PC erreichbar: ". $PCon );
+				 
 			}
 			if($PCon) {
 				// PC einschalten
-				IPS_LogMessage("MyPC".$user, "- Rechner ist erreichbar und wird nun hochgefahren.");
+				$this->SendDebug("SwitchPC".$user,"Rechner ist erreichbar und wird nun hochgefahren." ); 
+				 
 				$this->setValue("PC_State", 2);
+				$this->SendDebug("SwitchPC","PC hochfahren WOL");
 				$result = $this->wol($this->ReadPropertyString("mac"));
 				If ($result){
+					$this->SendDebug("SwitchPC".$user,"PC erfolgreich hochgefahren." ); 
 					 
-					IPS_LogMessage("MyPC".$user, "-WOLauf Rechner war erfolgreich.");
 					 
 				}
 				else{
-					IPS_LogMessage("MyPC".$user, "- Rechner ist erreichbar lässt sich aber nicht hochgefahren.");
-
+					 
+					$this->SendDebug("SwitchPC".$user,"PC lässt sich nicht hochfahren.");
 				}
 			}
 			else {
 				//Rechner ist nicht erreichbar
-				IPS_LogMessage("MyPC".$user, "- Rechner ist nicht erreichbar.");
+				$this->SendDebug("SwitchPC".$user,"PC ist nicht erreichbar.");
 				$this->setValue("PC_State", 5);
 			}
 		}
 		else {
 			//Rechner runterfahren
-			IPS_LogMessage("MyPC".$user, "- Rechner wird runtergefahren.");
+			$this->SendDebug("SwitchPC".$user,"PC wird runtergefahren.");
 			$this->shutdown();
 			$respond = $this->waitHostDown(100, 2);
 			if($respond){
@@ -311,6 +318,7 @@ class MyPC extends IPSModule{
 	# Returns :    bool true/false                                                                
 	#------------------------------------------------------------------------------  */
 	public Function SetPCStatus() {
+		
 		$PlugID = $this->ReadPropertyInteger("FSM"); 
 		$StatID = @IPS_GetObjectIDByName("STATE", $PlugID);
 		$plugState = GetValue($StatID);
@@ -321,47 +329,82 @@ class MyPC extends IPSModule{
 		$Mode = $this->getvalue("Mode");
 		$I_high = $this->ReadPropertyInteger("limitUp");
 		$I_low = $this->ReadPropertyInteger("limitDown");
-
+		$this->SendDebug("SetPCStatus ".$user,"Zykl. PC Statusabfrage.");
 		//IPS_LogMessage("MyPC".$user, "- Stromänderung erkannt ".$I);
-
-		if(($I>$I_high) & ($state != 4) & ($state != 1)) {
-			//IPS_LogMessage("MyPC".$user, "- Stromänderung >600 erkannt- Rechner ist ON ");
-			$this->setValue("PC_State", 3); //Rechner ist hochgefahren
-			$this->SetValue("PC_Switch", true);
-		}
-		elseif(($I>$I_low) & ($state != 4) & ($state != 1) & ($state != 0)){
-			IPS_LogMessage("MyPC".$user, "- Stromänderung >200 erkannt- Rechner fährt hoch.");
-			$this->setValue("PC_State", 2); //Rechner wird hochgefahren
-		}
-		//Strom is low and PC ist aus und im Auto mode
-		if(($I<$I_low) & ($state == 1) & ($Mode)) {
-			IPS_Sleep(1000);
-			IPS_LogMessage("MyPC".$user, "- Stromänderung <200 erkannt- Rechner aus Power off.");
-			//Steckdose ausschalten
-			HM_WriteValueBoolean($PlugID, "STATE", false);
-			$this->setValue("PC_State", 0); //Rechner und Power aus
-			$this->SetValue("PC_Switch", false);
-		}
-		elseif(($I<$I_low) & ($state == 4)){
-			IPS_Sleep(3000);
-			$this->setValue("PC_State", 1); //Rechner ist aus und Power bleibt an
-			$this->SetValue("PC_Switch", false);
-		}
 		//Steckdose ist aus dann ist auch Rechner aus
 		if(!$plugState){
+			$this->SendDebug("SetPCStatus".$user," Rechner ist aus und Steckdose ist aus.");
 			$this->setValue("PC_State", 0); //Rechner und Power aus
 			$this->SetValue("PC_Switch", false);
 		}
-
-		//Strom is low and PC steht länger als x sec in starting 
-		if(($I<$I_low) & ($state == 2)) {
-			//waiting for 30 sec
-			IPS_Sleep(30000);
-			If($I<$I_low) {
-				IPS_LogMessage("MyPC".$user, "- Rechner bleibt im Starting mode stecken.");
-				$this->setValue("PC_State", 1); //Rechner ist aus und Power ist noch an
+		else{
+			$this->SendDebug("SetPCStatus ".$user, "Strom: ".$I. "- Status: ".$state);
+			if(($I>$I_high) & ($state != 4) & ($state != 1)) {
+				//IPS_LogMessage("MyPC".$user, "- Stromänderung >600 erkannt- Rechner ist ON ");
+				$this->SendDebug("SetPCStatus".$user,"Strom>".$I_high." und NOT Shutting down");
+				$this->setValue("PC_State", 3); //Rechner ist hochgefahren
+				$this->SetValue("PC_Switch", true);
+				$this->SendDebug("SetPCStatus".$user,"setzte Rechner auf ON");
 			}
-		}	
+			elseif(($I>$I_low) & ($state != 4) & ($state != 1) & ($state != 0)){
+				
+				$this->SendDebug("SetPCStatus".$user,"Strom>".$I_low." und Rechner fährt hoch");
+				$this->setValue("PC_State", 2); //Rechner wird hochgefahren
+			}
+			//Strom is low and PC ist aus und im Auto mode
+			if(($I<$I_low) & ($state == 1) & ($Mode)) {
+				IPS_Sleep(1000);
+				
+				$this->SendDebug("SetPCStatus".$user,"Strom<".$I_low." erkannt- Rechner aus Power off.");
+				//Steckdose ausschalten
+				$SwitchOnArray = IPS_GetVariable($this->ReadPropertyInteger("FSMState"));
+				$SwitchOnTime = $SwitchOnArray["VariableChanged"];
+				//falls Steckdose > 3min = 180sec an ist dann erst ausschalten
+				if(time()> ($SwitchOnTime) + 180){
+					HM_WriteValueBoolean($PlugID, "STATE", false);
+					$this->setValue("PC_State", 0); //Rechner und Power aus
+					$this->SetValue("PC_Switch", false);
+				}
+			}
+			elseif(($I<$I_low) & ($state == 4)){
+				IPS_Sleep(3000);
+				$this->SendDebug("SetPCStatus".$user,"Strom<".$I_low." und ist runtergefahren und ist aus.");
+				$this->setValue("PC_State", 1); //Rechner ist aus und Power bleibt an
+				$this->SetValue("PC_Switch", false);
+			}
+
+
+			//Strom is low and PC steht länger als x sec in starting 
+			if(($I<$I_low) & ($state == 2)) {
+				//waiting for 30 sec
+				IPS_Sleep(30000);
+				If($I<$I_low) {
+					$this->SendDebug("SetPCStatus".$user,"Strom<".$I_low." Rechner bleibt im starting Modus stecken.");
+					$this->setValue("PC_State", 1); //Rechner ist aus und Power ist noch an
+				}
+			}	
+
+			//Strom ist high und Status immer noch OFF 
+			if(($I>$I_high) & ($state == 1)) {
+				//prüfen ob Rechner erreichbar
+				$PCip = $this->ReadPropertyString("IP");
+				$net = $this->checkHost($PCip);
+				if ($net){
+					//Rechner-Netzwerkkarte ist erreichbar
+					$this->setValue("PC_State", 3); //Rechner und Power ist ein.
+					$this->SetValue("PC_Switch", true);
+				}
+				else{
+					
+				}
+				
+			}
+
+			if($I < $I_low){
+				$this->SendDebug("SetPCStatus".$user,"Strom ist <".$I_low." -PC ist OFF.");
+				$this->setValue("PC_State", 1); //Rechner ist aus.
+			}
+		}
 		return $I;
 	}
 

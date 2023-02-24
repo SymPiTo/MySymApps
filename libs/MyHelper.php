@@ -404,6 +404,38 @@ trait TimerHelper
 }
 
 
+
+
+/**
+ * Trait welcher Objekt-Eigenschaften in den Instance-Buffer schreiben und lesen kann.
+ */
+    #------------------------------------------------------------------------------# 
+    #  Function: BuffHelper                                                        #
+    #..............................................................................#
+    #   Beschreibung:                                                              #
+    #         schreiben und lesen von Objekt Eigenschafen in den Instanz Buffer    #
+    #         Syntax $this->Variable
+    #..............................................................................#
+    #  Parameters:  Get ->  Property Name             ($x = $this->VariableName)   #
+    #               Set ->  Property Name, Wert       $this-VariableName = "fhsk"  #                                                        
+    #..............................................................................#
+    # Returns:                                             #
+    #                                                     #
+    #------------------------------------------------------------------------------#
+trait BuffHelper {
+    # Wert einer Eigenschaft aus den InstanceBuffer lesen.
+    public function __get($name) {
+        return unserialize($this->GetBuffer($name));
+    }
+
+    # Wert einer Eigenschaft in den InstanceBuffer schreiben.
+    public function __set($name, $value) {
+        $Data = serialize($value);
+        $this->SetBuffer($name, $Data);
+    }
+}
+
+
 trait VersionHelper{		
     #----------------------------------------------------------------------------#
     #   Function: GetIPSVersion                                                  #

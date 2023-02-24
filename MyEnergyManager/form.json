@@ -65,7 +65,7 @@
             "type": "List",
             "name": "StromSensorList",
             "caption": "StromMessSensor",
-            "rowCount": 5,
+            "rowCount": 10,
             "add": true,
             "delete": true,
             "sort": {
