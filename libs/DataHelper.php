@@ -27,6 +27,9 @@ trait csv {
 	protected Function findCellValue($filename, $searchCol, $SearchValue, $CellCol) {
         $data = $this->csv_to_array($filename);
         $key = array_search($SearchValue, array_column($data, $searchCol));
+        If($key == false){
+            return false;
+        }
         return $data[$key][$CellCol];
 	}
 }

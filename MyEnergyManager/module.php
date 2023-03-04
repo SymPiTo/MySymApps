@@ -79,32 +79,37 @@ class MyEnergyManager extends IPSModule {
 		//Never delete this line!
 		parent::ApplyChanges();
 
-		//für jeden Sensor eine Variable anlegen
+		//für jeden Sensor einen Variablen-Link anlegen
 		$EnergySensors = json_decode($this->ReadPropertyString("StromSensorList"));
-		 $this->SendDebug("SensorList", $EnergySensors, 0);
-		foreach ($EnergySensors as $key => $sensor) {
-			$SIdent = $sensor->ID;
-			
-			$exist = @IPS_GetLinkIDByName("Sensor_".$SIdent, $this->InstanceID);
-			if ($exist === false){
-				// Anlegen eines neuen Links mit dem Namen "ObjectID"
-				$LinkID = IPS_CreateLink();             // Link anlegen
-				IPS_SetName($LinkID, "Sensor_".$SIdent); // Link benennen
-				IPS_SetParent($LinkID, $this->InstanceID); // Link einsortieren unter dem Objekt mit der ID "12345"
-				IPS_SetLinkTargetID($LinkID, $SIdent);    // Link verknüpfen
-			}
-			else{
-    			$this->SendDebug("Die Link-ID lautet: ", $SIdent);
-			}
-		}
- 
-		if($this->ReadPropertyBoolean("Open")){
-			$this->SetTimerInterval('UpdateTrigger', 1000  * $this->ReadPropertyInteger('Update_Interval'));
-            $this->updateData();
+        $this->SendDebug("SensorList", $EnergySensors, 0);
+        if (!empty($EnergySensors)){
+            foreach ($EnergySensors as $key => $sensor) {
+                $SIdent = $sensor->ID;
+                
+                $exist = @IPS_GetLinkIDByName("Sensor_".$SIdent, $this->InstanceID);
+                if ($exist === false){
+                    // Anlegen eines neuen Links mit dem Namen "ObjectID"
+                    $LinkID = IPS_CreateLink();             // Link anlegen
+                    IPS_SetName($LinkID, "Sensor_".$SIdent); // Link benennen
+                    IPS_SetParent($LinkID, $this->InstanceID); // Link einsortieren unter dem Objekt mit der ID "12345"
+                    IPS_SetLinkTargetID($LinkID, $SIdent);    // Link verknüpfen
+                }
+                else{
+                    $this->SendDebug("Die Link-ID lautet: ", $SIdent);
+                }
+            }
+
+            if($this->ReadPropertyBoolean("Open")){
+                $this->SetTimerInterval('UpdateTrigger', 1000  * $this->ReadPropertyInteger('Update_Interval'));
+                $this->updateData();
+            }
+            else{
+                $this->SetTimerInterval('UpdateTrigger', 0);
+            }
         }
-		else{
-			$this->SetTimerInterval('UpdateTrigger', 0);
-		}
+        else{
+            $this->SetTimerInterval('UpdateTrigger', 0);
+        }
 	}
 	
 #_________________________________________________________________________________________________________
@@ -130,10 +135,18 @@ class MyEnergyManager extends IPSModule {
     #---------------------------------------------------------------------------------#
 
 	public Function updateData() {
-        $filename = "/home/pi/pi-share/MyEnergy.csv";   
+         $filename = "/home/pi/pi-share/MyEnergy.csv";   
+        //aktuelles Jahr
         $year = date("Y");
+        $this->SendDebug("JAHR", $year,0);
+        //Vorjahr
         $previousyear = $year -1;
-        $result = $this->findCellValue($filename,"year",  $year, "kWh");
+            $result = $this->findCellValue($filename,"year",  $year, "Jahres-Verbrauch");
+        if(!$result){
+            $result = $this->findCellValue($filename,"year",  $previousyear, "Jahres-Verbrauch");
+        }
+
+        //$this->SendDebug("suche Jahreswert", $result,0);
         $this->SetValue("kwh_jahr", $result);
 
         $result = $this->findCellValue($filename,"year",  $year, "NetCost");
@@ -169,14 +182,17 @@ class MyEnergyManager extends IPSModule {
 	private Function calcActEnergy() {
 		$actPower = 0;
 		$EnergySensors = json_decode($this->ReadPropertyString("StromSensorList"));
-		foreach ($EnergySensors as $key => $sensor) {
-			$SIdent = $sensor->ID;
-			$value = GetValue($SIdent);
-			$actPower += $value;
-            $this->SendDebug("calcActEnergy", $SIdent."-".$value);
-			
-		}
-		$this->SetValue("kwh_akt", $actPower);
+        $this->SendDebug("Power_Sensoren", $EnergySensors);
+        if(!empty($EnergySensors)){
+            foreach ($EnergySensors as $key => $sensor) {
+                $SIdent = $sensor->ID;
+                $value = GetValue($SIdent);
+                $actPower += $value;
+                $this->SendDebug("calcActEnergy", $SIdent."-".$value);
+                
+            }
+            $this->SetValue("kwh_akt", $actPower);
+        }
 	}
 
     #---------------------------------------------------------------------------------#
@@ -232,6 +248,7 @@ class MyEnergyManager extends IPSModule {
 	public Function update() {
 		$this->calcActEnergy();
 		$this->calcCost();
+        
 	}
 
 
