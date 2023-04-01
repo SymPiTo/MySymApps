@@ -213,6 +213,7 @@ class MyGreensens extends IPSModule {
             }
             else {
                 $this->SendDebug($this->Translate("Received data frm API without error."),"");
+
             }
             //Kopfdaten
             $headers = array(
@@ -247,6 +248,8 @@ class MyGreensens extends IPSModule {
         }
         else {
             $this->SendDebug($this->Translate("Error"), $this->Translate("No sensor data received.", 0));
+            //Timer off
+            $this->SetTimerInterval("updatePlant", 0);
             return false;
         }
     }  //End
@@ -317,21 +320,31 @@ class MyGreensens extends IPSModule {
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
         
         $resp = curl_exec($curl);
+        $this->SendDebug("Token-Anfrage:", $resp, 0);
         curl_close($curl);
         $obj= json_decode($resp);
-        
-        $token =  $obj->data->token;
-        $timestamp = time();
-        //Schreibt  in den Buffer "Databuffer"
-        $this->SetBuffer("token", $token);
-        $this->SetBuffer("timestamp", $timestamp);
-        if($token != ""){
-            $this->SetBuffer("valid", true);
-            $this->SendDebug($this->Translate("received Token:"), $token, 0);
-            return $token;
+        if($resp !=false){
+            $token =  $obj->data->token;
+            $timestamp = time();
+            //Schreibt  in den Buffer "Databuffer"
+            $this->SetBuffer("token", $token);
+            $this->SetBuffer("timestamp", $timestamp);
+            if($token != ""){
+                $this->SetBuffer("valid", true);
+                $this->SendDebug($this->Translate("received Token:"), $token, 0);
+                return $token;
+            }
+            else{
+                $this->SendDebug($this->Translate("Error:"), $this->Translate("No Token received"), 0);
+                //Timer off
+                $this->SetTimerInterval("updatePlant", 0);
+                return false;
+            }    
         }
         else{
-            $this->SendDebug($this->Translate("Error:"), $this->Translate("No Token received"), 0);
+            $this->SendDebug($this->Translate("Error:"), "keine Verbindung zur API möglich.", 0);
+            //Timer off
+            $this->SetTimerInterval("updatePlant", 0);
             return false;
         }
     }  //End
