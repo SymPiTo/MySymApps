@@ -247,7 +247,7 @@ class MyGreensens extends IPSModule {
             return $plantdata;
         }
         else {
-            $this->SendDebug($this->Translate("Error"), $this->Translate("No sensor data received.", 0));
+            $this->SendDebug($this->Translate("Error"), $this->Translate("No sensor data received."),0);
             //Timer off
             $this->SetTimerInterval("updatePlant", 0);
             return false;
