@@ -6,6 +6,42 @@
         },
         {
             "type": "Label",
+            "label": "Person 1 - Torsten BLE-Detector"
+        },
+        {
+            "name": "BLE1",
+            "type": "SelectVariable",
+            "caption": "BLE-Sensor Torsten"
+        },
+        {
+            "type": "Label",
+            "label": "Person 2 - Pierre BLE-Detector"
+        },
+        {
+            "name": "BLE2",
+            "type": "SelectVariable",
+            "caption": "BLE-Sensor Pierre"
+        },
+        {
+            "type": "Label",
+            "label": "Person 1 - Torsten Handy-Login Detector"
+        },
+        {
+            "name": "Handy1",
+            "type": "SelectVariable",
+            "caption": "Handy-Login Torsten"
+        },
+        {
+            "type": "Label",
+            "label": "Person 2 - Pierre Handy-Login Detector"
+        },
+        {
+            "name": "Handy2",
+            "type": "SelectVariable",
+            "caption": "Handy-Login Pierre"
+        },
+        {
+            "type": "Label",
             "label": "Add/Delete Präsenzsensor variables"
         },
         {

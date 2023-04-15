@@ -11,7 +11,7 @@
 
 #___________________________________________________________________________ 
 #    Section: Beschreibung
-#    Das Modul dient zum automatisieren von Virgängen, um Energie zu sparen.
+#    Das Modul dient zum automatisieren von Vorgängen, um Energie zu sparen.
 #    Über Detector Sensoren wird erfasst welche Räume bzw. Wohnung leer ist.
 #    In Abhängigkeit davon werden bestimmte Aktionen ausgelöst.
 #    
@@ -23,6 +23,7 @@ require_once __DIR__ . '/../libs/MyHelper.php';  // diverse Klassen
 class MyEnergyControl extends IPSModule {
 
      use DebugHelper;
+     use EventHelper;
  
 
 # ___________________________________________________________________________ 
@@ -52,7 +53,10 @@ class MyEnergyControl extends IPSModule {
         
        // $this->ReadPropertyFloat("NAME", 0.0);
 
-       // $this->ReadPropertyInteger("NAME", 0);
+       $this->RegisterPropertyInteger("BLE1", 0);
+       $this->RegisterPropertyInteger("BLE2", 0);
+       $this->RegisterPropertyInteger("Handy1", 0);
+       $this->RegisterPropertyInteger("Handy2", 0);
 
        // $this->ReadPropertyString("NAME", "");
 
@@ -61,6 +65,12 @@ class MyEnergyControl extends IPSModule {
        // $this->RegisterProfiles();
        
         #REGISTER VARIABLES
+        $variablenID = $this->RegisterVariableBoolean ("PierreAtHome", "Pierre is da", '~Switch', 0);
+        IPS_SetInfo ($variablenID, "WSS");
+
+        $variablenID = $this->RegisterVariableBoolean ("TorstenAtHome", "Torsten is da", '~Switch', 0);
+        IPS_SetInfo ($variablenID, "WSS");
+
         $variablenID = $this->RegisterVariableBoolean ("StatWZ", "Wohnzimmer Person", '~Switch', 0);
         IPS_SetInfo ($variablenID, "WSS");
         
@@ -100,35 +110,7 @@ class MyEnergyControl extends IPSModule {
 
         $this->RegisterTimer('T_Wohn', 0, 'EC_checkEvent($_IPS[\'TARGET\'], "Wohn");');
 
-        //IPS_SetInfo ($variablenID, "WSS");
-        //$this->RegisterPropertyString("ID_Test", "MaxMustermann"); 
 
-
-
-        /*
-        $variablenID = $this->RegisterVariableFloat ($Ident, $Name, $Profil, $Position);
-        IPS_SetInfo ($variablenID, "WSS");
-        IPS_SetHidden($variablenID, true); //Objekt verstecken
-
-        $variablenID = $this->RegisterPropertyInteger ($Name, $Standardwert, $Profil, $Position);
-        IPS_SetInfo ($variablenID, "WSS");
-        IPS_SetHidden($variablenID, true); //Objekt verstecken
-
-        $variablenID = $this->RegisterPropertyString ($Name, $Standardwert, $Profil, $Position);
-        IPS_SetInfo ($variablenID, "WSS");
-        IPS_SetHidden($variablenID, true); //Objekt verstecken
-
-
-
-        // Verbinde mit neu erstellten Splitter, falls noch keine Verbindung besteht
-        $this->RequireParent("{_GUID-SPLITTER_}");
-        // Verbinde mit neu erstellten IO, falls noch keine Verbindung besteht
-        $this->RequireParent("{_GUID-IO_}");
-
-
-        //Webfront Actions setzen
-        $this->EnableAction("IDENT der registrierten Variable");
-*/
 
     } //Function: Create End
 
@@ -142,6 +124,47 @@ class MyEnergyControl extends IPSModule {
         $this->RegisterMessage(0, IPS_KERNELSTARTED);
         //Never delete this line!
         parent::ApplyChanges();
+
+        # Register Events
+ 
+        if($this->ReadPropertyInteger("BLE2") >0){
+            //Event bei Änderung der Variablen "BLE1"
+            $EventName = "BLE2Evnt";
+            $varID = $this->ReadPropertyInteger("BLE2");
+            $Ident = "IDBLE2Evnt";
+            $ParentID = $varID; //Event unter die Variable hängen
+            $cmd = "EC_PierreAtHome(".$this->InstanceID.");" ;
+            $EventID = $this->RegisterVarEvent($EventName, $Ident, 0, $ParentID, 0, 1, $varID,  $cmd); 
+         }
+         if($this->ReadPropertyInteger("BLE1") >0){
+            //Event bei Änderung der Variablen "BLE2"
+            $EventName = "BLE1Evnt";
+            $varID = $this->ReadPropertyInteger("BLE1");
+            $Ident = "IDBLE1Evnt";
+            $ParentID = $varID; //Event unter die Variable hängen
+            $cmd = "EC_TorstenAtHome(".$this->InstanceID.");" ;
+            $EventID = $this->RegisterVarEvent($EventName, $Ident, 0, $ParentID, 0, 1, $varID,  $cmd); 
+         }
+
+         if($this->ReadPropertyInteger("Handy1") >0){
+            //Event bei Änderung der Variablen "Handy1"
+            $EventName = "Handy1Evnt";
+            $varID = $this->ReadPropertyInteger("Handy1");
+            $Ident = "IDHandy1Evnt";
+            $ParentID = $varID; //Event unter die Variable hängen
+            $cmd = "EC_TorstenAtHome(".$this->InstanceID.");" ;
+            $EventID = $this->RegisterVarEvent($EventName, $Ident, 0, $ParentID, 0, 1, $varID,  $cmd); 
+         }
+         if($this->ReadPropertyInteger("Handy2") >0){
+            //Event bei Änderung der Variablen "Handy2"
+            $EventName = "Handy2Evnt";
+            $varID = $this->ReadPropertyInteger("Handy2");
+            $Ident = "IDHandy2Evnt";
+            $ParentID = $varID; //Event unter die Variable hängen
+            $cmd = "EC_PierreAtHome(".$this->InstanceID.");" ;
+            $EventID = $this->RegisterVarEvent($EventName, $Ident, 0, $ParentID, 0, 1, $varID,  $cmd); 
+         }
+
 
          #Ein-Ausgangszähler
         $this->SetBuffer("buffer_cM", 0);
@@ -188,6 +211,8 @@ class MyEnergyControl extends IPSModule {
             $this->SetTimerInterval("T_D", 0);
             $this->SetTimerInterval("T_K", 0);
  				
+            $this->PierreAtHome();
+            $this->TorstenAtHome();
     } //Function: ApplyChanges  End
 
 
@@ -197,7 +222,7 @@ class MyEnergyControl extends IPSModule {
     #  NachrichtenIDs/SenderIDs-Kombinationen aufgerufen.        #
     #------------------------------------------------------------#
     public function MessageSink($TimeStamp, $SenderID, $Message, $Data) {
-        $this->SendDebug("MessageSink", "Message from SenderID ".$SenderID." with Message ".$Message);
+        //$this->SendDebug("MessageSink", "Message from SenderID ".$SenderID." with Message ".$Message);
 
         switch ($Message) {
             case IPS_KERNELSTARTED:
@@ -276,6 +301,81 @@ class MyEnergyControl extends IPSModule {
 #    Die Funktionen werden, mit dem selbst eingerichteten Prefix, in PHP und JSON-RPC wie folgt zur 
 #    Verfügung gestellt:
 #_________________________________________________________________________________________________________
+    #---------------------------------------------------------------------------------#
+    # Function: PierreAtHome                                                          #
+    #.................................................................................#
+    # Beschreibung:                                                                   #
+    #.................................................................................#
+    # Parameters:                                                                     #
+    #.................................................................................#
+    # Returns:                                                                        #
+    #---------------------------------------------------------------------------------#
+    public function PierreAtHome(){
+        $this->sendDebug("PierreAtHome: ","Event wurde ausgelöst", 0);
+        # prüfen og BLE oder Handy eingeloggt.
+        $BLE2 = $this->ReadPropertyInteger('BLE2');
+        $Handy2 = $this->ReadPropertyInteger('Handy2');
+        $BLE_P = false;
+        $Handy_P = false;
+        if($BLE2 > 0){
+            $BLE_P = GetValue($BLE2);
+        }
+        if($Handy2 > 0){
+            $Handy_P = GetValue($Handy2);
+        }
+        if($BLE_P or $Handy_P){
+            $this->SetValue('PierreAtHome', true);
+        } 
+        if(!$BLE_P and !$Handy_P){
+            $this->SetValue('PierreAtHome', false); 
+        }
+    }
+
+    #---------------------------------------------------------------------------------#
+    # Function: TorstenAtHome                                                          #
+    #.................................................................................#
+    # Beschreibung:                                                                   #
+    #.................................................................................#
+    # Parameters:                                                                     #
+    #.................................................................................#
+    # Returns:                                                                        #
+    #---------------------------------------------------------------------------------#
+    public function TorstenAtHome(){
+        $this->sendDebug("TorstenAtHome: ","Event wurde ausgelöst", 0);
+        # prüfen og BLE oder Handy eingeloggt.
+        $BLE1 = $this->ReadPropertyInteger('BLE1');
+        $Handy1 = $this->ReadPropertyInteger('Handy1');
+        $BLE_T = false;
+        $Handy_T = false;
+        if($BLE1 > 0){
+            $BLE_T = GetValue($BLE1);
+        }
+        if($Handy1 > 0){
+            $Handy_T = GetValue($Handy1);
+        }
+        if($BLE_T or $Handy_T){
+            $this->SetValue('TorstenAtHome', true);
+        } 
+        if(!$BLE_T and !$Handy_T){
+            $this->SetValue('TorstenAtHome', false);
+        }
+    }
+
+    #---------------------------------------------------------------------------------#
+    # Function: Wohnung Leer                                                          #
+    #.................................................................................#
+    # Beschreibung:                                                                   #
+    #.................................................................................#
+    # Parameters:                                                                     #
+    #.................................................................................#
+    # Returns:                                                                        #
+    #---------------------------------------------------------------------------------#
+    public function ApertmentEmty(){
+        # Wohnung ist leer -> Alle Verbraucher ausschalten
+        
+    }
+
+
 
     #---------------------------------------------------------------------------------#
     # Function: setRoomStat                                                           #
@@ -297,7 +397,7 @@ class MyEnergyControl extends IPSModule {
     #    none                                                                         #
     #---------------------------------------------------------------------------------#
     public function setRoomStat(string $room, int $id){
-        $this->SendDebug("setRoomStat: ",$room." - ".$id);
+        //$this->SendDebug("setRoomStat: ",$room." - ".$id);
         switch ($room) {
             case "Wohnzimmer":
                     $this->SetValue("StatWZ", true);  
@@ -383,7 +483,7 @@ class MyEnergyControl extends IPSModule {
         if($this->GetBuffer("buffer_cM")>120){
             if($StatD){
 
-                $this->SetValue("NrPerson", $no);
+                //$this->SetValue("NrPerson", $no);
                 SetBuffer("buffer_PersIn");
             }
             SetBuffer("buffer_cM",$this->GetBuffer("buffer_cM")+1);
@@ -393,7 +493,7 @@ class MyEnergyControl extends IPSModule {
             $this->SetTimerInterval("T_Door", 0);
             if($this->GetBuffer("buffer_PersIn")){
                 #Person kam rein
-                $no = $this->GetValue("NrPerson");
+                //$no = $this->GetValue("NrPerson");
                 $no = $No + 1;
                 if($no<0){
                     $no = 0;
@@ -401,7 +501,7 @@ class MyEnergyControl extends IPSModule {
             }
             else{
                 #Person ging raus
-                $no = $this->GetValue("NrPerson");
+                //$no = $this->GetValue("NrPerson");
                 $no = $no - 1;
                 if($no<0){
                     $no = 0;
@@ -434,7 +534,7 @@ class MyEnergyControl extends IPSModule {
                 #nur zurücksetzen wenn alle Räume inaktiv und Wohn Timer abgelaufen
                 if(!$this->GetValue("StatWZ") AND !$this->GetValue("StatKZ") AND !$this->GetValue("StatSZ") AND !$this->GetValue("StatK") AND !$this->GetValue("StatD") AND !$this->GetValue("StatAZ")){
                     $this->SetTimerInterval("T_Wohn", 0);
-                    $this->SetValue("NrPerson", 0);
+                    //$this->SetValue("NrPerson", 0);
                 } 
                 break; 
             case "WZ":
