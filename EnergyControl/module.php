@@ -58,7 +58,9 @@ class MyEnergyControl extends IPSModule {
        $this->RegisterPropertyInteger("Handy1", 0);
        $this->RegisterPropertyInteger("Handy2", 0);
 
-       // $this->ReadPropertyString("NAME", "");
+       $this->RegisterPropertyInteger("AlexaK", 0);
+       $this->RegisterPropertyInteger("AlexaSZ", 0);
+       $this->RegisterPropertyInteger("AlexaWZ", 0);
 
 
         // Register Profiles
@@ -106,7 +108,7 @@ class MyEnergyControl extends IPSModule {
         $this->RegisterTimer('T_AZ', 0, 'EC_checkEvent($_IPS[\'TARGET\'], "AZ");');
         $this->RegisterTimer('T_K', 0, 'EC_checkEvent($_IPS[\'TARGET\'], "K");');
 
-        $this->RegisterTimer('T_Door', 0, 'EC_checkMovement($_IPS[\'TARGET\']);');
+        #$this->RegisterTimer('T_Door', 0, 'EC_checkMovement($_IPS[\'TARGET\']);');
 
         $this->RegisterTimer('T_Wohn', 0, 'EC_checkEvent($_IPS[\'TARGET\'], "Wohn");');
 
@@ -165,6 +167,7 @@ class MyEnergyControl extends IPSModule {
             $EventID = $this->RegisterVarEvent($EventName, $Ident, 0, $ParentID, 0, 1, $varID,  $cmd); 
          }
 
+     
 
          #Ein-Ausgangszähler
         $this->SetBuffer("buffer_cM", 0);
@@ -304,7 +307,8 @@ class MyEnergyControl extends IPSModule {
     #---------------------------------------------------------------------------------#
     # Function: PierreAtHome                                                          #
     #.................................................................................#
-    # Beschreibung:                                                                   #
+    # Beschreibung: Funktion wird getriggert durch Event                              #
+    #               bei Variablenänderung Handy uns BLE Sensor                        #
     #.................................................................................#
     # Parameters:                                                                     #
     #.................................................................................#
@@ -326,15 +330,18 @@ class MyEnergyControl extends IPSModule {
         if($BLE_P or $Handy_P){
             $this->SetValue('PierreAtHome', true);
         } 
+        # Pierre ist nicht zu Hause 
         if(!$BLE_P and !$Handy_P){
             $this->SetValue('PierreAtHome', false); 
+            $this->ApartementActions();
         }
     }
 
     #---------------------------------------------------------------------------------#
-    # Function: TorstenAtHome                                                          #
+    # Function: TorstenAtHome                                                         #
     #.................................................................................#
-    # Beschreibung:                                                                   #
+    # Beschreibung: Funktion wird getriggert durch Event                              #
+    #               bei Variablenänderung Handy uns BLE Sensor                        #
     #.................................................................................#
     # Parameters:                                                                     #
     #.................................................................................#
@@ -362,17 +369,56 @@ class MyEnergyControl extends IPSModule {
     }
 
     #---------------------------------------------------------------------------------#
-    # Function: Wohnung Leer                                                          #
+    # Function: ApartementActions                                                     #
     #.................................................................................#
-    # Beschreibung:                                                                   #
+    # Beschreibung:  Auszuführende Aktionen, die ausgeführt werden                    #
+    #               je nachdem wer in der Wohnung ist.                                #
+    #               Funktion wird getriggert durch                                    #
+    #                   PierreAtHome()                                                #
+    #                   TorstenAtHome()                                               #
     #.................................................................................#
     # Parameters:                                                                     #
     #.................................................................................#
     # Returns:                                                                        #
     #---------------------------------------------------------------------------------#
-    public function ApertmentEmty(){
+    public function ApartementActions(){
         # Wohnung ist leer -> Alle Verbraucher ausschalten
         
+        # Pierre ist weg - Pierre Sensoren sind false 
+        if($this->GetValue('PierreAtHome')){
+
+        }
+        else{
+            # Licht im Kinderzimmer ausschalten
+
+            # PC-Steckdose ausschalten
+
+            # Heizung im Kinderzimmer ausschalten
+
+        }
+
+        # Torsten ist weg - Torsten Sensoren sind false 
+        if($this->GetValue('TorstenAtHome')){
+
+        }
+        else{
+            # Licht im Schlafzimmer ausschalten
+            # Licht im Wohnzimmer ausschalten
+            # Licht in der Diele ausschalten
+            # Licht im Arbeitszimmer ausschalten
+        
+            # PC-Steckdose Schlafzimmer ausschalten
+        
+            # Heizung im Schalfzimmer ausschalten
+            # Heizung im Wohnzimmer ausschalten
+        
+        }
+
+        # Pierre und Torsten sind weg
+        if(($this->GetValue('PierreAtHome') == false) AND ($this->GetValue('TorstenAtHome') == false)){
+            # Alarmanlage einschalten
+            
+        }
     }
 
 
@@ -450,17 +496,8 @@ class MyEnergyControl extends IPSModule {
                           $this->SetTimerInterval("T_Wohn", 900000);
                 break;  
             case "Eingangstür":
-          
-    //wenn zuerst Türsensor vor Dielendetector anspricht, dann kommt Person rein sonst raus.
-    if(GetValue(36168) == false){
-        SetValue(13087, GetValue(13087) + 1);
-                }
-                else{
-                    $counter = GetValue(13087) - 1;
-                    if ($counter < 0) {$counter = 0;} 
-                    SetValue(13087, $counter );
-                }
-                
+                # Türsensor würde aktiviert
+
 
                 break;                        
             default:
@@ -473,13 +510,15 @@ class MyEnergyControl extends IPSModule {
     #---------------------------------------------------------------------------------#
     # Function: checkMovement                                                         #
     #.................................................................................#
-    # Beschreibung:                                                                   #
+    # Beschreibung: Funktion wird ausgelöst wenn Tür geöffnet wird                    #
     #.................................................................................#
     # Parameters:                                                                     #
     #.................................................................................#
     # Returns:                                                                        #
     #---------------------------------------------------------------------------------#
     public function checkMovement(){
+        
+        /*
         if($this->GetBuffer("buffer_cM")>120){
             if($StatD){
 
@@ -510,6 +549,7 @@ class MyEnergyControl extends IPSModule {
             $this->SetValue("StatDoor", false);
             $this->SetBuffer("buffer_cM", 0);
         }
+        */
     }
 
    

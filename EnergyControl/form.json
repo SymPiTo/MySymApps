@@ -42,6 +42,25 @@
         },
         {
             "type": "Label",
+            "label": "Alexa Geräte"
+        },
+        {
+            "name": "AlexaK",
+            "type": "SelectInstance",
+            "caption": "Alexa Küche"
+        },
+        {
+            "name": "AlexaSZ",
+            "type": "SelectInstance",
+            "caption": "Alexa Schlafzimmer"
+        },
+        {
+            "name": "AlexaWZ",
+            "type": "SelectInstance",
+            "caption": "Alexa Wohnzimmer"
+        },
+        {
+            "type": "Label",
             "label": "Add/Delete Präsenzsensor variables"
         },
         {
