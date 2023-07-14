@@ -410,7 +410,7 @@ public function getF($range){
         //Daten holen
         
         $weekData = $this->getAPIData("week");
-        $this->SendDebug("WochenDatenaus API:", $weekData, 0);
+        //$this->SendDebug("WochenDatenaus API:", $weekData, 0);
         //Tag berechnen
         $wochentage = array("Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag");
         for($i=0; $i < 6; $i++) {
