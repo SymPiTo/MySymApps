@@ -227,7 +227,7 @@ class MyWeather extends IPSModule
         
         if ($range === 'week'){
             $apiData->params['startTime'] = 'now'; 
-            $apiData->params['endTime'] = 'nowPlus7d';
+            $apiData->params['endTime'] = 'nowPlus5d';
             $apiData->params['timesteps'] = '1d';
             $apiData->params['fields'] = $apiData->getFields("week");
         }
@@ -410,10 +410,10 @@ public function getF($range){
         //Daten holen
         
         $weekData = $this->getAPIData("week");
- 
+        $this->SendDebug("WochenDatenaus API:", $weekData, 0);
         //Tag berechnen
         $wochentage = array("Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag");
-        for($i=0; $i < 7; $i++) {
+        for($i=0; $i < 6; $i++) {
             $zeit = strtotime($weekData[$i]['startTime']);
             $wetterWeek[$i]['weekday']  =  $wochentage[date("w", $zeit)];
             $wetterWeek[$i]['weekdayNo']  =  date("w", $zeit);
