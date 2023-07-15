@@ -1,26 +1,9 @@
 {
-    "elements": [{
+    "elements": [
+        {
             "name": "ModAlive",
             "type": "CheckBox",
             "caption": "Modul aktiv"
-        },
-        {
-            "type": "Label",
-            "label": "Person 1 - Torsten BLE-Detector"
-        },
-        {
-            "name": "BLE1",
-            "type": "SelectVariable",
-            "caption": "BLE-Sensor Torsten"
-        },
-        {
-            "type": "Label",
-            "label": "Person 2 - Pierre BLE-Detector"
-        },
-        {
-            "name": "BLE2",
-            "type": "SelectVariable",
-            "caption": "BLE-Sensor Pierre"
         },
         {
             "type": "Label",
@@ -71,18 +54,16 @@
             "add": true,
             "delete": true,
             "sort": {
-              "column": "ID",
-              "direction": "ascending"
+                "column": "ID",
+                "direction": "ascending"
             },
-            "columns": 
-            [
+            "columns": [
                 {
                     "name": "Raum",
                     "label": "Raumbezeichnung",
                     "width": "300px",
                     "add": "",
-                    "edit": 
-                    {
+                    "edit": {
                         "type": "ValidationTextBox",
                         "validate": "Wohnzimmer|Schlafzimmer|Kinderzimmer|Diele|Arbeitszimmer|Küche|Toilette|Eingangstür"
                     }
@@ -93,13 +74,15 @@
                     "width": "auto",
                     "add": 0,
                     "edit": {
-                        "type": "SelectVariable" 
+                        "type": "SelectVariable"
                     }
                 }
             ],
-            "values": [{
-                "ID": 0
-            }]
+            "values": [
+                {
+                    "ID": 0
+                }
+            ]
         },
         {
             "type": "Label",
@@ -113,18 +96,16 @@
             "add": true,
             "delete": true,
             "sort": {
-              "column": "ID",
-              "direction": "ascending"
+                "column": "ID",
+                "direction": "ascending"
             },
-            "columns": 
-            [
+            "columns": [
                 {
                     "name": "Raum",
                     "label": "Raumbezeichnung",
                     "width": "300px",
                     "add": "",
-                    "edit": 
-                    {
+                    "edit": {
                         "type": "ValidationTextBox",
                         "validate": "Wohnzimmer|Schlafzimmer|Kinderzimmer|Diele|Arbeitszimmer|Küche|Toilette|Eingangstür"
                     }
@@ -135,13 +116,15 @@
                     "width": "auto",
                     "add": 0,
                     "edit": {
-                        "type": "SelectObject" 
+                        "type": "SelectObject"
                     }
                 }
             ],
-            "values": [{
-                "ID": 0
-            }]
+            "values": [
+                {
+                    "ID": 0
+                }
+            ]
         },
         {
             "type": "Label",
@@ -155,18 +138,16 @@
             "add": true,
             "delete": true,
             "sort": {
-              "column": "ID",
-              "direction": "ascending"
+                "column": "ID",
+                "direction": "ascending"
             },
-            "columns": 
-            [
+            "columns": [
                 {
                     "name": "Raum",
                     "label": "Raumbezeichnung",
                     "width": "300px",
                     "add": "",
-                    "edit": 
-                    {
+                    "edit": {
                         "type": "ValidationTextBox",
                         "validate": "WohnzimmerF|WohnzimmerM|WohnzimmerT|Schlafzimmer|Kinderzimmer|Diele|Arbeitszimmer|Küche|Toilette|Eingangstür"
                     }
@@ -177,13 +158,15 @@
                     "width": "auto",
                     "add": 0,
                     "edit": {
-                        "type": "SelectObject" 
+                        "type": "SelectObject"
                     }
                 }
             ],
-            "values": [{
-                "ID": 0
-            }]
+            "values": [
+                {
+                    "ID": 0
+                }
+            ]
         },
         {
             "type": "Label",
@@ -197,18 +180,16 @@
             "add": true,
             "delete": true,
             "sort": {
-              "column": "ID",
-              "direction": "ascending"
+                "column": "ID",
+                "direction": "ascending"
             },
-            "columns": 
-            [
+            "columns": [
                 {
                     "name": "Raum",
                     "label": "Raumbezeichnung",
                     "width": "300px",
                     "add": "",
-                    "edit": 
-                    {
+                    "edit": {
                         "type": "ValidationTextBox",
                         "validate": "Alarmanlage"
                     }
@@ -219,21 +200,18 @@
                     "width": "auto",
                     "add": 0,
                     "edit": {
-                        "type": "SelectObject" 
+                        "type": "SelectObject"
                     }
                 }
             ],
-            "values": [{
-                "Raum": "Alarmanlage",
-                "ID": 0
-            }]
-        }     
+            "values": [
+                {
+                    "Raum": "Alarmanlage",
+                    "ID": 0
+                }
+            ]
+        }
     ],
-    "status": [
-
-    ],
-    "actions": [
-
-
-    ]
+    "status": [],
+    "actions": []
 }

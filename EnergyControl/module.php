@@ -53,8 +53,7 @@ class MyEnergyControl extends IPSModule {
         
        // $this->ReadPropertyFloat("NAME", 0.0);
 
-       $this->RegisterPropertyInteger("BLE1", 0);
-       $this->RegisterPropertyInteger("BLE2", 0);
+
        $this->RegisterPropertyInteger("Handy1", 0);
        $this->RegisterPropertyInteger("Handy2", 0);
 
@@ -112,7 +111,9 @@ class MyEnergyControl extends IPSModule {
 
         $this->RegisterTimer('T_Wohn', 0, 'EC_checkEvent($_IPS[\'TARGET\'], "Wohn");');
 
-
+        #false => Ansage wurde noch  nicht gemacht.
+        $this->SetBuffer("echo1", "aktiv");
+        $this->SetBuffer("echo2", "aktiv");
 
     } //Function: Create End
 
@@ -127,46 +128,24 @@ class MyEnergyControl extends IPSModule {
         //Never delete this line!
         parent::ApplyChanges();
 
-        # Register Events
- 
-        if($this->ReadPropertyInteger("BLE2") >0){
-            //Event bei Änderung der Variablen "BLE1"
-            $EventName = "BLE2Evnt";
-            $varID = $this->ReadPropertyInteger("BLE2");
-            $Ident = "IDBLE2Evnt";
-            $ParentID = $varID; //Event unter die Variable hängen
-            $cmd = "EC_PierreAtHome(".$this->InstanceID.");" ;
-            $EventID = $this->RegisterVarEvent($EventName, $Ident, 0, $ParentID, 0, 1, $varID,  $cmd); 
-         }
-         if($this->ReadPropertyInteger("BLE1") >0){
-            //Event bei Änderung der Variablen "BLE2"
-            $EventName = "BLE1Evnt";
-            $varID = $this->ReadPropertyInteger("BLE1");
-            $Ident = "IDBLE1Evnt";
-            $ParentID = $varID; //Event unter die Variable hängen
-            $cmd = "EC_TorstenAtHome(".$this->InstanceID.");" ;
-            $EventID = $this->RegisterVarEvent($EventName, $Ident, 0, $ParentID, 0, 1, $varID,  $cmd); 
-         }
 
-         if($this->ReadPropertyInteger("Handy1") >0){
-            //Event bei Änderung der Variablen "Handy1"
-            $EventName = "Handy1Evnt";
-            $varID = $this->ReadPropertyInteger("Handy1");
-            $Ident = "IDHandy1Evnt";
-            $ParentID = $varID; //Event unter die Variable hängen
-            $cmd = "EC_TorstenAtHome(".$this->InstanceID.");" ;
-            $EventID = $this->RegisterVarEvent($EventName, $Ident, 0, $ParentID, 0, 1, $varID,  $cmd); 
+         $Handy1 = $this->ReadPropertyInteger("Handy1");
+         if($Handy1 >0 and IPS_VariableExists($Handy1)){
+            # registriere Message auf Variablenänderung
+            $this->RegisterMessage($Handy1, VM_UPDATE /* Variable wurde aktualisiert */);
+            $this->SetBuffer("echo1", "aktiv");
          }
-         if($this->ReadPropertyInteger("Handy2") >0){
-            //Event bei Änderung der Variablen "Handy2"
-            $EventName = "Handy2Evnt";
-            $varID = $this->ReadPropertyInteger("Handy2");
-            $Ident = "IDHandy2Evnt";
-            $ParentID = $varID; //Event unter die Variable hängen
-            $cmd = "EC_PierreAtHome(".$this->InstanceID.");" ;
-            $EventID = $this->RegisterVarEvent($EventName, $Ident, 0, $ParentID, 0, 1, $varID,  $cmd); 
+         else{
+            $this->UnregisterMessage($Handy1, VM_UPDATE);
          }
-
+         $Handy2 = $this->ReadPropertyInteger("Handy2");
+         if($Handy2 >0 and IPS_VariableExists($Handy2)){
+            $this->RegisterMessage($Handy2, VM_UPDATE /* Variable wurde aktualisiert */);
+            $this->SetBuffer("echo2", "aktiv");
+         }
+        else{
+            $this->UnregisterMessage($Handy2, VM_UPDATE);
+        }
      
 
          #Ein-Ausgangszähler
@@ -232,10 +211,21 @@ class MyEnergyControl extends IPSModule {
                 $this->KernelReady();
                 break;
             case VM_UPDATE:
-                
+                # registrierte Variable wurde aktualisiert.
                 $MessageList = $this->GetMessageList();
+                //$this->sendDebug("Messagelist: ",$MessageList, 0);
                 
-                $this->sendDebug("Messagelist: ",$MessageList, 0);
+                 
+                switch ($SenderID) {
+                    case $this->ReadPropertyInteger("Handy1"):
+                        
+                        $this->TorstenAtHome();
+                        break;
+                    case $this->ReadPropertyInteger("Handy2"):
+                       
+                        $this->PierreAtHome();
+                        break;
+                }
 
                 $arrString = $this->ReadPropertyString("PraesenzS");
                 $arr = json_decode($arrString);
@@ -308,31 +298,26 @@ class MyEnergyControl extends IPSModule {
     # Function: PierreAtHome                                                          #
     #.................................................................................#
     # Beschreibung: Funktion wird getriggert durch Event                              #
-    #               bei Variablenänderung Handy uns BLE Sensor                        #
+    #               bei Variablenänderung Handy                                       #
     #.................................................................................#
     # Parameters:                                                                     #
     #.................................................................................#
     # Returns:                                                                        #
     #---------------------------------------------------------------------------------#
     public function PierreAtHome(){
-        $this->sendDebug("PierreAtHome: ","Event wurde ausgelöst", 0);
-        # prüfen og BLE oder Handy eingeloggt.
-        $BLE2 = $this->ReadPropertyInteger('BLE2');
-        $Handy2 = $this->ReadPropertyInteger('Handy2');
-        $BLE_P = false;
-        $Handy_P = false;
-        if($BLE2 > 0){
-            $BLE_P = GetValue($BLE2);
-        }
-        if($Handy2 > 0){
-            $Handy_P = GetValue($Handy2);
-        }
-        if($BLE_P or $Handy_P){
+        # prüfen ob Handy eingeloggt.
+        $Handy2 = GetValue($this->ReadPropertyInteger('Handy2'));
+        $ASZID = $this->ReadPropertyInteger('AlexaK');
+        $Echo2Buffer = $this->GetBuffer("echo2");
+
+        if($Handy2 and $Echo2Buffer=="aktiv"){
             $this->SetValue('PierreAtHome', true);
+            ECHOREMOTE_TextToSpeech( $ASZID, 'Hallo Pierre, Willkommen zu Hause.');
+            $this->SetBuffer("echo2", "inaktiv");
         } 
-        # Pierre ist nicht zu Hause 
-        if(!$BLE_P and !$Handy_P){
+        if(!$Handy2) {
             $this->SetValue('PierreAtHome', false); 
+            $this->SetBuffer("echo2", "aktiv");
             $this->ApartementActions();
         }
     }
@@ -341,30 +326,29 @@ class MyEnergyControl extends IPSModule {
     # Function: TorstenAtHome                                                         #
     #.................................................................................#
     # Beschreibung: Funktion wird getriggert durch Event                              #
-    #               bei Variablenänderung Handy uns BLE Sensor                        #
+    #               bei Variablenänderung Handy                                       #
     #.................................................................................#
     # Parameters:                                                                     #
     #.................................................................................#
     # Returns:                                                                        #
     #---------------------------------------------------------------------------------#
     public function TorstenAtHome(){
-        $this->sendDebug("TorstenAtHome: ","Event wurde ausgelöst", 0);
-        # prüfen og BLE oder Handy eingeloggt.
-        $BLE1 = $this->ReadPropertyInteger('BLE1');
-        $Handy1 = $this->ReadPropertyInteger('Handy1');
-        $BLE_T = false;
-        $Handy_T = false;
-        if($BLE1 > 0){
-            $BLE_T = GetValue($BLE1);
-        }
-        if($Handy1 > 0){
-            $Handy_T = GetValue($Handy1);
-        }
-        if($BLE_T or $Handy_T){
-            $this->SetValue('TorstenAtHome', true);
+        $this->SendDebug("Func_TorstenAtHome()","gestartet",0);
+        # prüfen ob Handy eingeloggt.
+        $Handy1 = GetValue($this->ReadPropertyInteger('Handy1'));
+        $this->SendDebug("Status Handy1",$Handy1,0);
+        $ASZID = $this->ReadPropertyInteger('AlexaK');
+        $Echo1Buffer = $this->GetBuffer("echo1");
+        $this->SendDebug("Ansage  ",$Echo1Buffer,0);
+        if($Handy1 and $Echo1Buffer=="aktiv"){
+                $this->SetValue('TorstenAtHome', true);
+                ECHOREMOTE_TextToSpeech( $ASZID, 'Hallo Torsten, Willkommen zu Hause.');
+                $this->SetBuffer("echo1", "inaktiv");
         } 
-        if(!$BLE_T and !$Handy_T){
-            $this->SetValue('TorstenAtHome', false);
+        if(!$Handy1) {
+            $this->SetValue('TorstenAtHome', false); 
+            $this->SetBuffer("echo1", "aktiv");
+            $this->ApartementActions();
         }
     }
 
