@@ -230,7 +230,7 @@ class MyEnergyControl extends IPSModule {
                             $this->SetBuffer("startTime", time());
                         }
 
-                        if(time() > $this->GetBuffer("startTime")+25){
+                        if( time() > intval($this->GetBuffer("startTime"))+25){
                             //wenn akt. Zeit > 25s + Bufferzeit
                             //dann akt (IST) Wert in Variable schreiben.
                             $this->SetValue("TorstenAtHome", $Handy1);
