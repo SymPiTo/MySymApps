@@ -218,7 +218,29 @@ class MyEnergyControl extends IPSModule {
                  
                 switch ($SenderID) {
                     case $this->ReadPropertyInteger("Handy1"):
+                        $Handy1 = GetValue($this->ReadPropertyInteger('Handy1')); //IST Wert
+                        $TAH = $this->GetValue("TorstenAtHome"); //War Wert
+                        //wird ein Signalwechsel von 1 auf 0 erkannt, dann 25s abwarten 
+                        //bis neuer Wert in Variabe geschrieben wird.
+
+                        //Vergleiche Variablen Wert (War) mit Ist Wert
+                        if($Handy1==0 and $TAH=1){
+                            //falls 1->0
+                            //Zeit lesen und in Buffer schreiben.
+                            $this->SetBuffer("startTime", time());
+                        }
+
+                        if(time() > $this->GetBuffer("startTime")+25){
+                            //wenn akt. Zeit > 25s + Bufferzeit
+                            //dann akt (IST) Wert in Variable schreiben.
+                            $this->SetValue("TorstenAtHome", $Handy1);
+
+                        }
                         
+                        // sonst nicht.
+                        
+
+                        //Auswertung der TorstenAtHome Variable
                         $this->TorstenAtHome();
                         break;
                     case $this->ReadPropertyInteger("Handy2"):
@@ -335,17 +357,17 @@ class MyEnergyControl extends IPSModule {
     public function TorstenAtHome(){
         $this->SendDebug("Func_TorstenAtHome()","gestartet",0);
         # prüfen ob Handy eingeloggt.
-        $Handy1 = GetValue($this->ReadPropertyInteger('Handy1'));
-        $this->SendDebug("Status Handy1",$Handy1,0);
+        $Handy1loggedIn = $this->GetValue('TorstenAtHome');
+        $this->SendDebug("Status Handy1",$Handy1loggedIn,0);
         $ASZID = $this->ReadPropertyInteger('AlexaK');
         $Echo1Buffer = $this->GetBuffer("echo1");
         $this->SendDebug("Ansage  ",$Echo1Buffer,0);
-        if($Handy1 and $Echo1Buffer=="aktiv"){
+        if($Handy1loggedIn and $Echo1Buffer=="aktiv"){
                 $this->SetValue('TorstenAtHome', true);
                 ECHOREMOTE_TextToSpeech( $ASZID, 'Hallo Torsten, Willkommen zu Hause.');
                 $this->SetBuffer("echo1", "inaktiv");
         } 
-        if(!$Handy1) {
+        if(!$Handy1loggedIn) {
             $this->SetValue('TorstenAtHome', false); 
             $this->SetBuffer("echo1", "aktiv");
             $this->ApartementActions();
