@@ -334,7 +334,7 @@ class MyEnergyControl extends IPSModule {
 
         if($Handy2 and $Echo2Buffer=="aktiv"){
             $this->SetValue('PierreAtHome', true);
-            ECHOREMOTE_TextToSpeech( $ASZID, 'Hallo Pierre, Willkommen zu Hause.');
+            //ECHOREMOTE_TextToSpeech( $ASZID, 'Hallo Pierre, Willkommen zu Hause.');
             $this->SetBuffer("echo2", "inaktiv");
         } 
         if(!$Handy2) {
