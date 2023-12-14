@@ -498,5 +498,14 @@ public function getF($range){
         $this->setvalue('ID_WeekData', json_encode($wetterWeek));
         return [$tempday, $wetterNow, $wetterWeek];
     }
+ #________________________________________________________________________________________
+# Section: Private Functions
+#    Die folgenden Funktionen stehen nur innerhalb des Moduls zur verfügung
+#    Hilfsfunktionen: 
+#_______________________________________________________________________________________
  
+    /** Wird ausgeführt wenn der Kernel hochgefahren wurde. */
+    protected function KernelReady(){
+        $this->ApplyChanges();
+    }
 }
