@@ -98,7 +98,14 @@ class MyWarning extends IPSModule{
 
         $this->WriteAttributeString("SensorList", $this->ReadPropertyString("Sensors"));
 	
-
+        /*check if Modul Telegram Messenger -  installiert ist.
+        if (IPS_ModuleExists("{eaf404e1-7a2a-40a5-bb4a-e34ca5ac72e5}")){
+             
+        }
+        else{
+            $this->SetStatus(201);
+        }
+        */
 	
     }
 
@@ -133,8 +140,15 @@ class MyWarning extends IPSModule{
 			$varNam = IPS_GetObject($SenderID);
 			$StateMsg = $this->ReadPropertyString("StateMsg"); 
 			$VisID = $this->ReadPropertyInteger("VisID");
+			$trigger = GetValue($SenderID);
 			#VISU_PostNotificationEx ($this->ReadPropertyInteger("VisID"), 'Warnung', $varNam['ObjectInfo'].$StateMsg, 'Alert', 'alarm' , $this->ReadPropertyInteger("TabletID")) ;
-			VISU_PostNotification($VisID, $varNam['ObjectInfo'], $StateMsg, 'Info', 0);
+			if ($trigger){
+				if ($this->ReadPropertyBoolean("ModActive") && $this->ReadPropertyBoolean("Tablet")){
+					VISU_PostNotification($VisID, $varNam['ObjectInfo'], $StateMsg, 'Info', 0);
+				} else {
+	
+				}
+			}
 			break;
 		}
 	} 
