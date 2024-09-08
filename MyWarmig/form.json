@@ -11,6 +11,29 @@
         },
         {
             "type": "Label",
+            "label": "Warnung an Tablet senden."
+        },
+        {
+            "type": "ValidationTextBox",
+            "name": "StateMsg",
+            "caption": "Zustandstext"
+        },
+        {
+            "type": "Label",
+            "label": "Warnung an Tablet senden."
+        },
+        {
+            "name": "Tablet",
+            "type": "CheckBox",
+            "caption": "Tablet Message aktivieren"
+        },
+        {
+            "type": "SelectInstance",
+            "name": "VisID",
+            "caption": "Visualisierung auswählen"
+        },
+        {
+            "type": "Label",
             "label": "Warnung an Mobile-App senden."
         },
         {

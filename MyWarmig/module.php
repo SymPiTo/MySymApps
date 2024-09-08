@@ -37,6 +37,7 @@ class MyWarning extends IPSModule{
 		parent::Create();
 
         #Properties registrieren
+		$this->RegisterPropertyString("StateMsg", "leer");
         $this->RegisterPropertyString("Sensors", "[]");
         $this->RegisterPropertyBoolean("ModActive", false);
         $this->RegisterPropertyBoolean("Mobile", false);
@@ -44,6 +45,9 @@ class MyWarning extends IPSModule{
         $this->RegisterPropertyBoolean("Telegram", false);
         $this->RegisterPropertyInteger("TelegramModulID", 0);
         $this->RegisterPropertyInteger("SenderID", 0);
+		$this->RegisterPropertyInteger("VisID", 0);
+		$this->RegisterPropertyBoolean("Tablet", true);
+		$this->RegisterPropertyInteger("TabletID", 0);
 
 		$this->RegisterAttributeString("SensorList", ""); 	
 		$this->WriteAttributeString("SensorList", $this->ReadPropertyString("Sensors"));
@@ -126,10 +130,11 @@ class MyWarning extends IPSModule{
 			$this->LogMessage('MessageSink: Kernel runtergefahren', KL_MESSAGE);
 			break;
         Case VM_UPDATE:
-            IPS_LogMessage("MessageSink", "Message from SenderID ".$SenderID." with Message ".$Message."\r\n Data: ".print_r($Data, true));
-			$variable = IPS_GetVariable($SenderID);
-			$varNam = $variable['Name'];
-			VISU_PostNotificationEx (21477, 'Warnung', 'Batterie ist leer.'.$varNam, 'Alert', 'alarm' , 6) ;
+			$varNam = IPS_GetObject($SenderID);
+			$StateMsg = $this->ReadPropertyString("StateMsg"); 
+			$VisID = $this->ReadPropertyInteger("VisID");
+			#VISU_PostNotificationEx ($this->ReadPropertyInteger("VisID"), 'Warnung', $varNam['ObjectInfo'].$StateMsg, 'Alert', 'alarm' , $this->ReadPropertyInteger("TabletID")) ;
+			VISU_PostNotification($VisID, $varNam['ObjectInfo'], $StateMsg, 'Info', 0);
 			break;
 		}
 	} 
