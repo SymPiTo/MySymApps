@@ -1,0 +1,136 @@
+<?php
+ #******************************************************************************#
+ # Title : MyWarning                                                            #
+ #                                                                              #
+ # Author: PiTo                                                                 #
+ #                                                                              #
+ # GITHUB: <https://github.com/SymPiTo/MySymDevices/tree/master/MyComfee>       #
+ #                                                                              #
+ # Version: 1.0.0  20240907                                                     #
+ #******************************************************************************#
+ # _____________________________________________________________________________#
+ #    Section: Beschreibung                                                     #
+ #    Das Modul dient zur Erzeugung einer Benachrictigung                       #
+ #    für mehrere auslösende Variablen                                          #
+ # _____________________________________________________________________________#
+ 
+ require_once(__DIR__ . "/../libs/MyHelper.php");
+
+class MyWarning extends IPSModule{
+	#Traits aufrufen
+	use ProfileHelper;
+	use DebugHelper;
+
+#______________________________________________________________________________________________________________________________________________
+#           Section: Internal Module Functions                                                                                                 
+#           Die folgenden Funktionen sind Standard Funktionen zur Modul Erstellung                                                             
+#______________________________________________________________________________________________________________________________________________
+
+	/*
+	#---------------------------------------------------------------------#
+	#       Function: Create()                                            #
+	#       Create() wird ausgeführt, beim Anlegen der Instanz.           #
+	#       Wird ausgeführt beim symcon Neustart                          #
+	#---------------------------------------------------------------------#
+	*/
+	public function Create() {
+		parent::Create();
+
+        #Properties registrieren
+        $this->RegisterPropertyString("Sensors", "[]");
+        $this->RegisterPropertyBoolean("ModActive", false);
+        $this->RegisterPropertyBoolean("Mobile", false);
+        $this->RegisterPropertyInteger("MobileID", 0);
+        $this->RegisterPropertyBoolean("Telegram", false);
+        $this->RegisterPropertyInteger("TelegramModulID", 0);
+        $this->RegisterPropertyInteger("SenderID", 0);
+
+		$this->RegisterAttributeString("SensorList", ""); 	
+		$this->WriteAttributeString("SensorList", $this->ReadPropertyString("Sensors"));
+
+		$this->RegisterVariableString("Bat","Sensor","");
+	}
+	#--------------------------------------------------------------------------------#
+	#       Function: ApplyChanges()                                                 #
+	#       Einträge vor ApplyChanges() werden sowohl beim Systemstart               #
+	#       als auch beim Ändern der Parameter in der Form ausgeführt.               #
+	#       ApplyChanges() wird ausgeführt, beim Anlegen der Instanz                 #
+	#       und beim ändern der Parameter in der Form                                #
+	#--------------------------------------------------------------------------------#
+	
+	public function ApplyChanges(){
+		$this->RegisterMessage(0, IPS_KERNELSTARTED);
+		$this->RegisterMessage(0, IPS_KERNELSHUTDOWN);
+		if (IPS_GetKernelRunlevel() <> KR_READY) {
+			$this->LogMessage('ApplyChanges: Kernel is not ready! Kernel Runlevel = '.IPS_GetKernelRunlevel(), KL_ERROR);
+			//ApplyChanges wird über MessageSink nachgestartet.
+			return;
+		}
+		//Never delete this line!
+		parent::ApplyChanges();
+
+		#Registriere Neue bzw. deregistriere Variablen
+		$OldSensorList = json_decode($this->ReadAttributeString("SensorList"), true);
+		$OldSensorList = array_column($OldSensorList, 'ID');
+		 
+		$NewSensorList = json_decode($this->ReadPropertyString("Sensors"), true);
+		$NewSensorList = array_column($NewSensorList, 'ID');
+
+		$newSensors = array_diff($NewSensorList, $OldSensorList);
+		if(!empty($newSensors)){
+			foreach ($newSensors as $value) {
+				$this->RegisterMessage($value, VM_UPDATE);
+				$this->SendDebug("Added", $value, 0);
+			}
+		}
+
+		$delSensors = array_diff($OldSensorList, $NewSensorList);
+		if(!empty($delSensors)){
+			foreach ($delSensors as $value) {
+				$this->UnRegisterMessage($value, VM_UPDATE);
+				$this->SendDebug("Deleted", $value, 0);
+			}
+		}
+
+        $this->WriteAttributeString("SensorList", $this->ReadPropertyString("Sensors"));
+	
+
+	
+    }
+
+	#------------------------------------------------------------------#
+	#       Function: Destroy()                                        #
+	#       Destroy() IPS Standard Funktion                            #
+	#                                                                  #
+	#------------------------------------------------------------------#
+	
+	public function Destroy(){
+
+		//Never delete this line!
+		parent::Destroy();
+
+	}	
+
+	#--------------------------------------------------------------------------------------------#
+	#       Function: MessageSink()                                                              #
+	#       MessageSink() IPS Standard Funktion                                                  #
+	#       auf System-oder eigen definierten Meldungen reagieren.                               #
+	#--------------------------------------------------------------------------------------------#
+	public function MessageSink($TimeStamp, $SenderID, $Message, $Data){
+		Switch($Message) {
+		Case IPS_KERNELSTARTED:
+			$this->LogMessage('MessageSink: Kernel hochgefahren', KL_MESSAGE);
+			$this->ApplyChanges();
+			break;
+		Case IPS_KERNELSHUTDOWN:
+			$this->LogMessage('MessageSink: Kernel runtergefahren', KL_MESSAGE);
+			break;
+        Case VM_UPDATE:
+            IPS_LogMessage("MessageSink", "Message from SenderID ".$SenderID." with Message ".$Message."\r\n Data: ".print_r($Data, true));
+			$variable = IPS_GetVariable($SenderID);
+			$varNam = $variable['Name'];
+			VISU_PostNotificationEx (21477, 'Warnung', 'Batterie ist leer.'.$varNam, 'Alert', 'alarm' , 6) ;
+			break;
+		}
+	} 
+}

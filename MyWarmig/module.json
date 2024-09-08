@@ -1,0 +1,13 @@
+{
+    "id": "{53B4B71A-4E73-D50F-1375-5C9DA535CFD9}",
+    "name": "MyWarning",
+    "type": 3,
+    "vendor": "PiTo",
+    "aliases": [
+        "MyWarning"
+    ],
+    "parentRequirements": [],
+    "childRequirements": [],
+    "implemented": [],
+    "prefix": "W"
+}

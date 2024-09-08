@@ -1,0 +1,90 @@
+{
+    "elements": [
+        {
+            "type": "Label",
+            "label": "Module aktivieren."
+        },
+        {
+            "name": "ModActive",
+            "type": "CheckBox",
+            "caption": "Modul Aktiv"
+        },
+        {
+            "type": "Label",
+            "label": "Warnung an Mobile-App senden."
+        },
+        {
+            "name": "Mobile",
+            "type": "CheckBox",
+            "caption": "Mobile aktivieren"
+        },
+        {
+            "type": "NumberSpinner",
+            "name": "MobileID",
+            "caption": "Mobile-ID"
+        },
+        {
+            "type": "Label",
+            "label": "Warnung an Telegram Empfänger senden."
+        },
+        {
+            "name": "Telegram",
+            "type": "CheckBox",
+            "caption": "Telegram aktivieren."
+        },
+        {
+            "type": "SelectInstance",
+            "name": "TelegramModulID",
+            "caption": "Telegram Modul auswählen"
+        },
+        {
+            "type": "NumberSpinner",
+            "name": "SenderID",
+            "caption": "Telegram Sender ID",
+            "digits": 0
+        },
+        {
+            "type": "Label",
+            "label": "Add/Delete sensor variables, which trigger the alarm"
+        },
+        {
+            "type": "List",
+            "name": "Sensors",
+            "caption": "Sensors",
+            "rowCount": 5,
+            "add": true,
+            "delete": true,
+            "sort": {
+                "column": "ID",
+                "direction": "ascending"
+            },
+            "columns": [
+                {
+                    "name": "ID",
+                    "width": "auto",
+                    "add": 0,
+                    "edit": {
+                        "type": "SelectVariable"
+                    }
+                }
+            ],
+            "values": [
+                {
+                    "ID": 0
+                }
+            ]
+        }
+    ],
+    "status": [
+        {
+            "code": 200,
+            "icon": "error",
+            "caption": "Alexa Remote Module nicht installiert!!"
+        },
+        {
+            "code": 201,
+            "icon": "error",
+            "caption": "Telegram Messenger Module nicht installiert!"
+        }
+    ]
+}
