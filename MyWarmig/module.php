@@ -51,6 +51,7 @@ class MyWarning extends IPSModule{
 
 		$this->RegisterAttributeString("SensorList", ""); 	
 		$this->WriteAttributeString("SensorList", $this->ReadPropertyString("Sensors"));
+		$this->RegisterAttributeString("TriggerList", ""); 
 
 		$this->RegisterVariableString("Bat","Sensor","");
 	}
@@ -137,17 +138,35 @@ class MyWarning extends IPSModule{
 			$this->LogMessage('MessageSink: Kernel runtergefahren', KL_MESSAGE);
 			break;
         Case VM_UPDATE:
+			$MA = $this->ReadPropertyBoolean("ModActive");
+			$T = $this->ReadPropertyBoolean("Tablet");
 			$varNam = IPS_GetObject($SenderID);
 			$StateMsg = $this->ReadPropertyString("StateMsg"); 
 			$VisID = $this->ReadPropertyInteger("VisID");
 			$trigger = GetValue($SenderID);
+			$TriggerArray = json_decode($this->ReadAttributeString("TriggerList"), true);
 			#VISU_PostNotificationEx ($this->ReadPropertyInteger("VisID"), 'Warnung', $varNam['ObjectInfo'].$StateMsg, 'Alert', 'alarm' , $this->ReadPropertyInteger("TabletID")) ;
 			if ($trigger){
-				if ($this->ReadPropertyBoolean("ModActive") && $this->ReadPropertyBoolean("Tablet")){
+				# prüfe ob triggered Sensor in Liste steht.
+				
+				foreach ($TriggerArray as $TriggerID => $state) {
+					 if($TrigerID == $SenderID){
+						$TriggerArray[$TriggerID] = true;
+					 }
+				}
+				if ($MA && T && !$TriggerArray[$TriggerID]){
 					VISU_PostNotification($VisID, $varNam['ObjectInfo'], $StateMsg, 'Info', 0);
 				} else {
+				
 	
 				}
+			} else {
+				foreach ($TriggerArray as $TriggerID => $state) {
+					if($TrigerID == $SenderID){
+					   $TriggerArray[$TriggerID] = false;
+					}
+			   }
+
 			}
 			break;
 		}
