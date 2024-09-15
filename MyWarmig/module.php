@@ -74,10 +74,12 @@ class MyWarning extends IPSModule{
 		//Never delete this line!
 		parent::ApplyChanges();
 
+		
+
 		#Registriere Neue bzw. deregistriere Variablen
-		$OldSensorList = json_decode($this->ReadAttributeString("SensorList"), true);
-		$OldSensorList = array_column($OldSensorList, 'ID');
-		 
+		
+		$OldSensorList = $this->MessageList();
+		
 		$NewSensorList = json_decode($this->ReadPropertyString("Sensors"), true);
 		$NewSensorList = array_column($NewSensorList, 'ID');
 
@@ -88,7 +90,7 @@ class MyWarning extends IPSModule{
 				$this->SendDebug("Added", $value, 0);
 			}
 		}
-
+	
 		$delSensors = array_diff($OldSensorList, $NewSensorList);
 		if(!empty($delSensors)){
 			foreach ($delSensors as $value) {
@@ -96,9 +98,13 @@ class MyWarning extends IPSModule{
 				$this->SendDebug("Deleted", $value, 0);
 			}
 		}
-
+		
         $this->WriteAttributeString("SensorList", $this->ReadPropertyString("Sensors"));
-	
+		
+
+		$this->SendDebug("aktMessages: ", $this->MessageList(), 0);
+		$this->SendDebug("Added", "-------------", 0);
+
         /*check if Modul Telegram Messenger -  installiert ist.
         if (IPS_ModuleExists("{eaf404e1-7a2a-40a5-bb4a-e34ca5ac72e5}")){
              
@@ -138,37 +144,49 @@ class MyWarning extends IPSModule{
 			$this->LogMessage('MessageSink: Kernel runtergefahren', KL_MESSAGE);
 			break;
         Case VM_UPDATE:
+			$this->SendDebug("VM_UPDATE","angesprochen:".$SenderID,0);
 			$MA = $this->ReadPropertyBoolean("ModActive");
 			$T = $this->ReadPropertyBoolean("Tablet");
 			$varNam = IPS_GetObject($SenderID);
 			$StateMsg = $this->ReadPropertyString("StateMsg"); 
 			$VisID = $this->ReadPropertyInteger("VisID");
-			$trigger = GetValue($SenderID);
+			$triggerValue = GetValue($SenderID);
+			
 			$TriggerArray = json_decode($this->ReadAttributeString("TriggerList"), true);
 			#VISU_PostNotificationEx ($this->ReadPropertyInteger("VisID"), 'Warnung', $varNam['ObjectInfo'].$StateMsg, 'Alert', 'alarm' , $this->ReadPropertyInteger("TabletID")) ;
-			if ($trigger){
+			if ($triggerValue == TRUE){
+				//$this->SendDebug("VM_UPDATE","Trigger Value TRUE",0);
 				# prüfe ob triggered Sensor in Liste steht.
 				
-				foreach ($TriggerArray as $TriggerID => $state) {
-					 if($TrigerID == $SenderID){
-						$TriggerArray[$TriggerID] = true;
-					 }
-				}
-				if ($MA && T && !$TriggerArray[$TriggerID]){
-					VISU_PostNotification($VisID, $varNam['ObjectInfo'], $StateMsg, 'Info', 0);
+	 
+				if ($MA && T && !$TriggerArray[$SenderID]){
+					$SensorName = $varNam['ObjectInfo'];
+					//$this->SendDebug("SensorName:", $SensorName,0);
+					VISU_PostNotification ($VisID, $StateMsg, $SensorName, 'Info', 0) ;
+					#VISU_PostNotificationEx($VisID, $varNam['ObjectInfo'], $StateMsg, 'Info', 6);
+					$TriggerArray[$SenderID] = true; 
 				} else {
 				
 	
 				}
 			} else {
-				foreach ($TriggerArray as $TriggerID => $state) {
-					if($TrigerID == $SenderID){
-					   $TriggerArray[$TriggerID] = false;
-					}
-			   }
 
+				
 			}
+			$this->WriteAttributeString("TriggerList",json_decode($TriggerArray));
 			break;
 		}
 	} 
+
+
+	public function MessageList() {
+		$msg = $this->GetMessageList();
+		$keysArray = [];
+		foreach ($msg as $key => $subArray) {
+			$keysArray[] = $key;		
+		}
+		return $keysArray;
+
+	}
+	
 }
