@@ -347,7 +347,7 @@ class MyHumidityCalc extends IPSModule
                 $t_open = IPS_GetVariable($windowId)['VariableChanged'];  // Wert in Unix time in Sekunden seit
                 
                 // wenn Meldung Lüften und Fenster > 5 Minuten offen dann Meldung Lüfen beendet.
-                if(($this->getvalue('Auswertung') == 'lüften')  & ((time() - $t_open) > 600)){
+                if(($this->getvalue('Auswertung') == 'lüften') && ((time() - $t_open) > 600)){
                     $this->SetValue('Auswertung', 'lüften beenden.');
                     $this->SetValue('WinOpen', true);
                 }
@@ -360,16 +360,17 @@ class MyHumidityCalc extends IPSModule
             else{
                 $this->SetValue('WinOpen', false);
                 // Fenster ist zu . relative Luftfeuchtigkeit >60% und Differenz >50% und Lüften erlaubt
-                if($TPi >13 and $Hinweis){
+                //if($TPi >13 and $Hinweis){
+                if(($Humidity > 72) && ($Diff > 50) && $Hinweis){
                     $this->SetValue('Auswertung', 'Schimmel Alarm');
                 }    
-                elseif (($Humidity > 60) and ($Diff > 50) & $Hinweis){
+                elseif (($Humidity > 60) && ($Diff > 50) && $Hinweis){
                     $this->SetValue('Auswertung', 'lüften!');
                 }
-                elseif(($Humidity > 60) and ($Diff > 40) & $Hinweis){
+                elseif(($Humidity > 60) && ($Diff > 40) && $Hinweis){
                     $this->SetValue('Auswertung', 'gelegentlich lüften!'); 
                 }
-                elseif(($Tin *0.8)<$TPi and $Hinweis){
+                elseif(($Tin *0.8)<$TPi && $Hinweis){
                     $this->SetValue('Auswertung', 'dringend lüften!');
                 }
                 else{
@@ -387,12 +388,12 @@ class MyHumidityCalc extends IPSModule
            
             // Fenster ist zu . relative Luftfeuchtigkeit >60% und Differenz >50% und Lüften erlaubt
             if($TPi >13 and $Hinweis){
-                $this->SetValue('Auswertung', 'Schimmel Alarm');
+                $this->SetValue('Auswertung', 'Schimmel Alarmcccc');
             }    
-            elseif (($Humidity > 60) and ($Diff > 50) & $Hinweis){
+            elseif (($Humidity > 60) and ($Diff > 50) && $Hinweis){
                 $this->SetValue('Auswertung', 'lüften!');
             }
-            elseif(($Humidity > 60) and ($Diff > 40) & $Hinweis){
+            elseif(($Humidity > 60) and ($Diff > 40) && $Hinweis){
                 $this->SetValue('Auswertung', 'gelegentlich lüften!'); 
             }
             elseif(($Tin *0.8)<$TPi and $Hinweis){

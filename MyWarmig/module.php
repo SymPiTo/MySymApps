@@ -159,18 +159,19 @@ class MyWarning extends IPSModule{
 				# prüfe ob triggered Sensor in Liste steht.
 				
 	 
-				if ($MA && T && !$TriggerArray[$SenderID]){
-					$SensorName = $varNam['ObjectInfo'];
+				#if ($MA && T && !$TriggerArray[$SenderID]){
+				#	$SensorName = $varNam['ObjectInfo'];
 					//$this->SendDebug("SensorName:", $SensorName,0);
 					VISU_PostNotification ($VisID, $StateMsg, $SensorName, 'Info', 0) ;
 					#VISU_PostNotificationEx($VisID, $varNam['ObjectInfo'], $StateMsg, 'Info', 6);
-					$TriggerArray[$SenderID] = true; 
-				} else {
+				#	$TriggerArray[$SenderID] = true; 
+				#} else {
 				
 	
-				}
+				#}
 			} else {
 
+				 
 				
 			}
 			$this->WriteAttributeString("TriggerList",json_decode($TriggerArray));
