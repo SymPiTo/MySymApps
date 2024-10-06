@@ -160,8 +160,8 @@ class MyWarning extends IPSModule{
 				
 	 
 				#if ($MA && T && !$TriggerArray[$SenderID]){
-				#	$SensorName = $varNam['ObjectInfo'];
-					//$this->SendDebug("SensorName:", $SensorName,0);
+					$SensorName = $varNam['ObjectInfo'];
+				#	//$this->SendDebug("SensorName:", $SensorName,0);
 					VISU_PostNotification ($VisID, $StateMsg, $SensorName, 'Info', 0) ;
 					#VISU_PostNotificationEx($VisID, $varNam['ObjectInfo'], $StateMsg, 'Info', 6);
 				#	$TriggerArray[$SenderID] = true; 

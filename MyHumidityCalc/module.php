@@ -371,7 +371,7 @@ class MyHumidityCalc extends IPSModule
                     $this->SetValue('Auswertung', 'lüften!');
                     $VisID = 21477; 
                     #$VisID = $this->ReadPropertyInteger("VisID");
-                    VISU_PostNotification ($VisID, 'Bitte Lüften', 'Kinderzimmer', 'Info', 0);
+                    #VISU_PostNotification ($VisID, 'Bitte Lüften', 'Kinderzimmer', 'Info', 0);
                 }
                 elseif(($Humidity > 60) && ($Diff > 40) && $Hinweis){
                     $this->SetValue('Auswertung', 'gelegentlich lüften!'); 
