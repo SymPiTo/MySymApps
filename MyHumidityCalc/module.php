@@ -383,14 +383,14 @@ class MyHumidityCalc extends IPSModule
                     if ($Hinweis){
                         $this->SetValue('Auswertung', 'Lüften erlaubt.');
                     } else {
-                        $this->SetValue('Auswertung', 'alles OK.');
+                        $this->SetValue('Auswertung', '');
                     }
                     
                 } 
             }
             // wenn Werte ok dann Meldung zurücksetzen
             if(($Diff < 40)){
-                $this->SetValue('Auswertung', 'alles OK.');
+                $this->SetValue('Auswertung', '');
             }
 
         }
@@ -421,11 +421,11 @@ class MyHumidityCalc extends IPSModule
                 if ($Hinweis){
                     $this->SetValue('Auswertung', 'Lüften erlaubt.');
                 } else {
-                    $this->SetValue('Auswertung', 'alles OK.');
+                    $this->SetValue('Auswertung', '');
                 }
             } 
             if(($Diff < 40)){
-                $this->SetValue('Auswertung', 'alles OK.');
+                $this->SetValue('Auswertung', '');
             }
         }
 
