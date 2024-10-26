@@ -316,7 +316,7 @@ class MyHumidityCalc extends IPSModule
         else{
             $this->SetValue("KlimaInnen", "OK");
         }
-        // Kritisch wenn innen Temperatur unterhal des Taupunktes Innen liegt. Grenzwert ist 80%
+        // Kritisch wenn innen Temperatur unterhalb des Taupunktes Innen liegt. Grenzwert ist 80%
         //Bsp.: TP = 14 *  und T = 16 * 0,8 = 12,8 => kritisch 
 
         $this->warning();
@@ -365,7 +365,7 @@ class MyHumidityCalc extends IPSModule
                     $this->SetValue('Auswertung', 'Schimmel Alarm');
                     $VisID = 21477; 
                     #$VisID = $this->ReadPropertyInteger("VisID");
-                    VISU_PostNotification ($VisID, 'Dringend Lüften - Schimmelalarm!', 'Kinderzimmer', 'Info', 0);
+                    VISU_PostNotification ($VisID, 'Dringend Lüften-Schimmelalarm', 'Kinderzimmer', 'Info', 0);
                 }    
                 elseif (($Humidity > 60) && ($Diff > 50) && $Hinweis){
                     $this->SetValue('Auswertung', 'lüften!');
