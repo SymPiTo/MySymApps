@@ -277,6 +277,8 @@ public function getF($range){
         
         $this->setparameters($range);
         $apiData =  $this->WDclass;
+        //$this->SendDebug("apiData: ",$apiData,0);
+        
         //Daten holen
         $array_json = $apiData->getData();
         if($array_json[0] == true){
@@ -290,6 +292,7 @@ public function getF($range){
             //Fehler!!
             return $array_json;
         }
+           
     }  
             
  

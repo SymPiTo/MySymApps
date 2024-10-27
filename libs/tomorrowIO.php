@@ -312,7 +312,7 @@
             CURLOPT_TIMEOUT => 30,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => "GET",
-            CURLOPT_HTTPHEADER, array("accept: application/json")
+            CURLOPT_HTTPHEADER => array("accept: application/json")
             ]);
 
             $json_string = curl_exec($curl);
@@ -322,15 +322,12 @@
 
             $array_json = json_decode($json_string, true); 
             
-            if ($err or array_key_exists('code',$array_json)) {
+            if ($err || array_key_exists('code',$array_json)) {
                 $errMessage = TIO_ERROR_CODES::ToString($array_json['code']);
                 return array(false, "cURL Error #:" . $errMessage);
             } else {
                 return array(true, $array_json);
             }
- 
-
-
         }
 
     }
