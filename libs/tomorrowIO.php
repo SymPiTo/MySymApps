@@ -196,15 +196,36 @@
                 case 1101:
                     $weather = "teilweise wolkig";
                     break;
-                case 1101:
+                case 1102:
+                    $weather = "meistens wolkig";
+                    break;
+                case 1103:
                     $weather = "meistens wolkig";
                     break;
                 case 2000:
                     $weather = "Nebel";
                     break;   
-                case 2001:
+                case 2100:
                     $weather = "leichter Nebel";
                     break; 
+                case 2101:
+                    $weather = "leichter Nebel";
+                    break; 
+                case 2102:
+                    $weather = "leichter Nebel";
+                    break;
+                case 2103:
+                    $weather = "leichter Nebel";
+                    break;
+                case 2106:
+                    $weather = "Nebel";
+                    break;
+                case 2107:
+                    $weather = "Nebel";
+                    break;
+                case 2108:
+                    $weather = "Nebel";
+                    break;
                 case 3000:
                     $weather = "leichter Wind";
                     break; 
@@ -225,7 +246,43 @@
                     break; 
                 case 4201:
                     $weather = "starker Regen";
-                    break;   
+                    break;  
+                case 4202:
+                    $weather = "starker Regen";
+                    break; 
+                case 4203:
+                    $weather = "Nieselregen";
+                    break;
+                case 4204:
+                    $weather = "Nieselregen";
+                    break;
+                case 4205:
+                    $weather = "Nieselregen";
+                    break;
+                case 4208:
+                    $weather = "Regen";
+                    break;
+                case 4209:
+                    $weather = "Regen";
+                    break;
+                case 4210:
+                    $weather = "Regen";
+                    break;
+                case 4211:
+                    $weather = "starker Regen";
+                    break;  
+                case 4212:
+                    $weather = "starker Regen";
+                    break; 
+                case 4213:
+                    $weather = "leichter Regen";
+                    break;
+                case 4214:
+                    $weather = "leichter Regen";
+                    break;
+                case 4215:
+                    $weather = "leichter Regen";
+                    break;
                 case 5000:
                     $weather = "Schnee";
                     break;
@@ -238,18 +295,120 @@
                 case 5101:
                     $weather = "starker Schneefall";
                     break; 
+                case 5102:
+                    $weather = "leichter Schneefall";
+                    break; 
+                case 5103:
+                    $weather = "leichter Schneefall";
+                    break;
+                case 5104:
+                    $weather = "leichter Schneefall";
+                    break;
+                case 5105:
+                    $weather = "Schnee";
+                    break;
+                case 5106:
+                    $weather = "Schnee";
+                    break;
+                case 5107:
+                    $weather = "Schnee";
+                    break;
+                case 5108:
+                    $weather = "Schnee";
+                    break;
+                case 5110:
+                    $weather = "Schnee";
+                    break;
+                case 5112:
+                    $weather = "Eis Hagel";
+                    break;
+                case 5114:
+                    $weather = "Eis Regen";
+                    break;
+                case 5115:
+                    $weather = "Scheegestöber";
+                    break; 
+                case 5116:
+                    $weather = "Scheegestöber";
+                    break; 
+                case 5117:
+                    $weather = "Scheegestöber";
+                    break; 
+                case 5119:
+                    $weather = "starker Schneefall";
+                    break; 
+                case 5120:
+                    $weather = "starker Schneefall";
+                    break; 
+                case 5121:
+                    $weather = "starker Schneefall";
+                    break; 
+                case 5122:
+                    $weather = "leichter Schneefall";
+                    break; 
                 case 6000:
                     $weather = "eisiger Nieselregen";
                     break; 
                 case 6001:
                     $weather = "eisiger Regen";
                     break; 
+                case 6002:
+                    $weather = "eisiger Regen";
+                    break; 
+                case 6003:
+                    $weather = "eisiger Regen";
+                    break; 
+                case 6004:
+                    $weather = "eisiger Regen";
+                    break; 
                 case 6200:
                     $weather = "leichter eisiger Regen";
                     break; 
                 case 6201:
+                    $weather = "starker Nieselregen";
+                    break; 
+                case 6202:
+                    $weather = "starker eisiger Regen";
+                    break;
+                case 6203:
+                    $weather = "leichter eisiger Regen";
+                    break; 
+                case 6204:
+                    $weather = "Nieselregen";
+                    break; 
+                case 6205:
+                    $weather = "leichter Nieselregen";
+                    break; 
+                case 6206:
+                    $weather = "eisiger Nieselregen";
+                    break; 
+                case 6207:
                     $weather = "starker eisiger Regen";
                     break; 
+                case 6208:
+                    $weather = "starker eisiger Regen";
+                    break;   
+                case 6209:
+                    $weather = "leichter eisiger Regen";
+                    break; 
+                case 6212:
+                    $weather = "eisiger Regen";
+                    break; 
+                case 6213:
+                    $weather = "eisiger Regen";
+                    break; 
+                case 6214:
+                    $weather = "eisiger Regen";
+                    break; 
+                case 6215:
+                    $weather = "eisiger Regen";
+                    break;  
+                case 6220:
+                    $weather = "eisiger Regen";
+                    break;
+                case 6222:
+                    $weather = "eisiger Regen";
+                    break;
                 case 7000:
                     $weather = "Hagel";
                     break; 
@@ -259,9 +418,54 @@
                 case 7102:
                     $weather = "leichter Hagel";
                     break; 
+                case 7103:
+                    $weather = "starker Hagel";
+                    break; 
+                case 7105:
+                    $weather = "Hagel";
+                    break; 
+                case 7106:
+                    $weather = "Hagel";
+                    break; 
+                case 7107:
+                    $weather = "Hagel";
+                    break; 
+                case 7108:
+                    $weather = "Hagel";
+                    break; 
+                case 7109:
+                    $weather = "Hagel";
+                    break;  
+                case 7110:
+                    $weather = "leichter Hagel";
+                    break; 
+                case 7111:
+                    $weather = "leichter Hagel";
+                    break; 
+                case 7112:
+                    $weather = "leichter Hagel";
+                    break; 
+                case 7113:
+                    $weather = "starker Hagel";
+                    break; 
+                case 7114:
+                    $weather = "starker Hagel";
+                    break; 
+                case 7115:
+                    $weather = "Hagel";
+                    break;
+                case 7116:
+                    $weather = "starker Hagel";
+                    break; 
+                case 7117:
+                    $weather = "Hagel";
+                    break; 
                 case 8000:
                     $weather = "Gewitter";
                     break; 
+                case 8001:
+                    $weather = "Gewitter";
+                    break;
                 default:
                     $weather = "unbekannt";
                     break;
