@@ -130,7 +130,7 @@ class MyWeather extends IPSModule
         $this->setFields();
 
         $ModOn = $this->ModuleUp($this->ReadPropertyBoolean("ID_active"));
-        if(!$ModOn){
+        if($ModOn){
             
             $this->SetTimerInterval("TimerGetWeather", 3600000);
         }
