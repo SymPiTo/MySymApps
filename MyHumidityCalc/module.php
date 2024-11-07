@@ -361,11 +361,11 @@ class MyHumidityCalc extends IPSModule
                 $this->SetValue('WinOpen', false);
                 // Fenster ist zu . relative Luftfeuchtigkeit >60% und Differenz >50% und Lüften erlaubt
                 //if($TPi >13 and $Hinweis){
-                if(($Humidity > 72) && ($Diff > 50) && $Hinweis){
+                if(($Humidity > 75) && ($Diff > 50) && $Hinweis){
                     $this->SetValue('Auswertung', 'Schimmel Alarm');
                     $VisID = 21477; 
                     #$VisID = $this->ReadPropertyInteger("VisID");
-                    VISU_PostNotification ($VisID, 'Dringend Lüften-Schimmelalarm', 'Kinderzimmer', 'Info', 0);
+                    # VISU_PostNotification ($VisID, 'Dringend Lüften-Schimmelalarm', 'Kinderzimmer', 'Info', 0);
                 }    
                 elseif (($Humidity > 60) && ($Diff > 50) && $Hinweis){
                     $this->SetValue('Auswertung', 'lüften!');
@@ -399,17 +399,17 @@ class MyHumidityCalc extends IPSModule
            
             // Fenster ist zu . relative Luftfeuchtigkeit >60% und Differenz >50% und Lüften erlaubt
             //if($TPi >13 and $Hinweis){
-            if (($Humidity > 720) && ($Diff > 50) && $Hinweis){
+            if (($Humidity > 75) && ($Diff > 50) && $Hinweis){
                 $this->SetValue('Auswertung', 'Schimmel Alarm');
                 $VisID = 21477; 
                 #$VisID = $this->ReadPropertyInteger("VisID");
-                VISU_PostNotification ($VisID, 'Dringend Lüften - Schimmelalarm!', 'Kinderzimmer', 'Info', 0);
+                # VISU_PostNotification ($VisID, 'Dringend Lüften - Schimmelalarm!', 'Kinderzimmer', 'Info', 0);
             }    
             elseif (($Humidity > 60) && ($Diff > 50) && $Hinweis){
                 $this->SetValue('Auswertung', 'lüften!');
                 $VisID = 21477; 
-                #$VisID = $this->ReadPropertyInteger("VisID");
-                #VISU_PostNotification ($VisID, 'Bitte Lüften', 'Kinderzimmer', 'Info', 0);
+                # $VisID = $this->ReadPropertyInteger("VisID");
+                # VISU_PostNotification ($VisID, 'Bitte Lüften', 'Kinderzimmer', 'Info', 0);
             }
             elseif(($Humidity > 60) && ($Diff > 40) && $Hinweis){
                 $this->SetValue('Auswertung', 'gelegentlich lüften!'); 
